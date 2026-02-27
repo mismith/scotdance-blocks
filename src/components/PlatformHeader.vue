@@ -1,0 +1,67 @@
+<script setup lang="ts">
+import { makeDraggable } from '@vue-dnd-kit/core'
+import { ref as vueRef } from 'vue'
+
+import { useCompetitionStore } from '@/stores/competition'
+
+import InlineEdit from '@/components/InlineEdit.vue'
+import type { DragPlatformData, Platform } from '@/types'
+
+const props = defineProps<{
+  platform: Platform
+  platformId: string
+  index: number
+}>()
+
+const emit = defineEmits<{
+  remove: []
+}>()
+
+const store = useCompetitionStore()
+
+const handleEl = vueRef<HTMLElement | null>(null)
+
+const { isDragging } = makeDraggable(
+  handleEl,
+  { groups: ['platform'] },
+  () =>
+    [
+      props.index,
+      [
+        {
+          type: 'platform',
+          platformId: props.platformId,
+          index: props.index,
+        } satisfies DragPlatformData,
+      ],
+    ] as [number, DragPlatformData[]],
+)
+</script>
+
+<template>
+  <div
+    data-platform-header
+    class="group border border-gray-300 bg-gray-50 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
+    :class="isDragging ? 'opacity-40' : ''"
+  >
+    <div class="flex items-center justify-center gap-1">
+      <span
+        ref="handleEl"
+        class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+        title="Drag to reorder"
+      >&#8942;&#8942;</span>
+      <InlineEdit
+        :model-value="platform.name"
+        placeholder="Name"
+        @update:model-value="store.renamePlatform(platformId, $event)"
+      />
+      <button
+        class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+        title="Remove platform"
+        @click.stop="emit('remove')"
+      >
+        &times;
+      </button>
+    </div>
+  </div>
+</template>

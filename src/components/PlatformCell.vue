@@ -21,7 +21,7 @@ const { provider, activeDragGroup } = useDragType()
 function getInsertIndex(chipSelector: string, pointerY: number): number | undefined {
   if (!el.value) return undefined
   const chips = el.value.querySelectorAll(chipSelector)
-  if (!chips.length) return undefined
+  if (!chips.length) return 0
   for (let i = 0; i < chips.length; i++) {
     const rect = chips[i].getBoundingClientRect()
     if (pointerY < rect.top + rect.height / 2) return i
@@ -132,9 +132,9 @@ const liveJudgeInsertIndex = computed(() => {
 </script>
 
 <template>
-  <td
+  <div
     ref="el"
-    class="border border-gray-200 px-2 py-1.5 align-top transition-colors"
+    class="border border-gray-200 px-2 py-1.5 transition-colors"
     :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
   >
     <template v-if="assignment">
@@ -175,6 +175,12 @@ const liveJudgeInsertIndex = computed(() => {
         />
       </div>
     </template>
-    <span v-else class="text-xs text-gray-300">&mdash;</span>
-  </td>
+    <template v-else>
+      <div
+        v-if="isDragOver && (liveGroupInsertIndex === 0 || liveJudgeInsertIndex === 0)"
+        class="h-0.5 rounded bg-blue-500"
+      />
+      <span v-else class="text-xs text-gray-300">&mdash;</span>
+    </template>
+  </div>
 </template>

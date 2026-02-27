@@ -267,7 +267,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     const id = generateId()
     const existingCount = Object.keys(data.value.platforms).length
     data.value.platforms[id] = {
-      name: name ?? String.fromCharCode(65 + existingCount),
+      name: name ?? `Platform ${String.fromCharCode(65 + existingCount)}`,
     }
     return id
   }
@@ -291,6 +291,10 @@ export const useCompetitionStore = defineStore('competition', () => {
   }
 
   // --- Reorder ---
+
+  function reorderPlatform(fromIndex: number, toIndex: number) {
+    data.value.platforms = reorderRecord(data.value.platforms, fromIndex, toIndex)
+  }
 
   function reorderBlock(fromIndex: number, toIndex: number) {
     data.value.schedule.blocks = reorderRecord(data.value.schedule.blocks, fromIndex, toIndex)
@@ -341,6 +345,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     addPlatform,
     removePlatform,
     renamePlatform,
+    reorderPlatform,
     reorderBlock,
     reorderEvent,
     reorderDance,

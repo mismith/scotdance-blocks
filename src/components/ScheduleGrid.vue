@@ -6,8 +6,8 @@ import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
 import EventSection from '@/components/EventSection.vue'
-import InlineEdit from '@/components/InlineEdit.vue'
-import type { DragEventData, ScheduleBlock } from '@/types'
+import PlatformHeader from '@/components/PlatformHeader.vue'
+import type { DragEventData, DragPlatformData, ScheduleBlock } from '@/types'
 
 const props = defineProps<{
   block: ScheduleBlock
@@ -17,13 +17,21 @@ const props = defineProps<{
 const store = useCompetitionStore()
 const { provider, activeDragGroup } = useDragType()
 
-const isValidTarget = computed(() => activeDragGroup.value === 'event')
+const isEventValidTarget = computed(() => activeDragGroup.value === 'event')
+const isPlatformValidTarget = computed(() => activeDragGroup.value === 'platform')
 
-const tableEl = vueRef<HTMLElement | null>(null)
+const gridCols = computed(
+  () => `auto repeat(${store.platformEntries.length}, 1fr) auto`,
+)
+
+const gridEl = vueRef<HTMLElement | null>(null)
+const headerRowEl = vueRef<HTMLElement | null>(null)
+
+// --- Event reorder (vertical) ---
 
 function getEventInsertIndex(pointerY: number): number | undefined {
-  if (!tableEl.value) return undefined
-  const sections = tableEl.value.querySelectorAll('[data-event-section]')
+  if (!gridEl.value) return undefined
+  const sections = gridEl.value.querySelectorAll('[data-event-section]')
   if (!sections.length) return undefined
   for (let i = 0; i < sections.length; i++) {
     const rect = sections[i].getBoundingClientRect()
@@ -32,7 +40,7 @@ function getEventInsertIndex(pointerY: number): number | undefined {
   return sections.length
 }
 
-const { isDragOver } = makeDroppable(tableEl, {
+const { isDragOver } = makeDroppable(gridEl, {
   groups: ['event'],
   events: {
     onDrop(event) {
@@ -61,6 +69,62 @@ const liveEventInsertIndex = computed(() => {
   return getEventInsertIndex(pointerY) ?? -1
 })
 
+// --- Platform reorder (horizontal) ---
+
+function getPlatformInsertIndex(pointerX: number): number | undefined {
+  if (!headerRowEl.value) return undefined
+  const headers = headerRowEl.value.querySelectorAll('[data-platform-header]')
+  if (!headers.length) return undefined
+  for (let i = 0; i < headers.length; i++) {
+    const rect = headers[i].getBoundingClientRect()
+    if (pointerX < rect.left + rect.width / 2) return i
+  }
+  return headers.length
+}
+
+const { isDragOver: isPlatformDragOver } = makeDroppable(headerRowEl, {
+  groups: ['platform'],
+  events: {
+    onDrop(event) {
+      const dragData = event.payload?.items[0] as DragPlatformData | undefined
+      if (!dragData) return
+
+      const pointerX = event.provider.pointer.value?.current.x ?? 0
+      const insertIndex = getPlatformInsertIndex(pointerX)
+
+      if (insertIndex !== undefined) {
+        store.reorderPlatform(
+          dragData.index,
+          insertIndex > dragData.index ? insertIndex - 1 : insertIndex,
+        )
+      }
+    },
+  },
+})
+
+const livePlatformInsertIndex = computed(() => {
+  if (!isPlatformDragOver.value) return -1
+  const pointerX = provider.pointer.value?.current.x
+  if (pointerX === undefined) return -1
+  return getPlatformInsertIndex(pointerX) ?? -1
+})
+
+// Absolute left position for platform insertion indicator
+const indicatorLeftPx = computed(() => {
+  if (!isPlatformDragOver.value || !headerRowEl.value) return 0
+  const idx = livePlatformInsertIndex.value
+  if (idx < 0) return 0
+  const headers = headerRowEl.value.querySelectorAll('[data-platform-header]')
+  const containerRect = headerRowEl.value.getBoundingClientRect()
+  if (idx < headers.length) {
+    return headers[idx].getBoundingClientRect().left - containerRect.left
+  }
+  if (headers.length > 0) {
+    return headers[headers.length - 1].getBoundingClientRect().right - containerRect.left
+  }
+  return 0
+})
+
 function onAddPlatform() {
   store.addPlatform()
 }
@@ -79,56 +143,50 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
 <template>
   <div class="overflow-x-auto">
-    <table ref="tableEl" class="w-full border-collapse text-sm" :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''">
-      <thead>
-        <tr>
-          <th
-            class="border border-gray-300 bg-gray-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+    <div
+      ref="gridEl"
+      class="w-full text-sm"
+      :class="isEventValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
+      :style="{ display: 'grid', gridTemplateColumns: gridCols }"
+    >
+      <!-- Header row -->
+      <div
+        ref="headerRowEl"
+        class="relative col-span-full grid grid-cols-subgrid"
+        :class="isPlatformValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
+      >
+        <div class="border border-gray-300 bg-gray-50 px-3 py-2" />
+        <PlatformHeader
+          v-for="([platformId, platform], platformIndex) in store.platformEntries"
+          :key="platformId"
+          :platform="platform"
+          :platform-id="platformId"
+          :index="platformIndex"
+          @remove="onRemovePlatform(platformId)"
+        />
+        <div class="border border-gray-300 bg-gray-50 px-3 py-2 text-center">
+          <button
+            class="text-xs text-gray-400 hover:text-blue-600"
+            title="Add platform"
+            @click="onAddPlatform"
           >
-            Dance
-          </th>
-          <th
-            v-for="[platformId, platform] in store.platformEntries"
-            :key="platformId"
-            class="group border border-gray-300 bg-gray-50 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
-          >
-            <div class="flex items-center justify-center gap-1">
-              <span>Platform </span>
-              <InlineEdit
-                :model-value="platform.name"
-                placeholder="Name"
-                @update:model-value="store.renamePlatform(platformId, $event)"
-              />
-              <button
-                class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-                title="Remove platform"
-                @click="onRemovePlatform(platformId)"
-              >
-                &times;
-              </button>
-            </div>
-          </th>
-          <th
-            class="border border-gray-300 bg-gray-50 px-3 py-2 text-center"
-          >
-            <button
-              class="text-xs text-gray-400 hover:text-blue-600"
-              title="Add platform"
-              @click="onAddPlatform"
-            >
-              +
-            </button>
-          </th>
-        </tr>
-      </thead>
+            +
+          </button>
+        </div>
+        <!-- Platform insertion indicator (absolute, no layout impact) -->
+        <div
+          v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"
+          class="absolute top-0 bottom-0 z-10 w-0.5 bg-blue-500"
+          :style="{ left: indicatorLeftPx + 'px' }"
+        />
+      </div>
+
+      <!-- Events -->
       <template v-for="([eventId, event], eventIndex) in eventEntries" :key="eventId">
-        <tbody v-if="isDragOver && liveEventInsertIndex === eventIndex">
-          <tr>
-            <td :colspan="store.platformEntries.length + 2" class="h-0 p-0">
-              <div class="h-0.5 bg-blue-500" />
-            </td>
-          </tr>
-        </tbody>
+        <div
+          v-if="isDragOver && liveEventInsertIndex === eventIndex"
+          class="col-span-full h-0.5 bg-blue-500"
+        />
         <EventSection
           :event="event"
           :block-id="blockId"
@@ -136,28 +194,20 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :index="eventIndex"
         />
       </template>
-      <tbody v-if="isDragOver && liveEventInsertIndex === eventEntries.length">
-        <tr>
-          <td :colspan="store.platformEntries.length + 2" class="h-0 p-0">
-            <div class="h-0.5 bg-blue-500" />
-          </td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td
-            :colspan="store.platformEntries.length + 2"
-            class="border border-dashed border-gray-300 px-3 py-2 text-center"
-          >
-            <button
-              class="text-sm text-gray-400 hover:text-blue-600"
-              @click="onAddEvent"
-            >
-              + Add event
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <div
+        v-if="isDragOver && liveEventInsertIndex === eventEntries.length"
+        class="col-span-full h-0.5 bg-blue-500"
+      />
+
+      <!-- Add event -->
+      <div class="col-span-full border border-dashed border-gray-300 px-3 py-2 text-center">
+        <button
+          class="text-sm text-gray-400 hover:text-blue-600"
+          @click="onAddEvent"
+        >
+          + Add event
+        </button>
+      </div>
+    </div>
   </div>
 </template>

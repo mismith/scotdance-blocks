@@ -101,6 +101,12 @@ export interface DragBlockData {
   index: number
 }
 
+export interface DragPlatformData {
+  type: 'platform'
+  platformId: string
+  index: number
+}
+
 export type DragItemData = DragGroupData | DragJudgeData
 
 // === Root ===

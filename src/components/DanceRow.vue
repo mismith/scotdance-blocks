@@ -41,12 +41,12 @@ const { isDragging } = makeDraggable(
 </script>
 
 <template>
-  <tr
+  <div
     data-dance-row
-    class="group hover:bg-gray-50"
+    class="group col-span-full grid grid-cols-subgrid"
     :class="{ 'opacity-40': isDragging }"
   >
-    <td class="border border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
+    <div class="border border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
       <div class="flex items-center gap-1">
         <span
           ref="handleEl"
@@ -70,13 +70,13 @@ const { isDragging } = makeDraggable(
           </button>
         </div>
       </div>
-    </td>
+    </div>
     <PlatformCell
       v-for="[platformId] in store.platformEntries"
       :key="platformId"
       :assignment="scheduledDance.platforms[platformId]"
       :location="{ blockId, eventId, danceId, platformId }"
     />
-    <td class="border border-gray-200"></td>
-  </tr>
+    <div class="border border-gray-200" />
+  </div>
 </template>

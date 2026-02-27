@@ -20,7 +20,7 @@ const props = defineProps<{
 const store = useCompetitionStore()
 const { provider, activeDragGroup } = useDragType()
 
-const tbodyEl = vueRef<HTMLElement | null>(null)
+const sectionEl = vueRef<HTMLElement | null>(null)
 const eventHandleEl = vueRef<HTMLElement | null>(null)
 
 // --- Event drag handle ---
@@ -41,10 +41,10 @@ const { isDragging: isEventDragging } = makeDraggable(
     ] as [number, DragEventData[]],
 )
 
-// --- Dance drop zone (tbody) ---
+// --- Dance drop zone ---
 function getInsertIndex(pointerY: number): number | undefined {
-  if (!tbodyEl.value) return undefined
-  const rows = tbodyEl.value.querySelectorAll('[data-dance-row]')
+  if (!sectionEl.value) return undefined
+  const rows = sectionEl.value.querySelectorAll('[data-dance-row]')
   if (!rows.length) return undefined
   for (let i = 0; i < rows.length; i++) {
     const rect = rows[i].getBoundingClientRect()
@@ -53,7 +53,7 @@ function getInsertIndex(pointerY: number): number | undefined {
   return rows.length
 }
 
-const { isDragOver } = makeDroppable(tbodyEl, {
+const { isDragOver } = makeDroppable(sectionEl, {
   groups: ['dance'],
   events: {
     onDrop(event) {
@@ -95,52 +95,43 @@ function onRemoveEvent() {
 </script>
 
 <template>
-  <tbody
-    ref="tbodyEl"
+  <div
+    ref="sectionEl"
     data-event-section
+    class="col-span-full grid grid-cols-subgrid"
     :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'ring-1 ring-inset ring-blue-200' : '']"
   >
-    <tr class="group">
-      <th
-        :colspan="store.platformEntries.length + 2"
-        class="border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-semibold"
+    <div class="group col-span-full">
+      <div
+        class="flex items-center justify-between border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-semibold"
       >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1">
-            <span
-              ref="eventHandleEl"
-              class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
-              title="Drag to reorder"
-            >&#8942;&#8942;</span>
-            <InlineEdit
-              :model-value="event.name"
-              placeholder="Event name"
-              @update:model-value="store.renameEvent(blockId, eventId, $event)"
-            />
-            <span v-if="event.description" class="font-normal text-gray-500">
-              {{ event.description }}
-            </span>
-          </div>
-          <button
-            class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-            title="Remove event"
-            @click="onRemoveEvent"
-          >
-            &times;
-          </button>
+        <div class="flex items-center gap-1">
+          <span
+            ref="eventHandleEl"
+            class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+            title="Drag to reorder"
+          >&#8942;&#8942;</span>
+          <InlineEdit
+            :model-value="event.name"
+            placeholder="Event name"
+            @update:model-value="store.renameEvent(blockId, eventId, $event)"
+          />
         </div>
-      </th>
-    </tr>
+        <button
+          class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+          title="Remove event"
+          @click="onRemoveEvent"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
     <template v-if="event.dances && Object.keys(event.dances).length">
       <template v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)" :key="danceId">
-        <tr v-if="isDragOver && liveDanceInsertIndex === danceIndex">
-          <td
-            :colspan="store.platformEntries.length + 2"
-            class="h-0 p-0"
-          >
-            <div class="h-0.5 bg-blue-500" />
-          </td>
-        </tr>
+        <div
+          v-if="isDragOver && liveDanceInsertIndex === danceIndex"
+          class="col-span-full h-0.5 bg-blue-500"
+        />
         <DanceRow
           :scheduled-dance="scheduledDance"
           :block-id="blockId"
@@ -149,30 +140,19 @@ function onRemoveEvent() {
           :index="danceIndex"
         />
       </template>
-      <tr v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length">
-        <td
-          :colspan="store.platformEntries.length + 2"
-          class="h-0 p-0"
-        >
-          <div class="h-0.5 bg-blue-500" />
-        </td>
-      </tr>
+      <div
+        v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
+        class="col-span-full h-0.5 bg-blue-500"
+      />
     </template>
-    <tr v-else>
-      <td
-        :colspan="store.platformEntries.length + 2"
-        class="border border-gray-200 px-3 py-3 text-center text-sm italic text-gray-400"
-      >
-        {{ event.description || 'No dances' }}
-      </td>
-    </tr>
-    <tr>
-      <td
-        :colspan="store.platformEntries.length + 2"
-        class="border border-dashed border-gray-200 px-3 py-1.5"
-      >
-        <DanceAdder :block-id="blockId" :event-id="eventId" />
-      </td>
-    </tr>
-  </tbody>
+    <div
+      v-else
+      class="col-span-full border border-gray-200 px-3 py-3 text-center text-sm italic text-gray-400"
+    >
+      {{ event.description || 'No dances' }}
+    </div>
+    <div class="col-span-full border border-dashed border-gray-200 px-3 py-1.5">
+      <DanceAdder :block-id="blockId" :event-id="eventId" />
+    </div>
+  </div>
 </template>
