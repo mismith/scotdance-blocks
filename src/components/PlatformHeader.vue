@@ -20,10 +20,10 @@ const emit = defineEmits<{
 
 const store = useCompetitionStore()
 
-const handleEl = vueRef<HTMLElement | null>(null)
+const headerEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
-  handleEl,
+  headerEl,
   { groups: ['platform'], activation: { distance: 3 } },
   () =>
     [
@@ -41,17 +41,14 @@ const { isDragging } = makeDraggable(
 
 <template>
   <div
+    ref="headerEl"
     data-platform-header
-    class="group border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
+    class="group cursor-grab border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
     :class="isDragging ? 'opacity-40' : ''"
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-1">
-        <span
-          ref="handleEl"
-          class="cursor-grab text-gray-300 select-none"
-          title="Drag to reorder"
-        >⠿</span>
+        <span class="text-gray-300 select-none">⠿</span>
         <InlineEdit
           :model-value="platform.name"
           placeholder="Name"

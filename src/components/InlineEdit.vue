@@ -62,6 +62,7 @@ onMounted(() => {
     v-model="draft"
     :placeholder
     class="field-sizing-content rounded border border-blue-300 bg-white px-1 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
+    @pointerdown.stop
     @keydown.stop
     @keydown.enter="commit"
     @keydown.escape="cancel"

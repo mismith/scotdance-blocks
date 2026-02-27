@@ -21,11 +21,11 @@ const store = useCompetitionStore()
 const { provider, activeDragGroup } = useDragType()
 
 const sectionEl = vueRef<HTMLElement | null>(null)
-const eventHandleEl = vueRef<HTMLElement | null>(null)
+const eventHeaderEl = vueRef<HTMLElement | null>(null)
 
-// --- Event drag handle ---
+// --- Event drag (whole header row) ---
 const { isDragging: isEventDragging } = makeDraggable(
-  eventHandleEl,
+  eventHeaderEl,
   { groups: ['event'], activation: { distance: 3 } },
   () =>
     [
@@ -134,15 +134,11 @@ function onRemoveEvent() {
   >
     <div class="group col-span-full">
       <div
-        class="flex items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
+        ref="eventHeaderEl"
+        class="flex cursor-grab items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
       >
         <div class="flex items-center gap-1">
-          <span
-            ref="eventHandleEl"
-            class="cursor-grab text-gray-300 select-none"
-            title="Drag to reorder"
-            >⠿</span
-          >
+          <span class="text-gray-300 select-none">⠿</span>
           <InlineEdit
             :model-value="event.name"
             placeholder="Event name"

@@ -22,10 +22,10 @@ const emit = defineEmits<{
 
 const store = useCompetitionStore()
 
-const handleEl = vueRef<HTMLElement | null>(null)
+const tabEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
-  handleEl,
+  tabEl,
   { groups: ['block'], activation: { distance: 3 } },
   () =>
     [
@@ -43,8 +43,9 @@ const { isDragging } = makeDraggable(
 
 <template>
   <div
+    ref="tabEl"
     data-block-tab
-    class="group flex items-center justify-between border-b-2 px-2 py-1.5 text-sm font-medium transition-colors"
+    class="group flex cursor-grab items-center justify-between border-b-2 px-2 py-1.5 text-sm font-medium transition-colors"
     :class="[
       active
         ? 'border-blue-500 text-blue-600'
@@ -55,11 +56,7 @@ const { isDragging } = makeDraggable(
     @click="emit('select')"
   >
     <div class="flex items-center gap-1">
-      <span
-        ref="handleEl"
-        class="cursor-grab text-gray-300 select-none"
-        title="Drag to reorder"
-      >⠿</span>
+      <span class="text-gray-300 select-none">⠿</span>
       <InlineEdit
         :model-value="block.name"
         placeholder="Block name"

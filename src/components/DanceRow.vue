@@ -19,10 +19,10 @@ const store = useCompetitionStore()
 
 const dance = store.getDance(props.scheduledDance.danceId)
 
-const handleEl = vueRef<HTMLElement | null>(null)
+const nameCellEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
-  handleEl,
+  nameCellEl,
   { groups: ['dance'], activation: { distance: 3 } },
   () =>
     [
@@ -46,14 +46,13 @@ const { isDragging } = makeDraggable(
     class="group col-span-full grid grid-cols-subgrid"
     :class="{ 'opacity-40': isDragging }"
   >
-    <div class="border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
+    <div
+      ref="nameCellEl"
+      class="cursor-grab border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap"
+    >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1">
-          <span
-            ref="handleEl"
-            class="cursor-grab text-gray-300 select-none"
-            title="Drag to reorder"
-          >⠿</span>
+          <span class="text-gray-300 select-none">⠿</span>
           <div class="text-sm">
             {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
             <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
