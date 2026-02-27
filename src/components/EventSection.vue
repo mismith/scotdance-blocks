@@ -163,6 +163,7 @@ function onRemoveEvent() {
       <InlineEdit
         :model-value="event.description ?? ''"
         placeholder="Event description"
+        :required="false"
         @update:model-value="store.updateEventDescription(blockId, eventId, $event)"
       />
     </div>
@@ -195,7 +196,7 @@ function onRemoveEvent() {
       />
       <div
         data-dance-placeholder
-        class="col-span-full border-t border-l border-gray-200 px-1 py-1.5 text-center text-sm italic text-gray-400"
+        class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-left text-sm italic text-gray-400"
       >
         Drag dances here
       </div>

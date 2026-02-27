@@ -10,6 +10,11 @@ const props = defineProps<{
   steps?: string
   index?: number
   source?: { blockId: string; eventId: string } | 'palette'
+  removable?: boolean
+}>()
+
+const emit = defineEmits<{
+  remove: []
 }>()
 
 const el = vueRef<HTMLElement | null>(null)
@@ -37,11 +42,18 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-dance-chip
-    class="flex items-center cursor-grab rounded bg-green-100 px-2 py-1 text-xs font-medium leading-tight text-green-800 select-none"
+    class="group/chip flex items-center cursor-grab rounded bg-green-100 px-2 py-1 text-xs font-medium leading-tight text-green-800 select-none"
     :class="{ 'opacity-40': isDragging }"
   >
     <span class="mr-1 -ml-1 text-green-400">⠿</span>
-    {{ label }}
-    <span v-if="steps" class="ml-1 text-green-800/50">({{ steps }})</span>
+    <span class="flex-1"><slot>{{ label }}<span v-if="steps" class="ml-1 text-green-800/50">({{ steps }})</span></slot></span>
+    <button
+      v-if="removable"
+      class="ml-2 text-green-400 opacity-0 transition-opacity hover:text-red-500 group-hover/chip:opacity-100"
+      title="Remove"
+      @click.stop="emit('remove')"
+    >
+      &times;
+    </button>
   </span>
 </template>
