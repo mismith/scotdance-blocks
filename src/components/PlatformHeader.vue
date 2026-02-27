@@ -23,7 +23,7 @@ const handleEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
   handleEl,
-  { groups: ['platform'] },
+  { groups: ['platform'], activation: { distance: 3 } },
   () =>
     [
       props.index,
@@ -41,22 +41,24 @@ const { isDragging } = makeDraggable(
 <template>
   <div
     data-platform-header
-    class="group border border-gray-300 bg-gray-50 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
+    class="group border border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
     :class="isDragging ? 'opacity-40' : ''"
   >
-    <div class="flex items-center justify-center gap-1">
-      <span
-        ref="handleEl"
-        class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
-        title="Drag to reorder"
-      >&#8942;&#8942;</span>
-      <InlineEdit
-        :model-value="platform.name"
-        placeholder="Name"
-        @update:model-value="store.renamePlatform(platformId, $event)"
-      />
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1">
+        <span
+          ref="handleEl"
+          class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+          title="Drag to reorder"
+        >&#8942;&#8942;</span>
+        <InlineEdit
+          :model-value="platform.name"
+          placeholder="Name"
+          @update:model-value="store.renamePlatform(platformId, $event)"
+        />
+      </div>
       <button
-        class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+        class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
         title="Remove platform"
         @click.stop="emit('remove')"
       >

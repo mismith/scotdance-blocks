@@ -26,7 +26,7 @@ const eventHandleEl = vueRef<HTMLElement | null>(null)
 // --- Event drag handle ---
 const { isDragging: isEventDragging } = makeDraggable(
   eventHandleEl,
-  { groups: ['event'] },
+  { groups: ['event'], activation: { distance: 3 } },
   () =>
     [
       props.index,
@@ -99,18 +99,22 @@ function onRemoveEvent() {
     ref="sectionEl"
     data-event-section
     class="col-span-full grid grid-cols-subgrid"
-    :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'ring-1 ring-inset ring-blue-200' : '']"
+    :class="[
+      isEventDragging ? 'opacity-40' : '',
+      isValidTarget ? 'ring-1 ring-inset ring-blue-200' : '',
+    ]"
   >
     <div class="group col-span-full">
       <div
-        class="flex items-center justify-between border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-semibold"
+        class="flex items-center justify-between border border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
       >
         <div class="flex items-center gap-1">
           <span
             ref="eventHandleEl"
             class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
             title="Drag to reorder"
-          >&#8942;&#8942;</span>
+            >&#8942;&#8942;</span
+          >
           <InlineEdit
             :model-value="event.name"
             placeholder="Event name"
@@ -126,8 +130,18 @@ function onRemoveEvent() {
         </button>
       </div>
     </div>
+    <div class="col-span-full border border-gray-200 py-1.5 pr-1 pl-5 text-sm text-gray-500">
+      <InlineEdit
+        :model-value="event.description ?? ''"
+        placeholder="Event description"
+        @update:model-value="store.updateEventDescription(blockId, eventId, $event)"
+      />
+    </div>
     <template v-if="event.dances && Object.keys(event.dances).length">
-      <template v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)" :key="danceId">
+      <template
+        v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)"
+        :key="danceId"
+      >
         <div
           v-if="isDragOver && liveDanceInsertIndex === danceIndex"
           class="col-span-full h-0.5 bg-blue-500"
@@ -146,12 +160,12 @@ function onRemoveEvent() {
       />
     </template>
     <div
-      v-else
-      class="col-span-full border border-gray-200 px-3 py-3 text-center text-sm italic text-gray-400"
+      v-else-if="!event.description"
+      class="col-span-full border border-gray-200 px-1 py-3 text-center text-sm italic text-gray-400"
     >
-      {{ event.description || 'No dances' }}
+      No dances
     </div>
-    <div class="col-span-full border border-dashed border-gray-200 px-3 py-1.5">
+    <div class="col-span-full border border-dashed border-gray-200 px-1 py-1.5">
       <DanceAdder :block-id="blockId" :event-id="eventId" />
     </div>
   </div>

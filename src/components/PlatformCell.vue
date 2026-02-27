@@ -149,6 +149,8 @@ const liveJudgeInsertIndex = computed(() => {
             :group-id="groupId"
             :index="index"
             :source="location"
+            removable
+            @remove="store.removeGroupFromCell(location.blockId, location.eventId, location.danceId, location.platformId, groupId)"
           />
         </template>
         <div
@@ -156,7 +158,7 @@ const liveJudgeInsertIndex = computed(() => {
           class="h-0.5 rounded bg-blue-500"
         />
       </div>
-      <div v-if="assignment.orderedJudgeIds.length" class="mt-1 flex flex-col gap-0.5">
+      <div v-if="assignment.orderedJudgeIds.length || (isDragOver && liveJudgeInsertIndex >= 0)" class="mt-1 flex flex-col gap-0.5">
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
           <div
             v-if="isDragOver && liveJudgeInsertIndex === index"
@@ -167,6 +169,8 @@ const liveJudgeInsertIndex = computed(() => {
             :judge-id="judgeId"
             :index="index"
             :source="location"
+            removable
+            @remove="store.removeJudgeFromCell(location.blockId, location.eventId, location.danceId, location.platformId, judgeId)"
           />
         </template>
         <div

@@ -51,7 +51,7 @@ function cancel() {
     v-if="editing"
     ref="inputEl"
     v-model="draft"
-    class="rounded border border-blue-300 bg-white px-1 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
+    class="field-sizing-content rounded border border-blue-300 bg-white px-1 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
     @keydown.enter="commit"
     @keydown.escape="cancel"
     @blur="commit"

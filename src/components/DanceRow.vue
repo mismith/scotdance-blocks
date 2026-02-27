@@ -23,7 +23,7 @@ const handleEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
   handleEl,
-  { groups: ['dance'] },
+  { groups: ['dance'], activation: { distance: 3 } },
   () =>
     [
       props.index,
@@ -47,13 +47,13 @@ const { isDragging } = makeDraggable(
     :class="{ 'opacity-40': isDragging }"
   >
     <div class="border border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
-      <div class="flex items-center gap-1">
-        <span
-          ref="handleEl"
-          class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
-          title="Drag to reorder"
-        >&#8942;&#8942;</span>
-        <div class="flex flex-1 items-center justify-between">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1">
+          <span
+            ref="handleEl"
+            class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+            title="Drag to reorder"
+          >&#8942;&#8942;</span>
           <div class="text-sm">
             {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
             <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
@@ -61,14 +61,14 @@ const { isDragging } = makeDraggable(
               {{ scheduledDance.name }}
             </span>
           </div>
-          <button
-            class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-            title="Remove dance"
-            @click="store.removeDanceFromEvent(blockId, eventId, danceId)"
-          >
-            &times;
-          </button>
         </div>
+        <button
+          class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+          title="Remove dance"
+          @click="store.removeDanceFromEvent(blockId, eventId, danceId)"
+        >
+          &times;
+        </button>
       </div>
     </div>
     <PlatformCell

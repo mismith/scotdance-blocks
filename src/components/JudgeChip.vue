@@ -9,13 +9,18 @@ const props = defineProps<{
   judgeId: string
   index?: number
   source?: CellLocation | 'palette'
+  removable?: boolean
+}>()
+
+const emit = defineEmits<{
+  remove: []
 }>()
 
 const el = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
   el,
-  { groups: ['judge'] },
+  { groups: ['judge'], activation: { distance: 3 } },
   () =>
     [
       props.index ?? 0,
@@ -35,9 +40,15 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-judge-chip
-    class="inline-block cursor-grab rounded bg-amber-100 px-2 py-1 text-xs font-medium italic leading-tight text-amber-800 select-none"
+    class="group/chip flex items-center justify-between cursor-grab rounded bg-amber-100 px-2 py-1 text-xs font-medium italic leading-tight text-amber-800 select-none"
     :class="{ 'opacity-40': isDragging }"
   >
     {{ label }}
+    <button
+      v-if="removable"
+      class="ml-2 text-amber-400 opacity-0 transition-opacity hover:text-red-500 group-hover/chip:opacity-100"
+      title="Remove"
+      @click.stop="emit('remove')"
+    >&times;</button>
   </span>
 </template>

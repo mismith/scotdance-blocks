@@ -25,7 +25,7 @@ const handleEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
   handleEl,
-  { groups: ['block'] },
+  { groups: ['block'], activation: { distance: 3 } },
   () =>
     [
       props.index,
@@ -43,7 +43,7 @@ const { isDragging } = makeDraggable(
 <template>
   <div
     data-block-tab
-    class="group flex items-center gap-1 border-b-2 px-4 py-2 text-sm font-medium transition-colors"
+    class="group flex items-center justify-between border-b-2 px-2 py-1.5 text-sm font-medium transition-colors"
     :class="[
       active
         ? 'border-blue-500 text-blue-600'
@@ -53,18 +53,20 @@ const { isDragging } = makeDraggable(
     role="button"
     @click="emit('select')"
   >
-    <span
-      ref="handleEl"
-      class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
-      title="Drag to reorder"
-    >&#8942;&#8942;</span>
-    <InlineEdit
-      :model-value="block.name"
-      placeholder="Block name"
-      @update:model-value="store.renameBlock(blockId, $event)"
-    />
+    <div class="flex items-center gap-1">
+      <span
+        ref="handleEl"
+        class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+        title="Drag to reorder"
+      >&#8942;&#8942;</span>
+      <InlineEdit
+        :model-value="block.name"
+        placeholder="Block name"
+        @update:model-value="store.renameBlock(blockId, $event)"
+      />
+    </div>
     <button
-      class="ml-1 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+      class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
       title="Remove block"
       @click.stop="emit('remove')"
     >

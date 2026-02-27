@@ -243,6 +243,11 @@ export const useCompetitionStore = defineStore('competition', () => {
     if (event) event.name = name
   }
 
+  function updateEventDescription(blockId: string, eventId: string, description: string) {
+    const event = data.value.schedule.blocks[blockId]?.events[eventId]
+    if (event) event.description = description
+  }
+
   function addDanceToEvent(
     blockId: string,
     eventId: string,
@@ -340,6 +345,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     addEvent,
     removeEvent,
     renameEvent,
+    updateEventDescription,
     addDanceToEvent,
     removeDanceFromEvent,
     addPlatform,

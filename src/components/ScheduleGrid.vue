@@ -155,7 +155,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         class="relative col-span-full grid grid-cols-subgrid"
         :class="isPlatformValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
       >
-        <div class="border border-gray-300 bg-gray-50 px-3 py-2" />
+        <div class="border border-gray-300 bg-gray-50 px-1 py-1.5" />
         <PlatformHeader
           v-for="([platformId, platform], platformIndex) in store.platformEntries"
           :key="platformId"
@@ -164,7 +164,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :index="platformIndex"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="border border-gray-300 bg-gray-50 px-3 py-2 text-center">
+        <div class="border border-gray-300 bg-gray-50 px-1 py-1.5 text-center">
           <button
             class="text-xs text-gray-400 hover:text-blue-600"
             title="Add platform"
@@ -200,7 +200,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
       />
 
       <!-- Add event -->
-      <div class="col-span-full border border-dashed border-gray-300 px-3 py-2 text-center">
+      <div class="col-span-full border border-dashed border-gray-300 bg-gray-100 px-1 py-1.5 text-center">
         <button
           class="text-sm text-gray-400 hover:text-blue-600"
           @click="onAddEvent"
