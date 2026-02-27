@@ -245,6 +245,110 @@ export const useCompetitionStore = defineStore('competition', () => {
     assignment.orderedGroupIds.splice(toIndex, 0, item)
   }
 
+  // --- Reference data CRUD ---
+
+  function addCategory(): string {
+    const id = generateId()
+    data.value.categories[id] = { name: 'New Category' }
+    return id
+  }
+
+  function removeCategory(categoryId: string) {
+    delete data.value.categories[categoryId]
+    // Remove all groups in this category (and their assignments)
+    for (const [groupId, group] of Object.entries(data.value.groups)) {
+      if (group.categoryId === categoryId) removeGroup(groupId)
+    }
+  }
+
+  function renameCategory(categoryId: string, name: string) {
+    const category = data.value.categories[categoryId]
+    if (category) category.name = name
+  }
+
+  function addDance(): string {
+    const id = generateId()
+    data.value.dances[id] = { name: 'New Dance', shortName: '', groupIds: {} }
+    return id
+  }
+
+  function removeDance(danceId: string) {
+    delete data.value.dances[danceId]
+    for (const block of Object.values(data.value.schedule.blocks)) {
+      for (const event of Object.values(block.events)) {
+        if (!event.dances) continue
+        for (const [sdId, sd] of Object.entries(event.dances)) {
+          if (sd.danceId === danceId) delete event.dances[sdId]
+        }
+      }
+    }
+  }
+
+  function updateDance(danceId: string, fields: Partial<Pick<Dance, 'name' | 'shortName' | 'steps'>>) {
+    const dance = data.value.dances[danceId]
+    if (!dance) return
+    if (fields.name !== undefined) dance.name = fields.name
+    if (fields.shortName !== undefined) dance.shortName = fields.shortName
+    if (fields.steps !== undefined) dance.steps = fields.steps || undefined
+  }
+
+  function addGroup(categoryId: string): string {
+    const id = generateId()
+    data.value.groups[id] = { categoryId, name: 'New Group' }
+    return id
+  }
+
+  function removeGroup(groupId: string) {
+    delete data.value.groups[groupId]
+    for (const dance of Object.values(data.value.dances)) {
+      delete dance.groupIds[groupId]
+    }
+    for (const block of Object.values(data.value.schedule.blocks)) {
+      for (const event of Object.values(block.events)) {
+        if (!event.dances) continue
+        for (const sd of Object.values(event.dances)) {
+          for (const assignment of Object.values(sd.platforms)) {
+            const idx = assignment.orderedGroupIds.indexOf(groupId)
+            if (idx !== -1) assignment.orderedGroupIds.splice(idx, 1)
+          }
+        }
+      }
+    }
+  }
+
+  function renameGroup(groupId: string, name: string) {
+    const group = data.value.groups[groupId]
+    if (group) group.name = name
+  }
+
+  function addStaffMember(): string {
+    const id = generateId()
+    data.value.staff[id] = { firstName: 'New', lastName: 'Judge', type: 'Judge' }
+    return id
+  }
+
+  function removeStaffMember(staffId: string) {
+    delete data.value.staff[staffId]
+    for (const block of Object.values(data.value.schedule.blocks)) {
+      for (const event of Object.values(block.events)) {
+        if (!event.dances) continue
+        for (const sd of Object.values(event.dances)) {
+          for (const assignment of Object.values(sd.platforms)) {
+            const idx = assignment.orderedJudgeIds.indexOf(staffId)
+            if (idx !== -1) assignment.orderedJudgeIds.splice(idx, 1)
+          }
+        }
+      }
+    }
+  }
+
+  function renameStaffMember(staffId: string, firstName: string, lastName: string) {
+    const member = data.value.staff[staffId]
+    if (!member) return
+    member.firstName = firstName
+    member.lastName = lastName
+  }
+
   // --- Structural CRUD ---
 
   function addBlock(name?: string): string {
@@ -401,6 +505,18 @@ export const useCompetitionStore = defineStore('competition', () => {
     getGroupLabel,
     getDance,
     getStaffName,
+    addCategory,
+    removeCategory,
+    renameCategory,
+    addDance,
+    removeDance,
+    updateDance,
+    addGroup,
+    removeGroup,
+    renameGroup,
+    addStaffMember,
+    removeStaffMember,
+    renameStaffMember,
     loadData,
     addGroupToCell,
     removeGroupFromCell,
