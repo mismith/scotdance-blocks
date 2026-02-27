@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+
+/* Ensure drag overlay renders above all content */
+.dnd-kit-overlay-container {
+  z-index: 9999;
+}

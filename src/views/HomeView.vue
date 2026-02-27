@@ -1,5 +1,9 @@
+<script setup lang="ts">
+import ScheduleBuilder from '@/components/ScheduleBuilder.vue'
+</script>
+
 <template>
-  <main>
-    <h1>This is a home page</h1>
+  <main class="h-full">
+    <ScheduleBuilder />
   </main>
 </template>
