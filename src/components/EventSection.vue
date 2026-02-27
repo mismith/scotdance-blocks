@@ -5,7 +5,6 @@ import { computed, ref as vueRef } from 'vue'
 import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
-import DanceAdder from '@/components/DanceAdder.vue'
 import DanceRow from '@/components/DanceRow.vue'
 import InlineEdit from '@/components/InlineEdit.vue'
 import type { DragDanceData, DragEventData, ScheduleEvent } from '@/types'
@@ -45,7 +44,14 @@ const { isDragging: isEventDragging } = makeDraggable(
 function getInsertIndex(pointerY: number): number | undefined {
   if (!sectionEl.value) return undefined
   const rows = sectionEl.value.querySelectorAll('[data-dance-row]')
-  if (!rows.length) return undefined
+  if (!rows.length) {
+    const placeholder = sectionEl.value.querySelector('[data-dance-placeholder]')
+    if (placeholder) {
+      const rect = placeholder.getBoundingClientRect()
+      return pointerY < rect.top + rect.height / 2 ? 0 : 1
+    }
+    return 0
+  }
   for (let i = 0; i < rows.length; i++) {
     const rect = rows[i].getBoundingClientRect()
     if (pointerY < rect.top + rect.height / 2) return i
@@ -63,7 +69,14 @@ const { isDragOver } = makeDroppable(sectionEl, {
       const pointerY = event.provider.pointer.value?.current.y ?? 0
       const insertIndex = getInsertIndex(pointerY)
 
-      if (dragData.eventId === props.eventId && dragData.blockId === props.blockId) {
+      if (dragData.source === 'palette') {
+        if (insertIndex !== undefined) {
+          store.addDanceToEvent(props.blockId, props.eventId, dragData.danceId, undefined, insertIndex)
+        }
+      } else if (
+        dragData.source.eventId === props.eventId &&
+        dragData.source.blockId === props.blockId
+      ) {
         if (insertIndex !== undefined) {
           store.reorderDance(
             props.blockId,
@@ -101,7 +114,7 @@ function onRemoveEvent() {
     class="col-span-full grid grid-cols-subgrid"
     :class="[
       isEventDragging ? 'opacity-40' : '',
-      isValidTarget ? 'ring-1 ring-inset ring-blue-200' : '',
+      isValidTarget ? 'bg-green-50' : '',
     ]"
   >
     <div class="group col-span-full">
@@ -159,14 +172,21 @@ function onRemoveEvent() {
         class="col-span-full h-0.5 bg-blue-500"
       />
     </template>
-    <div
-      v-else-if="!event.description"
-      class="col-span-full border border-gray-200 px-1 py-3 text-center text-sm italic text-gray-400"
-    >
-      No dances
-    </div>
-    <div class="col-span-full border border-dashed border-gray-200 px-1 py-1.5">
-      <DanceAdder :block-id="blockId" :event-id="eventId" />
-    </div>
+    <template v-if="!(event.dances && Object.keys(event.dances).length)">
+      <div
+        v-if="isDragOver && liveDanceInsertIndex === 0"
+        class="col-span-full h-0.5 bg-blue-500"
+      />
+      <div
+        data-dance-placeholder
+        class="col-span-full border border-gray-200 px-1 py-3 text-center text-sm italic text-gray-400"
+      >
+        Drag dances here
+      </div>
+      <div
+        v-if="isDragOver && liveDanceInsertIndex === 1"
+        class="col-span-full h-0.5 bg-blue-500"
+      />
+    </template>
   </div>
 </template>

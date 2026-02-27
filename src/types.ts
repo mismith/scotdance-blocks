@@ -82,10 +82,9 @@ export interface DragJudgeData {
 
 export interface DragDanceData {
   type: 'dance'
-  scheduledDanceId: string
+  danceId: string
   index: number
-  blockId: string
-  eventId: string
+  source: { blockId: string; eventId: string } | 'palette'
 }
 
 export interface DragEventData {

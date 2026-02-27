@@ -146,14 +146,14 @@ const eventEntries = computed(() => Object.entries(props.block.events))
     <div
       ref="gridEl"
       class="w-full text-sm"
-      :class="isEventValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
+      :class="isEventValidTarget ? 'bg-blue-50' : ''"
       :style="{ display: 'grid', gridTemplateColumns: gridCols }"
     >
       <!-- Header row -->
       <div
         ref="headerRowEl"
         class="relative col-span-full grid grid-cols-subgrid"
-        :class="isPlatformValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
+        :class="isPlatformValidTarget ? 'bg-blue-50' : ''"
       >
         <div class="border border-gray-300 bg-gray-50 px-1 py-1.5" />
         <PlatformHeader
@@ -200,14 +200,12 @@ const eventEntries = computed(() => Object.entries(props.block.events))
       />
 
       <!-- Add event -->
-      <div class="col-span-full border border-dashed border-gray-300 bg-gray-100 px-1 py-1.5 text-center">
-        <button
-          class="text-sm text-gray-400 hover:text-blue-600"
-          @click="onAddEvent"
-        >
-          + Add event
-        </button>
-      </div>
+      <button
+        class="col-span-full border border-dashed border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm text-gray-400 hover:text-blue-600"
+        @click="onAddEvent"
+      >
+        + Add event
+      </button>
     </div>
   </div>
 </template>

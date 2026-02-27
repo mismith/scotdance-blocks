@@ -113,7 +113,11 @@ const { isDragOver } = makeDroppable(el, {
 })
 
 // Valid target: highlight when a group or judge is being dragged anywhere
-const isValidTarget = computed(() => activeDragGroup.value === 'group' || activeDragGroup.value === 'judge')
+const validTargetClass = computed(() => {
+  if (activeDragGroup.value === 'group') return 'bg-blue-50'
+  if (activeDragGroup.value === 'judge') return 'bg-amber-50'
+  return ''
+})
 
 // Live insertion index for visual indicator — only for the matching type
 const liveGroupInsertIndex = computed(() => {
@@ -135,7 +139,7 @@ const liveJudgeInsertIndex = computed(() => {
   <div
     ref="el"
     class="border border-gray-200 px-2 py-1.5 transition-colors"
-    :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
+    :class="validTargetClass"
   >
     <template v-if="assignment">
       <div class="flex flex-col gap-0.5">

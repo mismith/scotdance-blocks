@@ -30,10 +30,9 @@ const { isDragging } = makeDraggable(
       [
         {
           type: 'dance',
-          scheduledDanceId: props.danceId,
+          danceId: props.scheduledDance.danceId,
           index: props.index,
-          blockId: props.blockId,
-          eventId: props.eventId,
+          source: { blockId: props.blockId, eventId: props.eventId },
         } satisfies DragDanceData,
       ],
     ] as [number, DragDanceData[]],

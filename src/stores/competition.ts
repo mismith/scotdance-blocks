@@ -253,12 +253,20 @@ export const useCompetitionStore = defineStore('competition', () => {
     eventId: string,
     danceId: string,
     name?: string,
+    insertIndex?: number,
   ): string {
     const id = generateId()
     const event = data.value.schedule.blocks[blockId]?.events[eventId]
     if (event) {
       if (!event.dances) event.dances = {}
-      event.dances[id] = { danceId, name: name ?? '', platforms: {} }
+      const newDance = { danceId, name: name ?? '', platforms: {} }
+      if (insertIndex !== undefined) {
+        const entries = Object.entries(event.dances)
+        entries.splice(insertIndex, 0, [id, newDance])
+        event.dances = Object.fromEntries(entries)
+      } else {
+        event.dances[id] = newDance
+      }
     }
     return id
   }

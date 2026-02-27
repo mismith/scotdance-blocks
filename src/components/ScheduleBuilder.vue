@@ -76,7 +76,7 @@ function onRemoveBlock(blockId: string) {
 <template>
   <div class="flex h-full flex-col">
     <!-- Block tabs -->
-    <div ref="tabBarEl" class="flex items-center gap-1 border-b border-gray-200 bg-white px-4" :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''">
+    <div ref="tabBarEl" class="flex items-center gap-1 border-b border-gray-200 bg-white px-4" :class="isValidTarget ? 'bg-blue-50' : ''">
       <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
         <div
           v-if="isDragOver && liveBlockInsertIndex === blockIndex"
