@@ -24,8 +24,8 @@ function onRemoveStaff(staffId: string) {
 </script>
 
 <template>
-  <div>
-    <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Judges</h3>
+  <details open>
+    <summary class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Judges</summary>
     <div class="flex flex-col gap-1">
       <JudgeChip
         v-for="[staffId, member] in Object.entries(store.staff)"
@@ -56,5 +56,5 @@ function onRemoveStaff(staffId: string) {
     >
       <span class="-ml-1">+</span> Add judge
     </button>
-  </div>
+  </details>
 </template>

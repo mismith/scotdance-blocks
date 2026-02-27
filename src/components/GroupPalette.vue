@@ -34,8 +34,8 @@ function onRemoveCategory(categoryId: string) {
 </script>
 
 <template>
-  <div>
-    <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Groups</h3>
+  <details open>
+    <summary class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Groups</summary>
     <div
       v-for="[categoryId] in Object.entries(store.categories)"
       :key="categoryId"
@@ -87,5 +87,5 @@ function onRemoveCategory(categoryId: string) {
     >
       <span class="-ml-1">+</span> Add category
     </button>
-  </div>
+  </details>
 </template>

@@ -22,8 +22,8 @@ function onRemoveDance(danceId: string) {
 </script>
 
 <template>
-  <div>
-    <h3 class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Dances</h3>
+  <details open>
+    <summary class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Dances</summary>
     <div class="flex flex-col gap-1">
       <DanceChip
         v-for="[danceId, dance] in Object.entries(store.dances)"
@@ -55,5 +55,5 @@ function onRemoveDance(danceId: string) {
     >
       <span class="-ml-1">+</span> Add dance
     </button>
-  </div>
+  </details>
 </template>
