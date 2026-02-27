@@ -138,7 +138,7 @@ function onRemoveEvent() {
         <div class="flex items-center gap-1">
           <span
             ref="eventHandleEl"
-            class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
+            class="cursor-grab text-gray-300 select-none"
             title="Drag to reorder"
             >⠿</span
           >

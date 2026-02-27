@@ -67,10 +67,10 @@ function onRemoveStaff(staffId: string) {
       </div>
     </div>
     <button
-      class="mt-2 w-full text-left text-xs text-gray-400 hover:text-blue-600"
+      class="mt-1 w-full rounded bg-amber-100/25 px-2 py-1 text-left text-xs font-medium italic leading-tight text-amber-800 hover:bg-amber-100"
       @click="store.addStaffMember()"
     >
-      + Add judge
+      <span class="-ml-1">+</span> Add judge
     </button>
   </div>
 </template>

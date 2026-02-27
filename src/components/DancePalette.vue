@@ -76,10 +76,10 @@ function onRemoveDance(danceId: string) {
       </div>
     </div>
     <button
-      class="mt-2 w-full text-left text-xs text-gray-400 hover:text-blue-600"
+      class="mt-1 w-full rounded bg-green-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-green-800 hover:bg-green-100"
       @click="store.addDance()"
     >
-      + Add dance
+      <span class="-ml-1">+</span> Add dance
     </button>
   </div>
 </template>
