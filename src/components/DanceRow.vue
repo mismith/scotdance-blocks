@@ -17,14 +17,23 @@ const dance = store.getDance(props.scheduledDance.danceId)
 </script>
 
 <template>
-  <tr class="hover:bg-gray-50">
+  <tr class="group hover:bg-gray-50">
     <td class="border border-gray-200 px-3 py-1.5 font-medium whitespace-nowrap">
-      <div class="text-sm">
-        {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
-        <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
-      </div>
-      <div v-if="scheduledDance.name" class="text-xs text-gray-500">
-        {{ scheduledDance.name }}
+      <div class="flex items-center justify-between">
+        <div class="text-sm">
+          {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
+          <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
+          <span v-if="scheduledDance.name" class="ml-1 text-xs text-gray-500">
+            {{ scheduledDance.name }}
+          </span>
+        </div>
+        <button
+          class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+          title="Remove dance"
+          @click="store.removeDanceFromEvent(blockId, eventId, danceId)"
+        >
+          &times;
+        </button>
       </div>
     </td>
     <PlatformCell
@@ -33,5 +42,6 @@ const dance = store.getDance(props.scheduledDance.danceId)
       :assignment="scheduledDance.platforms[platformId]"
       :location="{ blockId, eventId, danceId, platformId }"
     />
+    <td class="border border-gray-200"></td>
   </tr>
 </template>

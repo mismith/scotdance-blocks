@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
+import { generateId } from '@/utils/id'
 import sampleData from '@/data/sample-data.json'
 import type { CompetitionData, Dance, Group } from '@/types'
 
@@ -197,6 +198,89 @@ export const useCompetitionStore = defineStore('competition', () => {
     assignment.orderedGroupIds.splice(toIndex, 0, item)
   }
 
+  // --- Structural CRUD ---
+
+  function addBlock(name?: string): string {
+    const id = generateId()
+    data.value.schedule.blocks[id] = { name: name ?? 'New Block', events: {} }
+    return id
+  }
+
+  function removeBlock(blockId: string) {
+    delete data.value.schedule.blocks[blockId]
+  }
+
+  function renameBlock(blockId: string, name: string) {
+    const block = data.value.schedule.blocks[blockId]
+    if (block) block.name = name
+  }
+
+  function addEvent(blockId: string, name?: string): string {
+    const id = generateId()
+    const block = data.value.schedule.blocks[blockId]
+    if (block) {
+      block.events[id] = { name: name ?? 'New Event', dances: {} }
+    }
+    return id
+  }
+
+  function removeEvent(blockId: string, eventId: string) {
+    const block = data.value.schedule.blocks[blockId]
+    if (block) delete block.events[eventId]
+  }
+
+  function renameEvent(blockId: string, eventId: string, name: string) {
+    const event = data.value.schedule.blocks[blockId]?.events[eventId]
+    if (event) event.name = name
+  }
+
+  function addDanceToEvent(
+    blockId: string,
+    eventId: string,
+    danceId: string,
+    name?: string,
+  ): string {
+    const id = generateId()
+    const event = data.value.schedule.blocks[blockId]?.events[eventId]
+    if (event) {
+      if (!event.dances) event.dances = {}
+      event.dances[id] = { danceId, name: name ?? '', platforms: {} }
+    }
+    return id
+  }
+
+  function removeDanceFromEvent(blockId: string, eventId: string, scheduledDanceId: string) {
+    const event = data.value.schedule.blocks[blockId]?.events[eventId]
+    if (event?.dances) delete event.dances[scheduledDanceId]
+  }
+
+  function addPlatform(name?: string): string {
+    const id = generateId()
+    const existingCount = Object.keys(data.value.platforms).length
+    data.value.platforms[id] = {
+      name: name ?? String.fromCharCode(65 + existingCount),
+    }
+    return id
+  }
+
+  function removePlatform(platformId: string) {
+    delete data.value.platforms[platformId]
+    // Clean up orphaned assignments in all dances
+    for (const block of Object.values(data.value.schedule.blocks)) {
+      for (const event of Object.values(block.events)) {
+        if (!event.dances) continue
+        for (const dance of Object.values(event.dances)) {
+          delete dance.platforms[platformId]
+        }
+      }
+    }
+  }
+
+  function renamePlatform(platformId: string, name: string) {
+    const platform = data.value.platforms[platformId]
+    if (platform) platform.name = name
+  }
+
   return {
     data,
     categories,
@@ -221,5 +305,16 @@ export const useCompetitionStore = defineStore('competition', () => {
     moveJudge,
     reorderGroupInCell,
     reorderJudgeInCell,
+    addBlock,
+    removeBlock,
+    renameBlock,
+    addEvent,
+    removeEvent,
+    renameEvent,
+    addDanceToEvent,
+    removeDanceFromEvent,
+    addPlatform,
+    removePlatform,
+    renamePlatform,
   }
 })
