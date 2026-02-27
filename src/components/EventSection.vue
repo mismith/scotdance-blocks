@@ -71,7 +71,13 @@ const { isDragOver } = makeDroppable(sectionEl, {
 
       if (dragData.source === 'palette') {
         if (insertIndex !== undefined) {
-          store.addDanceToEvent(props.blockId, props.eventId, dragData.danceId, undefined, insertIndex)
+          store.addDanceToEvent(
+            props.blockId,
+            props.eventId,
+            dragData.danceId,
+            undefined,
+            insertIndex,
+          )
         }
       } else if (
         dragData.source.eventId === props.eventId &&
@@ -83,6 +89,17 @@ const { isDragOver } = makeDroppable(sectionEl, {
             props.eventId,
             dragData.index,
             insertIndex > dragData.index ? insertIndex - 1 : insertIndex,
+          )
+        }
+      } else {
+        if (insertIndex !== undefined) {
+          store.moveDance(
+            dragData.source.blockId,
+            dragData.source.eventId,
+            dragData.scheduledDanceId,
+            props.blockId,
+            props.eventId,
+            insertIndex,
           )
         }
       }
@@ -112,10 +129,7 @@ function onRemoveEvent() {
     ref="sectionEl"
     data-event-section
     class="col-span-full grid grid-cols-subgrid"
-    :class="[
-      isEventDragging ? 'opacity-40' : '',
-      isValidTarget ? 'bg-green-50' : '',
-    ]"
+    :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'bg-green-50' : '']"
   >
     <div class="group col-span-full">
       <div
@@ -179,7 +193,7 @@ function onRemoveEvent() {
       />
       <div
         data-dance-placeholder
-        class="col-span-full border border-gray-200 px-1 py-3 text-center text-sm italic text-gray-400"
+        class="col-span-full border border-gray-200 px-1 py-1.5 text-center text-sm italic text-gray-400"
       >
         Drag dances here
       </div>

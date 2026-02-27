@@ -309,6 +309,31 @@ export const useCompetitionStore = defineStore('competition', () => {
     return id
   }
 
+  function moveDance(
+    fromBlockId: string,
+    fromEventId: string,
+    fromScheduledDanceId: string,
+    toBlockId: string,
+    toEventId: string,
+    toIndex?: number,
+  ) {
+    const fromEvent = data.value.schedule.blocks[fromBlockId]?.events[fromEventId]
+    const toEvent = data.value.schedule.blocks[toBlockId]?.events[toEventId]
+    if (!fromEvent?.dances?.[fromScheduledDanceId] || !toEvent) return
+
+    const scheduledDance = fromEvent.dances[fromScheduledDanceId]
+    delete fromEvent.dances[fromScheduledDanceId]
+
+    if (!toEvent.dances) toEvent.dances = {}
+    if (toIndex !== undefined) {
+      const entries = Object.entries(toEvent.dances)
+      entries.splice(toIndex, 0, [fromScheduledDanceId, scheduledDance])
+      toEvent.dances = Object.fromEntries(entries)
+    } else {
+      toEvent.dances[fromScheduledDanceId] = scheduledDance
+    }
+  }
+
   function removeDanceFromEvent(blockId: string, eventId: string, scheduledDanceId: string) {
     const event = data.value.schedule.blocks[blockId]?.events[eventId]
     if (event?.dances) delete event.dances[scheduledDanceId]
@@ -393,6 +418,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     renameEvent,
     updateEventDescription,
     addDanceToEvent,
+    moveDance,
     removeDanceFromEvent,
     addPlatform,
     removePlatform,
