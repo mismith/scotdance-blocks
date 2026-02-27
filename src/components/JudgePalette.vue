@@ -44,7 +44,7 @@ function onRemoveStaff(staffId: string) {
       </JudgeChip>
     </div>
     <button
-      class="mt-1 w-full rounded bg-amber-100/25 px-2 py-1 text-left text-xs font-medium italic leading-tight text-amber-800 hover:bg-amber-100"
+      class="mt-1 w-full rounded bg-amber-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-amber-800 hover:bg-amber-100"
       @click="() => { autoEditId = store.addStaffMember() }"
     >
       <span class="-ml-1">+</span> Add judge
