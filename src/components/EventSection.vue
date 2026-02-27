@@ -133,7 +133,7 @@ function onRemoveEvent() {
   >
     <div class="group col-span-full">
       <div
-        class="flex items-center justify-between border border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
+        class="flex items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
       >
         <div class="flex items-center gap-1">
           <span
@@ -157,7 +157,7 @@ function onRemoveEvent() {
         </button>
       </div>
     </div>
-    <div class="col-span-full border border-gray-200 py-1.5 pr-1 pl-5 text-sm text-gray-500">
+    <div class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-sm text-gray-500">
       <InlineEdit
         :model-value="event.description ?? ''"
         placeholder="Event description"
@@ -193,7 +193,7 @@ function onRemoveEvent() {
       />
       <div
         data-dance-placeholder
-        class="col-span-full border border-gray-200 px-1 py-1.5 text-center text-sm italic text-gray-400"
+        class="col-span-full border-t border-l border-gray-200 px-1 py-1.5 text-center text-sm italic text-gray-400"
       >
         Drag dances here
       </div>

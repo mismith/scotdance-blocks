@@ -59,7 +59,7 @@ function cancel() {
   <component
     :is="tag"
     v-else
-    class="cursor-text border-b border-dashed border-transparent hover:border-gray-400"
+    class="cursor-text border-b border-transparent hover:border-gray-400"
     :class="{ 'italic text-gray-400': !modelValue }"
     @click.stop="startEdit"
   >

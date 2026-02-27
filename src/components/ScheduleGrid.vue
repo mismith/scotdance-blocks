@@ -145,7 +145,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
   <div class="overflow-x-auto">
     <div
       ref="gridEl"
-      class="w-full text-sm"
+      class="w-full border-r border-b border-gray-300 text-sm"
       :class="isEventValidTarget ? 'bg-blue-50' : ''"
       :style="{ display: 'grid', gridTemplateColumns: gridCols }"
     >
@@ -155,7 +155,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         class="relative col-span-full grid grid-cols-subgrid"
         :class="isPlatformValidTarget ? 'bg-blue-50' : ''"
       >
-        <div class="border border-gray-300 bg-gray-50 px-1 py-1.5" />
+        <div class="border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5" />
         <PlatformHeader
           v-for="([platformId, platform], platformIndex) in store.platformEntries"
           :key="platformId"
@@ -164,7 +164,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :index="platformIndex"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="border border-gray-300 bg-gray-50 px-1 py-1.5 text-center">
+        <div class="border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center">
           <button
             class="text-xs text-gray-400 hover:text-blue-600"
             title="Add platform"
@@ -201,7 +201,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
       <!-- Add event -->
       <button
-        class="col-span-full border border-dashed border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm text-gray-400 hover:text-blue-600"
+        class="col-span-full border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm text-gray-400 hover:text-blue-600"
         @click="onAddEvent"
       >
         + Add event

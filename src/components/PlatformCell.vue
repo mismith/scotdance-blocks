@@ -138,7 +138,7 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="border border-gray-200 px-2 py-1.5 transition-colors"
+    class="border-t border-l border-gray-200 px-2 py-1.5 transition-colors"
     :class="validTargetClass"
   >
     <template v-if="assignment">

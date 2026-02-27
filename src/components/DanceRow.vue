@@ -46,7 +46,7 @@ const { isDragging } = makeDraggable(
     class="group col-span-full grid grid-cols-subgrid"
     :class="{ 'opacity-40': isDragging }"
   >
-    <div class="border border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
+    <div class="border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1">
           <span
@@ -77,6 +77,6 @@ const { isDragging } = makeDraggable(
       :assignment="scheduledDance.platforms[platformId]"
       :location="{ blockId, eventId, danceId, platformId }"
     />
-    <div class="border border-gray-200" />
+    <div class="border-t border-l border-gray-200" />
   </div>
 </template>

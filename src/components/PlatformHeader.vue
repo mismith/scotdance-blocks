@@ -41,7 +41,7 @@ const { isDragging } = makeDraggable(
 <template>
   <div
     data-platform-header
-    class="group border border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
+    class="group border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
     :class="isDragging ? 'opacity-40' : ''"
   >
     <div class="flex items-center justify-between">
