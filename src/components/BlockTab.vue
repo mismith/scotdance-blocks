@@ -45,11 +45,11 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between border-b-2 px-2 py-1.5 text-sm font-medium transition-colors"
+    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors"
     :class="[
       active
-        ? 'border-blue-500 text-blue-600'
-        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+        ? '-mb-px border-gray-200 border-b-white bg-white text-gray-900'
+        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700',
       isDragging ? 'opacity-40' : '',
     ]"
     role="button"
@@ -61,6 +61,7 @@ const { isDragging } = makeDraggable(
         :model-value="block.name"
         placeholder="Block name"
         :auto-edit="autoEdit"
+        :class="{ 'pointer-events-none': !active }"
         @update:model-value="store.renameBlock(blockId, $event)"
       />
     </div>

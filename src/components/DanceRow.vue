@@ -19,6 +19,17 @@ const store = useCompetitionStore()
 
 const dance = store.getDance(props.scheduledDance.danceId)
 
+function hasAssignments() {
+  return Object.values(props.scheduledDance.platforms).some(
+    (a) => a.orderedGroupIds.length > 0 || a.orderedJudgeIds.length > 0,
+  )
+}
+
+function onRemove() {
+  if (hasAssignments() && !confirm('Remove this dance? It has group/judge assignments.')) return
+  store.removeDanceFromEvent(props.blockId, props.eventId, props.danceId)
+}
+
 const nameCellEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
@@ -64,7 +75,7 @@ const { isDragging } = makeDraggable(
         <button
           class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover/cell:opacity-100"
           title="Remove dance"
-          @click="store.removeDanceFromEvent(blockId, eventId, danceId)"
+          @click="onRemove"
         >
           &times;
         </button>

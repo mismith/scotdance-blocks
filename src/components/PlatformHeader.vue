@@ -43,26 +43,23 @@ const { isDragging } = makeDraggable(
   <div
     ref="headerEl"
     data-platform-header
-    class="group cursor-grab border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500"
+    class="group flex items-center gap-1 cursor-grab border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center text-xs font-semibold text-gray-500"
     :class="isDragging ? 'opacity-40' : ''"
   >
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-1">
-        <span class="opacity-50 select-none">⠿</span>
-        <InlineEdit
-          :model-value="platform.name"
-          placeholder="Name"
-          :auto-edit="autoEdit"
-          @update:model-value="store.renamePlatform(platformId, $event)"
-        />
-      </div>
-      <button
-        class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-        title="Remove platform"
-        @click.stop="emit('remove')"
-      >
-        &times;
-      </button>
-    </div>
+    <span class="opacity-50 select-none">⠿</span>
+    <InlineEdit
+      :model-value="platform.name"
+      placeholder="Name"
+      :auto-edit="autoEdit"
+      class="mx-auto"
+      @update:model-value="store.renamePlatform(platformId, $event)"
+    />
+    <button
+      class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+      title="Remove platform"
+      @click.stop="emit('remove')"
+    >
+      &times;
+    </button>
   </div>
 </template>

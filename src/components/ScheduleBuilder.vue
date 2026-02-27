@@ -68,7 +68,9 @@ function onAddBlock() {
 }
 
 function onRemoveBlock(blockId: string) {
-  if (!confirm('Remove this block and all its events?')) return
+  const block = store.blocks[blockId]
+  const hasEvents = block?.events && Object.keys(block.events).length > 0
+  if (hasEvents && !confirm('Remove this block and all its events?')) return
   store.removeBlock(blockId)
   if (activeBlockId.value === blockId) {
     activeBlockId.value = blockEntries.value[0]?.[0] ?? ''
@@ -79,33 +81,41 @@ function onRemoveBlock(blockId: string) {
 <template>
   <div class="flex h-full flex-col">
     <!-- Block tabs -->
-    <div ref="tabBarEl" class="flex items-center gap-1 border-b border-gray-200 bg-white px-4" :class="isValidTarget ? 'bg-blue-50' : ''">
-      <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
+    <div class="flex border-b border-gray-200">
+      <div class="w-56 shrink-0 border-r border-gray-200 bg-gray-50" />
+      <div
+        ref="tabBarEl"
+        class="flex pt-2 gap-1 bg-white px-4"
+        :class="isValidTarget ? 'bg-blue-50' : ''"
+      >
+        <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
+          <div
+            v-if="isDragOver && liveBlockInsertIndex === blockIndex"
+            class="w-0.5 self-stretch rounded bg-blue-500"
+          />
+          <BlockTab
+            :block="block"
+            :block-id="blockId"
+            :index="blockIndex"
+            :active="activeBlockId === blockId"
+            :auto-edit="autoEditBlockId === blockId"
+            @select="activeBlockId = blockId"
+            class="pt-0"
+            @remove="onRemoveBlock(blockId)"
+          />
+        </template>
         <div
-          v-if="isDragOver && liveBlockInsertIndex === blockIndex"
+          v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
           class="w-0.5 self-stretch rounded bg-blue-500"
         />
-        <BlockTab
-          :block="block"
-          :block-id="blockId"
-          :index="blockIndex"
-          :active="activeBlockId === blockId"
-          :auto-edit="autoEditBlockId === blockId"
-          @select="activeBlockId = blockId"
-          @remove="onRemoveBlock(blockId)"
-        />
-      </template>
-      <div
-        v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
-        class="w-0.5 self-stretch rounded bg-blue-500"
-      />
-      <button
-        class="border-b-2 border-transparent px-3 py-2 text-sm text-gray-400 hover:text-gray-600"
-        title="Add block"
-        @click="onAddBlock"
-      >
-        +
-      </button>
+        <button
+          class="px-3 py-2 text-sm text-gray-400 hover:text-gray-600"
+          title="Add block"
+          @click="onAddBlock"
+        >
+          +
+        </button>
+      </div>
     </div>
 
     <!-- Main area: sidebar + grid -->

@@ -20,7 +20,9 @@ const { provider, activeDragGroup } = useDragType()
 const isEventValidTarget = computed(() => activeDragGroup.value === 'event')
 const isPlatformValidTarget = computed(() => activeDragGroup.value === 'platform')
 
-const gridCols = computed(() => `auto repeat(${store.platformEntries.length}, 1fr) auto`)
+const gridCols = computed(
+  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, 1fr) minmax(2rem, auto)`,
+)
 
 const gridEl = ref<HTMLElement | null>(null)
 const headerRowEl = ref<HTMLElement | null>(null)
@@ -131,7 +133,15 @@ function onAddPlatform() {
 }
 
 function onRemovePlatform(platformId: string) {
-  if (!confirm('Remove this platform column? All assignments on it will be lost.')) return
+  const hasAssignments = Object.values(store.blocks).some((block) =>
+    Object.values(block.events).some((event) =>
+      Object.values(event.dances ?? {}).some((sd) => {
+        const a = sd.platforms[platformId]
+        return a && (a.orderedGroupIds.length > 0 || a.orderedJudgeIds.length > 0)
+      }),
+    ),
+  )
+  if (hasAssignments && !confirm('Remove this platform? It has assignments.')) return
   store.removePlatform(platformId)
 }
 
@@ -204,10 +214,11 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
       <!-- Add event -->
       <button
-        class="col-span-full border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm text-gray-400 hover:text-blue-600"
+        class="col-span-full flex items-center gap-1 border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold text-gray-400 hover:text-gray-600"
         @click="onAddEvent"
       >
-        + Add event
+        <span class="select-none">+</span>
+        Add event
       </button>
     </div>
   </div>

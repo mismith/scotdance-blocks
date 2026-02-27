@@ -11,13 +11,24 @@ const store = useCompetitionStore()
 const autoEditId = ref<string | null>(null)
 const autoEditCategoryId = ref<string | null>(null)
 
+function isGroupAssigned(groupId: string) {
+  return Object.values(store.blocks).some((block) =>
+    Object.values(block.events).some((event) =>
+      Object.values(event.dances ?? {}).some((sd) =>
+        Object.values(sd.platforms).some((a) => a.orderedGroupIds.includes(groupId)),
+      ),
+    ),
+  )
+}
+
 function onRemoveGroup(groupId: string) {
-  if (!confirm('Remove this group and all its assignments?')) return
+  if (isGroupAssigned(groupId) && !confirm('Remove this group? It is assigned in the grid.')) return
   store.removeGroup(groupId)
 }
 
 function onRemoveCategory(categoryId: string) {
-  if (!confirm('Remove this category and all its groups?')) return
+  const hasGroups = (store.groupsByCategory[categoryId]?.length ?? 0) > 0
+  if (hasGroups && !confirm('Remove this category and all its groups?')) return
   store.removeCategory(categoryId)
 }
 </script>

@@ -11,7 +11,12 @@ const store = useCompetitionStore()
 const autoEditId = ref<string | null>(null)
 
 function onRemoveDance(danceId: string) {
-  if (!confirm('Remove this dance and all its scheduled instances?')) return
+  const isScheduled = Object.values(store.blocks).some((block) =>
+    Object.values(block.events).some((event) =>
+      Object.values(event.dances ?? {}).some((sd) => sd.danceId === danceId),
+    ),
+  )
+  if (isScheduled && !confirm('Remove this dance? It is scheduled in the grid.')) return
   store.removeDance(danceId)
 }
 </script>
@@ -36,13 +41,12 @@ function onRemoveDance(danceId: string) {
           :auto-edit="autoEditId === danceId"
           @update:model-value="store.updateDance(danceId, dance.shortName ? { shortName: $event } : { name: $event })"
         />
-        {{ ' ' }}
-        <InlineEdit
+        <span class="text-green-800/50">{{ ' ' }}(<InlineEdit
           :model-value="dance.steps ?? ''"
           placeholder="Steps"
           :required="false"
           @update:model-value="store.updateDance(danceId, { steps: $event })"
-        />
+        />)</span>
       </DanceChip>
     </div>
     <button

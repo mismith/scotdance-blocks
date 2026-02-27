@@ -72,7 +72,7 @@ onMounted(() => {
     :is="tag"
     v-else
     class="cursor-text border-b border-transparent hover:border-gray-400"
-    :class="{ 'italic text-gray-400': !modelValue }"
+    :class="{ 'text-current/50': !modelValue }"
     @click.stop="startEdit"
   >
     {{ modelValue || placeholder }}

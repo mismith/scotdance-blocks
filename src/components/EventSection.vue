@@ -120,7 +120,9 @@ const liveDanceInsertIndex = computed(() => {
 })
 
 function onRemoveEvent() {
-  if (!confirm('Remove this event and all its dances?')) return
+  const hasContent =
+    (props.event.dances && Object.keys(props.event.dances).length > 0) || !!props.event.description
+  if (hasContent && !confirm('Remove this event and all its contents?')) return
   store.removeEvent(props.blockId, props.eventId)
 }
 </script>
@@ -155,7 +157,7 @@ function onRemoveEvent() {
         </button>
       </div>
     </div>
-    <div class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-sm text-gray-500">
+    <div class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-sm">
       <InlineEdit
         :model-value="event.description ?? ''"
         placeholder="Event description"
@@ -192,9 +194,11 @@ function onRemoveEvent() {
       />
       <div
         data-dance-placeholder
-        class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-left text-sm italic text-gray-400"
+        class="col-span-full border-t border-l border-gray-200 px-1 py-1.5 text-center text-sm text-gray-400"
       >
-        Drag dances here
+        <div class="rounded border border-dashed border-gray-300 px-2 py-1">
+          Drag dances here
+        </div>
       </div>
       <div
         v-if="isDragOver && liveDanceInsertIndex === 1"

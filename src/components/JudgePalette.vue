@@ -11,7 +11,14 @@ const store = useCompetitionStore()
 const autoEditId = ref<string | null>(null)
 
 function onRemoveStaff(staffId: string) {
-  if (!confirm('Remove this judge and all their assignments?')) return
+  const isAssigned = Object.values(store.blocks).some((block) =>
+    Object.values(block.events).some((event) =>
+      Object.values(event.dances ?? {}).some((sd) =>
+        Object.values(sd.platforms).some((a) => a.orderedJudgeIds.includes(staffId)),
+      ),
+    ),
+  )
+  if (isAssigned && !confirm('Remove this judge? They are assigned in the grid.')) return
   store.removeStaffMember(staffId)
 }
 </script>
