@@ -1,0 +1,8 @@
+{
+  "name": "scotdance-blocks",
+  "compatibility_date": "2026-02-16",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+  },
+}
