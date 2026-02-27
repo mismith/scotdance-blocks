@@ -40,6 +40,8 @@ const { isDragging } = makeDraggable(
     class="flex items-center cursor-grab rounded bg-green-100 px-2 py-1 text-xs font-medium leading-tight text-green-800 select-none"
     :class="{ 'opacity-40': isDragging }"
   >
-    {{ label }}<span v-if="steps" class="ml-1 text-green-800/50">({{ steps }})</span>
+    <span class="mr-1 -ml-1 text-green-400">⠿</span>
+    {{ label }}
+    <span v-if="steps" class="ml-1 text-green-800/50">({{ steps }})</span>
   </span>
 </template>

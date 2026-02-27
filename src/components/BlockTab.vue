@@ -58,7 +58,7 @@ const { isDragging } = makeDraggable(
         ref="handleEl"
         class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
         title="Drag to reorder"
-      >&#8942;&#8942;</span>
+      >⠿</span>
       <InlineEdit
         :model-value="block.name"
         placeholder="Block name"

@@ -40,15 +40,17 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-group-chip
-    class="group/chip flex items-center justify-between cursor-grab rounded bg-blue-100 px-2 py-1 text-xs font-medium leading-tight text-blue-800 select-none"
+    class="group/chip flex items-center cursor-grab rounded bg-blue-100 px-2 py-1 text-xs font-medium leading-tight text-blue-800 select-none"
     :class="{ 'opacity-40': isDragging }"
   >
-    {{ label }}
+    <span class="mr-1 -ml-1 text-blue-400">⠿</span><span class="flex-1">{{ label }}</span>
     <button
       v-if="removable"
       class="ml-2 text-blue-400 opacity-0 transition-opacity hover:text-red-500 group-hover/chip:opacity-100"
       title="Remove"
       @click.stop="emit('remove')"
-    >&times;</button>
+    >
+      &times;
+    </button>
   </span>
 </template>

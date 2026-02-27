@@ -53,7 +53,7 @@ const { isDragging } = makeDraggable(
             ref="handleEl"
             class="cursor-grab text-gray-300 opacity-0 transition-opacity select-none group-hover:opacity-100"
             title="Drag to reorder"
-          >&#8942;&#8942;</span>
+          >⠿</span>
           <div class="text-sm">
             {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
             <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
