@@ -9,6 +9,7 @@ import InlineEdit from '@/components/InlineEdit.vue'
 const store = useCompetitionStore()
 
 const expandedId = ref<string | null>(null)
+const autoEditId = ref<string | null>(null)
 
 function toggleExpand(danceId: string) {
   expandedId.value = expandedId.value === danceId ? null : danceId
@@ -53,6 +54,7 @@ function onRemoveDance(danceId: string) {
             <InlineEdit
               :model-value="dance.name"
               placeholder="Name"
+              :auto-edit="autoEditId === danceId"
               @update:model-value="store.updateDance(danceId, { name: $event })"
             />
           </label>
@@ -77,7 +79,7 @@ function onRemoveDance(danceId: string) {
     </div>
     <button
       class="mt-1 w-full rounded bg-green-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-green-800 hover:bg-green-100"
-      @click="store.addDance()"
+      @click="() => { const id = store.addDance(); expandedId = id; autoEditId = id }"
     >
       <span class="-ml-1">+</span> Add dance
     </button>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -7,11 +7,13 @@ const props = withDefaults(
     tag?: string
     placeholder?: string
     selectOnFocus?: boolean
+    autoEdit?: boolean
   }>(),
   {
     tag: 'span',
     placeholder: '',
     selectOnFocus: true,
+    autoEdit: false,
   },
 )
 
@@ -44,6 +46,10 @@ function commit() {
 function cancel() {
   editing.value = false
 }
+
+onMounted(() => {
+  if (props.autoEdit) startEdit()
+})
 </script>
 
 <template>

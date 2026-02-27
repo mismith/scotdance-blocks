@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { makeDroppable } from '@vue-dnd-kit/core'
-import { computed, ref as vueRef } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -20,12 +20,10 @@ const { provider, activeDragGroup } = useDragType()
 const isEventValidTarget = computed(() => activeDragGroup.value === 'event')
 const isPlatformValidTarget = computed(() => activeDragGroup.value === 'platform')
 
-const gridCols = computed(
-  () => `auto repeat(${store.platformEntries.length}, 1fr) auto`,
-)
+const gridCols = computed(() => `auto repeat(${store.platformEntries.length}, 1fr) auto`)
 
-const gridEl = vueRef<HTMLElement | null>(null)
-const headerRowEl = vueRef<HTMLElement | null>(null)
+const gridEl = ref<HTMLElement | null>(null)
+const headerRowEl = ref<HTMLElement | null>(null)
 
 // --- Event reorder (vertical) ---
 
@@ -125,8 +123,11 @@ const indicatorLeftPx = computed(() => {
   return 0
 })
 
+const autoEditPlatformId = ref<string | null>(null)
+const autoEditEventId = ref<string | null>(null)
+
 function onAddPlatform() {
-  store.addPlatform()
+  autoEditPlatformId.value = store.addPlatform()
 }
 
 function onRemovePlatform(platformId: string) {
@@ -135,7 +136,7 @@ function onRemovePlatform(platformId: string) {
 }
 
 function onAddEvent() {
-  store.addEvent(props.blockId)
+  autoEditEventId.value = store.addEvent(props.blockId)
 }
 
 const eventEntries = computed(() => Object.entries(props.block.events))
@@ -162,6 +163,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :platform="platform"
           :platform-id="platformId"
           :index="platformIndex"
+          :auto-edit="autoEditPlatformId === platformId"
           @remove="onRemovePlatform(platformId)"
         />
         <div class="border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center">
@@ -192,6 +194,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :block-id="blockId"
           :event-id="eventId"
           :index="eventIndex"
+          :auto-edit="autoEditEventId === eventId"
         />
       </template>
       <div

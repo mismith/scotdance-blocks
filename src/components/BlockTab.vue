@@ -12,6 +12,7 @@ const props = defineProps<{
   blockId: string
   index: number
   active: boolean
+  autoEdit?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -62,6 +63,7 @@ const { isDragging } = makeDraggable(
       <InlineEdit
         :model-value="block.name"
         placeholder="Block name"
+        :auto-edit="autoEdit"
         @update:model-value="store.renameBlock(blockId, $event)"
       />
     </div>

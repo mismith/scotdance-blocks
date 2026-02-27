@@ -11,6 +11,7 @@ const props = defineProps<{
   platform: Platform
   platformId: string
   index: number
+  autoEdit?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -54,6 +55,7 @@ const { isDragging } = makeDraggable(
         <InlineEdit
           :model-value="platform.name"
           placeholder="Name"
+          :auto-edit="autoEdit"
           @update:model-value="store.renamePlatform(platformId, $event)"
         />
       </div>

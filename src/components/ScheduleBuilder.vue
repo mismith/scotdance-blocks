@@ -59,9 +59,12 @@ const liveBlockInsertIndex = computed(() => {
   return getTabInsertIndex(pointerX) ?? -1
 })
 
+const autoEditBlockId = ref<string | null>(null)
+
 function onAddBlock() {
   const id = store.addBlock()
   activeBlockId.value = id
+  autoEditBlockId.value = id
 }
 
 function onRemoveBlock(blockId: string) {
@@ -87,6 +90,7 @@ function onRemoveBlock(blockId: string) {
           :block-id="blockId"
           :index="blockIndex"
           :active="activeBlockId === blockId"
+          :auto-edit="autoEditBlockId === blockId"
           @select="activeBlockId = blockId"
           @remove="onRemoveBlock(blockId)"
         />

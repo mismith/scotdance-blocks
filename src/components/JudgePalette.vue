@@ -9,6 +9,7 @@ import JudgeChip from '@/components/JudgeChip.vue'
 const store = useCompetitionStore()
 
 const expandedId = ref<string | null>(null)
+const autoEditId = ref<string | null>(null)
 
 function toggleExpand(staffId: string) {
   expandedId.value = expandedId.value === staffId ? null : staffId
@@ -52,6 +53,7 @@ function onRemoveStaff(staffId: string) {
             <InlineEdit
               :model-value="member.firstName"
               placeholder="First name"
+              :auto-edit="autoEditId === staffId"
               @update:model-value="store.renameStaffMember(staffId, $event, member.lastName)"
             />
           </label>
@@ -68,7 +70,7 @@ function onRemoveStaff(staffId: string) {
     </div>
     <button
       class="mt-1 w-full rounded bg-amber-100/25 px-2 py-1 text-left text-xs font-medium italic leading-tight text-amber-800 hover:bg-amber-100"
-      @click="store.addStaffMember()"
+      @click="() => { const id = store.addStaffMember(); expandedId = id; autoEditId = id }"
     >
       <span class="-ml-1">+</span> Add judge
     </button>

@@ -14,6 +14,7 @@ const props = defineProps<{
   blockId: string
   eventId: string
   index: number
+  autoEdit?: boolean
 }>()
 
 const store = useCompetitionStore()
@@ -145,6 +146,7 @@ function onRemoveEvent() {
           <InlineEdit
             :model-value="event.name"
             placeholder="Event name"
+            :auto-edit="autoEdit"
             @update:model-value="store.renameEvent(blockId, eventId, $event)"
           />
         </div>
