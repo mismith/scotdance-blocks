@@ -80,6 +80,27 @@ export interface DragJudgeData {
   source: CellLocation | 'palette'
 }
 
+export interface DragDanceData {
+  type: 'dance'
+  scheduledDanceId: string
+  index: number
+  blockId: string
+  eventId: string
+}
+
+export interface DragEventData {
+  type: 'event'
+  eventId: string
+  index: number
+  blockId: string
+}
+
+export interface DragBlockData {
+  type: 'block'
+  blockId: string
+  index: number
+}
+
 export type DragItemData = DragGroupData | DragJudgeData
 
 // === Root ===

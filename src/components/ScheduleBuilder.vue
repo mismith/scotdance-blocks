@@ -1,17 +1,63 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { makeDroppable } from '@vue-dnd-kit/core'
+import { computed, ref, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
-import InlineEdit from '@/components/InlineEdit.vue'
+import { useDragType } from '@/composables/useDragType'
+import BlockTab from '@/components/BlockTab.vue'
 import ScheduleGrid from '@/components/ScheduleGrid.vue'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
+import type { DragBlockData } from '@/types'
 
 const store = useCompetitionStore()
+const { provider, activeDragGroup } = useDragType()
+
+const isValidTarget = computed(() => activeDragGroup.value === 'block')
 
 const blockEntries = computed(() => Object.entries(store.blocks))
 const activeBlockId = ref(blockEntries.value[0]?.[0] ?? '')
 const activeBlock = computed(() => store.blocks[activeBlockId.value])
+
+const tabBarEl = vueRef<HTMLElement | null>(null)
+
+function getTabInsertIndex(pointerX: number): number | undefined {
+  if (!tabBarEl.value) return undefined
+  const tabs = tabBarEl.value.querySelectorAll('[data-block-tab]')
+  if (!tabs.length) return undefined
+  for (let i = 0; i < tabs.length; i++) {
+    const rect = tabs[i].getBoundingClientRect()
+    if (pointerX < rect.left + rect.width / 2) return i
+  }
+  return tabs.length
+}
+
+const { isDragOver } = makeDroppable(tabBarEl, {
+  groups: ['block'],
+  events: {
+    onDrop(event) {
+      const dragData = event.payload?.items[0] as DragBlockData | undefined
+      if (!dragData) return
+
+      const pointerX = event.provider.pointer.value?.current.x ?? 0
+      const insertIndex = getTabInsertIndex(pointerX)
+
+      if (insertIndex !== undefined) {
+        store.reorderBlock(
+          dragData.index,
+          insertIndex > dragData.index ? insertIndex - 1 : insertIndex,
+        )
+      }
+    },
+  },
+})
+
+const liveBlockInsertIndex = computed(() => {
+  if (!isDragOver.value) return -1
+  const pointerX = provider.pointer.value?.current.x
+  if (pointerX === undefined) return -1
+  return getTabInsertIndex(pointerX) ?? -1
+})
 
 function onAddBlock() {
   const id = store.addBlock()
@@ -30,32 +76,25 @@ function onRemoveBlock(blockId: string) {
 <template>
   <div class="flex h-full flex-col">
     <!-- Block tabs -->
-    <div class="flex items-center gap-1 border-b border-gray-200 bg-white px-4">
-      <div
-        v-for="[blockId, block] in blockEntries"
-        :key="blockId"
-        class="group flex items-center gap-1 border-b-2 px-4 py-2 text-sm font-medium transition-colors"
-        :class="
-          activeBlockId === blockId
-            ? 'border-blue-500 text-blue-600'
-            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-        "
-        role="button"
-        @click="activeBlockId = blockId"
-      >
-        <InlineEdit
-          :model-value="block.name"
-          placeholder="Block name"
-          @update:model-value="store.renameBlock(blockId, $event)"
+    <div ref="tabBarEl" class="flex items-center gap-1 border-b border-gray-200 bg-white px-4" :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''">
+      <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
+        <div
+          v-if="isDragOver && liveBlockInsertIndex === blockIndex"
+          class="w-0.5 self-stretch rounded bg-blue-500"
         />
-        <button
-          class="ml-1 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-          title="Remove block"
-          @click.stop="onRemoveBlock(blockId)"
-        >
-          &times;
-        </button>
-      </div>
+        <BlockTab
+          :block="block"
+          :block-id="blockId"
+          :index="blockIndex"
+          :active="activeBlockId === blockId"
+          @select="activeBlockId = blockId"
+          @remove="onRemoveBlock(blockId)"
+        />
+      </template>
+      <div
+        v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
+        class="w-0.5 self-stretch rounded bg-blue-500"
+      />
       <button
         class="border-b-2 border-transparent px-3 py-2 text-sm text-gray-400 hover:text-gray-600"
         title="Add block"

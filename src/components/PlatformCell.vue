@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { makeDroppable } from '@vue-dnd-kit/core'
-import { ref as vueRef } from 'vue'
+import { computed, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
+import { useDragType } from '@/composables/useDragType'
 import GroupChip from '@/components/GroupChip.vue'
 import JudgeChip from '@/components/JudgeChip.vue'
 import type { CellLocation, DragGroupData, DragJudgeData, PlatformAssignment } from '@/types'
@@ -15,6 +16,7 @@ const props = defineProps<{
 
 const store = useCompetitionStore()
 const el = vueRef<HTMLElement | null>(null)
+const { provider, activeDragGroup } = useDragType()
 
 function getInsertIndex(chipSelector: string, pointerY: number): number | undefined {
   if (!el.value) return undefined
@@ -50,7 +52,6 @@ const { isDragOver } = makeDroppable(el, {
         const insertIndex = getInsertIndex('[data-group-chip]', pointerY)
 
         if (dragData.source !== 'palette' && isSameCell(dragData.source)) {
-          // Reorder within same cell
           if (insertIndex !== undefined) {
             store.reorderGroupInCell(
               loc.blockId,
@@ -110,33 +111,67 @@ const { isDragOver } = makeDroppable(el, {
     },
   },
 })
+
+// Valid target: highlight when a group or judge is being dragged anywhere
+const isValidTarget = computed(() => activeDragGroup.value === 'group' || activeDragGroup.value === 'judge')
+
+// Live insertion index for visual indicator — only for the matching type
+const liveGroupInsertIndex = computed(() => {
+  if (!isDragOver.value || activeDragGroup.value !== 'group') return -1
+  const pointerY = provider.pointer.value?.current.y
+  if (pointerY === undefined) return -1
+  return getInsertIndex('[data-group-chip]', pointerY) ?? -1
+})
+
+const liveJudgeInsertIndex = computed(() => {
+  if (!isDragOver.value || activeDragGroup.value !== 'judge') return -1
+  const pointerY = provider.pointer.value?.current.y
+  if (pointerY === undefined) return -1
+  return getInsertIndex('[data-judge-chip]', pointerY) ?? -1
+})
 </script>
 
 <template>
   <td
     ref="el"
     class="border border-gray-200 px-2 py-1.5 align-top transition-colors"
-    :class="isDragOver ? 'bg-blue-50 ring-2 ring-inset ring-blue-300' : ''"
+    :class="isValidTarget ? 'ring-1 ring-inset ring-blue-200' : ''"
   >
     <template v-if="assignment">
       <div class="flex flex-col gap-0.5">
-        <GroupChip
-          v-for="(groupId, index) in assignment.orderedGroupIds"
-          :key="groupId"
-          :label="store.getGroupLabel(groupId)"
-          :group-id="groupId"
-          :index="index"
-          :source="location"
+        <template v-for="(groupId, index) in assignment.orderedGroupIds" :key="groupId">
+          <div
+            v-if="isDragOver && liveGroupInsertIndex === index"
+            class="h-0.5 rounded bg-blue-500"
+          />
+          <GroupChip
+            :label="store.getGroupLabel(groupId)"
+            :group-id="groupId"
+            :index="index"
+            :source="location"
+          />
+        </template>
+        <div
+          v-if="isDragOver && liveGroupInsertIndex === (assignment?.orderedGroupIds.length ?? 0)"
+          class="h-0.5 rounded bg-blue-500"
         />
       </div>
       <div v-if="assignment.orderedJudgeIds.length" class="mt-1 flex flex-col gap-0.5">
-        <JudgeChip
-          v-for="(judgeId, index) in assignment.orderedJudgeIds"
-          :key="judgeId"
-          :label="store.getStaffName(judgeId)"
-          :judge-id="judgeId"
-          :index="index"
-          :source="location"
+        <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
+          <div
+            v-if="isDragOver && liveJudgeInsertIndex === index"
+            class="h-0.5 rounded bg-blue-500"
+          />
+          <JudgeChip
+            :label="store.getStaffName(judgeId)"
+            :judge-id="judgeId"
+            :index="index"
+            :source="location"
+          />
+        </template>
+        <div
+          v-if="isDragOver && liveJudgeInsertIndex === assignment.orderedJudgeIds.length"
+          class="h-0.5 rounded bg-blue-500"
         />
       </div>
     </template>

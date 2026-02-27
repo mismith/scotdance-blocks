@@ -55,6 +55,15 @@ export const useCompetitionStore = defineStore('competition', () => {
 
   // --- Helpers (internal) ---
 
+  function reorderRecord<T>(record: Record<string, T>, fromIndex: number, toIndex: number): Record<string, T> {
+    const entries = Object.entries(record)
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return record
+    if (fromIndex >= entries.length || toIndex >= entries.length) return record
+    const [moved] = entries.splice(fromIndex, 1)
+    entries.splice(toIndex, 0, moved)
+    return Object.fromEntries(entries)
+  }
+
   function getAssignment(blockId: string, eventId: string, danceId: string, platformId: string) {
     return data.value.schedule.blocks[blockId]?.events[eventId]?.dances?.[danceId]?.platforms[
       platformId
@@ -281,6 +290,22 @@ export const useCompetitionStore = defineStore('competition', () => {
     if (platform) platform.name = name
   }
 
+  // --- Reorder ---
+
+  function reorderBlock(fromIndex: number, toIndex: number) {
+    data.value.schedule.blocks = reorderRecord(data.value.schedule.blocks, fromIndex, toIndex)
+  }
+
+  function reorderEvent(blockId: string, fromIndex: number, toIndex: number) {
+    const block = data.value.schedule.blocks[blockId]
+    if (block) block.events = reorderRecord(block.events, fromIndex, toIndex)
+  }
+
+  function reorderDance(blockId: string, eventId: string, fromIndex: number, toIndex: number) {
+    const event = data.value.schedule.blocks[blockId]?.events[eventId]
+    if (event?.dances) event.dances = reorderRecord(event.dances, fromIndex, toIndex)
+  }
+
   return {
     data,
     categories,
@@ -316,5 +341,8 @@ export const useCompetitionStore = defineStore('competition', () => {
     addPlatform,
     removePlatform,
     renamePlatform,
+    reorderBlock,
+    reorderEvent,
+    reorderDance,
   }
 })
