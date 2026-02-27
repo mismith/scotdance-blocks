@@ -47,10 +47,48 @@ export const useCompetitionStore = defineStore('competition', () => {
     return dances.value[danceId]
   }
 
+  const staffDisplayNames = computed(() => {
+    const entries = Object.entries(staff.value)
+    const names: Record<string, string> = {}
+
+    // Group by last name
+    const byLastName: Record<string, [string, (typeof entries)[number][1]][]> = {}
+    for (const [id, member] of entries) {
+      if (!byLastName[member.lastName]) byLastName[member.lastName] = []
+      byLastName[member.lastName].push([id, member])
+    }
+
+    for (const group of Object.values(byLastName)) {
+      if (group.length === 1) {
+        // Unique last name
+        names[group[0][0]] = group[0][1].lastName
+      } else {
+        // Duplicate last names — try first initial
+        const byInitial: Record<string, typeof group> = {}
+        for (const entry of group) {
+          const key = `${entry[1].firstName[0]}. ${entry[1].lastName}`
+          if (!byInitial[key]) byInitial[key] = []
+          byInitial[key].push(entry)
+        }
+        for (const initialGroup of Object.values(byInitial)) {
+          if (initialGroup.length === 1) {
+            const [id, member] = initialGroup[0]
+            names[id] = `${member.firstName[0]}. ${member.lastName}`
+          } else {
+            // Still duplicate — use full name
+            for (const [id, member] of initialGroup) {
+              names[id] = `${member.firstName} ${member.lastName}`
+            }
+          }
+        }
+      }
+    }
+
+    return names
+  })
+
   function getStaffName(staffId: string): string {
-    const member = staff.value[staffId]
-    if (!member) return staffId
-    return `${member.firstName[0]}. ${member.lastName}`
+    return staffDisplayNames.value[staffId] ?? staffId
   }
 
   // --- Helpers (internal) ---
