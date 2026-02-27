@@ -48,7 +48,7 @@ const { isDragging } = makeDraggable(
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-1">
-        <span class="text-gray-300 select-none">⠿</span>
+        <span class="opacity-50 select-none">⠿</span>
         <InlineEdit
           :model-value="platform.name"
           placeholder="Name"

@@ -138,7 +138,7 @@ function onRemoveEvent() {
         class="flex cursor-grab items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
       >
         <div class="flex items-center gap-1">
-          <span class="text-gray-300 select-none">⠿</span>
+          <span class="opacity-50 select-none">⠿</span>
           <InlineEdit
             :model-value="event.name"
             placeholder="Event name"

@@ -56,7 +56,7 @@ const { isDragging } = makeDraggable(
     @click="emit('select')"
   >
     <div class="flex items-center gap-1">
-      <span class="text-gray-300 select-none">⠿</span>
+      <span class="-ml-1 mr-1 opacity-50 select-none">⠿</span>
       <InlineEdit
         :model-value="block.name"
         placeholder="Block name"
@@ -65,7 +65,7 @@ const { isDragging } = makeDraggable(
       />
     </div>
     <button
-      class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+      class="ml-2 -mr-1 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
       title="Remove block"
       @click.stop="emit('remove')"
     >

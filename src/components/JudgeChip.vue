@@ -43,7 +43,7 @@ const { isDragging } = makeDraggable(
     class="group/chip flex items-center cursor-grab rounded bg-amber-100 px-2 py-1 text-xs font-medium leading-tight text-amber-800 select-none"
     :class="{ 'opacity-40': isDragging }"
   >
-    <span class="mr-1 -ml-1 text-amber-400">⠿</span
+    <span class="mr-1 -ml-1 opacity-50">⠿</span
     ><span class="flex-1"><slot>{{ label }}</slot></span>
     <button
       v-if="removable"

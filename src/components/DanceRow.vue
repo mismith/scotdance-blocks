@@ -48,11 +48,11 @@ const { isDragging } = makeDraggable(
   >
     <div
       ref="nameCellEl"
-      class="cursor-grab border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap"
+      class="group/cell cursor-grab border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap"
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1">
-          <span class="text-gray-300 select-none">⠿</span>
+          <span class="opacity-50 select-none">⠿</span>
           <div class="text-sm">
             {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
             <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
@@ -62,7 +62,7 @@ const { isDragging } = makeDraggable(
           </div>
         </div>
         <button
-          class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+          class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover/cell:opacity-100"
           title="Remove dance"
           @click="store.removeDanceFromEvent(blockId, eventId, danceId)"
         >

@@ -38,7 +38,7 @@ function onRemoveCategory(categoryId: string) {
           @update:model-value="store.renameCategory(categoryId, $event)"
         />
         <button
-          class="text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover/cat:opacity-100"
+          class="ml-auto text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover/cat:opacity-100"
           title="Remove category"
           @click="onRemoveCategory(categoryId)"
         >
