@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const store = useCompetitionStore()
 const el = vueRef<HTMLElement | null>(null)
-const { provider, activeDragGroup } = useDragType()
+const { provider, activeDragGroup, activeDragPayload } = useDragType()
 
 function getInsertIndex(chipSelector: string, pointerY: number): number | undefined {
   if (!el.value) return undefined
@@ -49,6 +49,12 @@ const { isDragOver } = makeDroppable(el, {
       const loc = props.location
 
       if (dragData.type === 'group') {
+        // reject if group is not eligible for this dance
+        const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
+        const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
+        if (dance && Object.keys(dance.groupIds).length > 0 && !dance.groupIds[dragData.groupId])
+          return
+
         const insertIndex = getInsertIndex('[data-group-chip]', pointerY)
 
         if (dragData.source !== 'palette' && isSameCell(dragData.source)) {
@@ -112,9 +118,19 @@ const { isDragOver } = makeDroppable(el, {
   },
 })
 
-// Valid target: highlight when a group or judge is being dragged anywhere
+// Valid target: highlight when an eligible group or any judge is being dragged
 const validTargetClass = computed(() => {
-  if (activeDragGroup.value === 'group') return 'bg-blue-50'
+  if (activeDragGroup.value === 'group') {
+    const payload = activeDragPayload.value
+    if (payload?.type !== 'group') return ''
+    const loc = props.location
+    const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
+    const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
+    if (!dance) return ''
+    // empty groupIds = any group allowed
+    if (Object.keys(dance.groupIds).length === 0) return 'bg-blue-50'
+    return dance.groupIds[payload.groupId] ? 'bg-blue-50' : ''
+  }
   if (activeDragGroup.value === 'judge') return 'bg-amber-50'
   return ''
 })
@@ -122,6 +138,7 @@ const validTargetClass = computed(() => {
 // Live insertion index for visual indicator — only for the matching type
 const liveGroupInsertIndex = computed(() => {
   if (!isDragOver.value || activeDragGroup.value !== 'group') return -1
+  if (!validTargetClass.value) return -1
   const pointerY = provider.pointer.value?.current.y
   if (pointerY === undefined) return -1
   return getInsertIndex('[data-group-chip]', pointerY) ?? -1

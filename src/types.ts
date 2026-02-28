@@ -109,6 +109,14 @@ export interface DragPlatformData {
 
 export type DragItemData = DragGroupData | DragJudgeData
 
+export type DragData =
+  | DragGroupData
+  | DragJudgeData
+  | DragDanceData
+  | DragEventData
+  | DragBlockData
+  | DragPlatformData
+
 // === Root ===
 
 export interface CompetitionData {
