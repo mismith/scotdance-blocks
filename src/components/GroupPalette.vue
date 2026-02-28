@@ -35,7 +35,7 @@ function onRemoveCategory(categoryId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Groups</summary>
+    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-blue-400 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Groups</summary>
     <div
       v-for="[categoryId] in Object.entries(store.categories)"
       :key="categoryId"
@@ -49,7 +49,7 @@ function onRemoveCategory(categoryId: string) {
           @update:model-value="store.renameCategory(categoryId, $event)"
         />
         <button
-          class="ml-auto text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover/cat:opacity-100"
+          class="ml-auto flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100"
           title="Remove category"
           @click="onRemoveCategory(categoryId)"
         >
@@ -75,14 +75,14 @@ function onRemoveCategory(categoryId: string) {
         </GroupChip>
       </div>
       <button
-        class="mt-1 w-full rounded bg-blue-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-blue-800 hover:bg-blue-100"
+        class="mt-1 w-full rounded bg-blue-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-blue-800 outline-none hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-400"
         @click="() => { autoEditId = store.addGroup(categoryId) }"
       >
         <span class="-ml-1">+</span> Add group
       </button>
     </div>
     <button
-      class="mt-2 w-full rounded bg-gray-100/50 px-2 py-1 text-left text-xs font-medium leading-tight text-gray-500 hover:bg-gray-100"
+      class="mt-2 w-full rounded bg-gray-100/50 px-2 py-1 text-left text-xs font-medium leading-tight text-gray-500 outline-none hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-400"
       @click="() => { autoEditCategoryId = store.addCategory() }"
     >
       <span class="-ml-1">+</span> Add category

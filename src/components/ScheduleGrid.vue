@@ -153,13 +153,12 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 </script>
 
 <template>
-  <div class="overflow-x-auto">
-    <div
-      ref="gridEl"
-      class="w-full border-r border-b border-gray-300 text-sm"
-      :class="isEventValidTarget ? 'bg-blue-50' : ''"
-      :style="{ display: 'grid', gridTemplateColumns: gridCols }"
-    >
+  <div
+    ref="gridEl"
+    class="w-full border-r border-b border-gray-300 text-sm"
+    :class="isEventValidTarget ? 'bg-blue-50' : ''"
+    :style="{ display: 'grid', gridTemplateColumns: gridCols }"
+  >
       <!-- Header row -->
       <div
         ref="headerRowEl"
@@ -176,9 +175,9 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :auto-edit="autoEditPlatformId === platformId"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5 text-center">
+        <div class="flex items-center justify-center border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5">
           <button
-            class="text-xs text-gray-400 hover:text-blue-600"
+            class="flex size-5 items-center justify-center rounded text-xs text-gray-400 outline-none hover:text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-400"
             title="Add platform"
             @click="onAddPlatform"
           >
@@ -214,12 +213,11 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
       <!-- Add event -->
       <button
-        class="col-span-full flex items-center gap-1 border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold text-gray-400 hover:text-gray-600"
+        class="col-span-full flex items-center gap-1 border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
         @click="onAddEvent"
       >
         <span class="select-none">+</span>
         Add event
       </button>
     </div>
-  </div>
 </template>

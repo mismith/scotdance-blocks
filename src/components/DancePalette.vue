@@ -23,7 +23,7 @@ function onRemoveDance(danceId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Dances</summary>
+    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-blue-400 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Dances</summary>
     <div class="flex flex-col gap-1">
       <DanceChip
         v-for="[danceId, dance] in Object.entries(store.dances)"
@@ -50,7 +50,7 @@ function onRemoveDance(danceId: string) {
       </DanceChip>
     </div>
     <button
-      class="mt-1 w-full rounded bg-green-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-green-800 hover:bg-green-100"
+      class="mt-1 w-full rounded bg-green-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-green-800 outline-none hover:bg-green-100 focus-visible:ring-2 focus-visible:ring-blue-400"
       @click="() => { autoEditId = store.addDance() }"
     >
       <span class="-ml-1">+</span> Add dance

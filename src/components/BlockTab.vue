@@ -45,7 +45,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors"
+    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
     :class="[
       active
         ? '-mb-px border-gray-200 border-b-white bg-white text-gray-900'
@@ -56,19 +56,29 @@ const { isDragging } = makeDraggable(
     @click="emit('select')"
   >
     <div class="flex items-center gap-1">
-      <span class="-ml-1 mr-1 opacity-50 select-none">⠿</span>
+      <span data-grip tabindex="0" class="-ml-1 mr-1 opacity-50 outline-none select-none">⠿</span>
       <InlineEdit
+        v-if="active"
         :model-value="block.name"
         placeholder="Block name"
         :auto-edit="autoEdit"
-        :class="{ 'pointer-events-none': !active }"
         @update:model-value="store.renameBlock(blockId, $event)"
       />
+      <button
+        v-else
+        class="rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+        @click.stop="emit('select')"
+        @keydown.enter.stop
+        @keydown.space.stop
+      >
+        {{ block.name || 'Block name' }}
+      </button>
     </div>
     <button
-      class="ml-2 -mr-1 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+      class="ml-2 -mr-1 flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
       title="Remove block"
       @click.stop="emit('remove')"
+      @keydown.stop
     >
       &times;
     </button>

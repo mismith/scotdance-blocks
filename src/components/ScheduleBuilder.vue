@@ -79,13 +79,14 @@ function onRemoveBlock(blockId: string) {
 </script>
 
 <template>
-  <div class="flex h-full flex-col">
-    <!-- Block tabs -->
-    <div class="flex border-b border-gray-200">
-      <div class="w-56 shrink-0 border-r border-gray-200 bg-gray-50" />
+  <div class="flex h-full">
+    <ScheduleSidebar />
+
+    <div class="flex flex-1 flex-col overflow-clip">
+      <!-- Block tabs -->
       <div
         ref="tabBarEl"
-        class="flex pt-2 gap-1 bg-white px-4"
+        class="flex gap-1 border-b border-gray-200 bg-white px-4 pt-2"
         :class="isValidTarget ? 'bg-blue-50' : ''"
       >
         <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
@@ -109,18 +110,15 @@ function onRemoveBlock(blockId: string) {
           class="w-0.5 self-stretch rounded bg-blue-500"
         />
         <button
-          class="px-3 py-2 text-sm text-gray-400 hover:text-gray-600"
+          class="rounded px-3 py-2 text-sm text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-blue-400"
           title="Add block"
           @click="onAddBlock"
         >
           +
         </button>
       </div>
-    </div>
 
-    <!-- Main area: sidebar + grid -->
-    <div class="flex flex-1 overflow-hidden">
-      <ScheduleSidebar />
+      <!-- Grid -->
       <div class="flex-1 overflow-auto p-4">
         <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
         <div v-else class="py-12 text-center text-gray-400">

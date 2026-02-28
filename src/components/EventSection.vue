@@ -137,10 +137,10 @@ function onRemoveEvent() {
     <div class="group col-span-full">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold"
+        class="flex cursor-grab items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
       >
         <div class="flex items-center gap-1">
-          <span class="opacity-50 select-none">⠿</span>
+          <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
           <InlineEdit
             :model-value="event.name"
             placeholder="Event name"
@@ -149,9 +149,10 @@ function onRemoveEvent() {
           />
         </div>
         <button
-          class="ml-2 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
           title="Remove event"
           @click="onRemoveEvent"
+          @keydown.stop
         >
           &times;
         </button>
@@ -160,7 +161,7 @@ function onRemoveEvent() {
     <div class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-sm">
       <InlineEdit
         :model-value="event.description ?? ''"
-        placeholder="Event description"
+        placeholder="Add event description"
         :required="false"
         @update:model-value="store.updateEventDescription(blockId, eventId, $event)"
       />
@@ -196,9 +197,7 @@ function onRemoveEvent() {
         data-dance-placeholder
         class="col-span-full border-t border-l border-gray-200 px-1 py-1.5 text-center text-sm text-gray-400"
       >
-        <div class="rounded border border-dashed border-gray-300 px-2 py-1">
-          Drag dances here
-        </div>
+        <div class="rounded border border-dashed border-gray-300 px-2 py-1">Drag dances here</div>
       </div>
       <div
         v-if="isDragOver && liveDanceInsertIndex === 1"

@@ -26,6 +26,7 @@ const emit = defineEmits<{
 const editing = ref(false)
 const draft = ref('')
 const inputEl = ref<HTMLInputElement | null>(null)
+const displayEl = ref<HTMLElement | null>(null)
 
 async function startEdit() {
   draft.value = props.modelValue
@@ -37,17 +38,27 @@ async function startEdit() {
   }
 }
 
+async function focusDisplay() {
+  await nextTick()
+  displayEl.value?.focus()
+}
+
 function commit() {
   editing.value = false
   const trimmed = draft.value.trim()
-  if (props.required && !trimmed) return
+  if (props.required && !trimmed) {
+    focusDisplay()
+    return
+  }
   if (trimmed !== props.modelValue) {
     emit('update:modelValue', trimmed)
   }
+  focusDisplay()
 }
 
 function cancel() {
   editing.value = false
+  focusDisplay()
 }
 
 onMounted(() => {
@@ -61,7 +72,7 @@ onMounted(() => {
     ref="inputEl"
     v-model="draft"
     :placeholder
-    class="field-sizing-content rounded border border-blue-300 bg-white px-1 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
+    class="field-sizing-content rounded border border-blue-300 bg-white px-0 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
     @pointerdown.stop
     @keydown.stop
     @keydown.enter="commit"
@@ -71,9 +82,13 @@ onMounted(() => {
   <component
     :is="tag"
     v-else
-    class="cursor-text border-b border-transparent hover:border-gray-400"
+    ref="displayEl"
+    tabindex="0"
+    class="cursor-text border-b border-b-transparent outline-none hover:border-b-gray-400 focus-visible:border-b-blue-400"
     :class="{ 'text-current/50': !modelValue }"
     @click.stop="startEdit"
+    @keydown.stop
+    @keydown.enter.prevent="startEdit"
   >
     {{ modelValue || placeholder }}
   </component>
