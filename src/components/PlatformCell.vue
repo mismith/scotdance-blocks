@@ -146,7 +146,7 @@ const liveJudgeInsertIndex = computed(() => {
         <template v-for="(groupId, index) in assignment.orderedGroupIds" :key="groupId">
           <div
             v-if="isDragOver && liveGroupInsertIndex === index"
-            class="h-0.5 rounded bg-blue-500"
+            class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
           />
           <GroupChip
             :label="store.getGroupLabel(groupId)"
@@ -159,14 +159,14 @@ const liveJudgeInsertIndex = computed(() => {
         </template>
         <div
           v-if="isDragOver && liveGroupInsertIndex === (assignment?.orderedGroupIds.length ?? 0)"
-          class="h-0.5 rounded bg-blue-500"
+          class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
         />
       </div>
       <div v-if="assignment.orderedJudgeIds.length || (isDragOver && liveJudgeInsertIndex >= 0)" class="mt-1 flex flex-col gap-0.5">
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
           <div
             v-if="isDragOver && liveJudgeInsertIndex === index"
-            class="h-0.5 rounded bg-blue-500"
+            class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
           />
           <JudgeChip
             :label="store.getStaffName(judgeId)"
@@ -179,14 +179,14 @@ const liveJudgeInsertIndex = computed(() => {
         </template>
         <div
           v-if="isDragOver && liveJudgeInsertIndex === assignment.orderedJudgeIds.length"
-          class="h-0.5 rounded bg-blue-500"
+          class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
         />
       </div>
     </template>
     <template v-else>
       <div
         v-if="isDragOver && (liveGroupInsertIndex === 0 || liveJudgeInsertIndex === 0)"
-        class="h-0.5 rounded bg-blue-500"
+        class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
       />
       <span v-else class="text-xs text-gray-300">&mdash;</span>
     </template>

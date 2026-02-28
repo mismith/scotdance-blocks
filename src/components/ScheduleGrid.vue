@@ -196,7 +196,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
       <template v-for="([eventId, event], eventIndex) in eventEntries" :key="eventId">
         <div
           v-if="isDragOver && liveEventInsertIndex === eventIndex"
-          class="col-span-full h-0.5 bg-blue-500"
+          class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
         />
         <EventSection
           :event="event"
@@ -208,7 +208,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
       </template>
       <div
         v-if="isDragOver && liveEventInsertIndex === eventEntries.length"
-        class="col-span-full h-0.5 bg-blue-500"
+        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
       />
 
       <!-- Add event -->

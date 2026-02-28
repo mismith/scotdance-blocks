@@ -92,7 +92,7 @@ function onRemoveBlock(blockId: string) {
         <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
           <div
             v-if="isDragOver && liveBlockInsertIndex === blockIndex"
-            class="w-0.5 self-stretch rounded bg-blue-500"
+            class="w-0.5 -mx-0.75 relative z-10 self-stretch rounded bg-blue-500"
           />
           <BlockTab
             :block="block"
@@ -107,7 +107,7 @@ function onRemoveBlock(blockId: string) {
         </template>
         <div
           v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
-          class="w-0.5 self-stretch rounded bg-blue-500"
+          class="w-0.5 -mx-0.75 relative z-10 self-stretch rounded bg-blue-500"
         />
         <button
           class="rounded px-3 py-2 text-sm text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-blue-400"

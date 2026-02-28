@@ -173,7 +173,7 @@ function onRemoveEvent() {
       >
         <div
           v-if="isDragOver && liveDanceInsertIndex === danceIndex"
-          class="col-span-full h-0.5 bg-blue-500"
+          class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
         />
         <DanceRow
           :scheduled-dance="scheduledDance"
@@ -185,13 +185,13 @@ function onRemoveEvent() {
       </template>
       <div
         v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
-        class="col-span-full h-0.5 bg-blue-500"
+        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
       />
     </template>
     <template v-if="!(event.dances && Object.keys(event.dances).length)">
       <div
         v-if="isDragOver && liveDanceInsertIndex === 0"
-        class="col-span-full h-0.5 bg-blue-500"
+        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
       />
       <div
         data-dance-placeholder
@@ -201,7 +201,7 @@ function onRemoveEvent() {
       </div>
       <div
         v-if="isDragOver && liveDanceInsertIndex === 1"
-        class="col-span-full h-0.5 bg-blue-500"
+        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
       />
     </template>
   </div>
