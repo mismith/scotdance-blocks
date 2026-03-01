@@ -4,6 +4,7 @@ import { computed, ref, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
+import { useAutoFill } from '@/composables/useAutoFill'
 import { useDragType } from '@/composables/useDragType'
 import BlockTab from '@/components/BlockTab.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
@@ -76,6 +77,20 @@ function onRemoveBlock(blockId: string) {
     activeBlockId.value = blockEntries.value[0]?.[0] ?? ''
   }
 }
+
+// --- Auto-fill schedule ---
+const { autoFillSchedule } = useAutoFill()
+const showAutoFillMenu = ref(false)
+
+function onAutoFillSchedule() {
+  const hasContent = blockEntries.value.some(([, block]) =>
+    Object.keys(block.events).length > 0,
+  )
+  if (hasContent && !confirm('This will replace the current schedule. Continue?')) return
+  const firstBlockId = autoFillSchedule()
+  if (firstBlockId) activeBlockId.value = firstBlockId
+  showAutoFillMenu.value = false
+}
 </script>
 
 <template>
@@ -115,6 +130,34 @@ function onRemoveBlock(blockId: string) {
         >
           +
         </button>
+        <div class="relative ml-auto self-center">
+          <button
+            class="flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            title="Auto-fill"
+            @click="showAutoFillMenu = !showAutoFillMenu"
+          >
+            Auto-fill
+            <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" /></svg>
+          </button>
+          <Teleport to="body">
+            <div
+              v-if="showAutoFillMenu"
+              class="fixed inset-0 z-40"
+              @click="showAutoFillMenu = false"
+            />
+          </Teleport>
+          <div
+            v-if="showAutoFillMenu"
+            class="absolute right-0 top-full z-50 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
+          >
+            <button
+              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+              @click="onAutoFillSchedule"
+            >
+              Auto-fill schedule
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Grid -->

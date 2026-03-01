@@ -4,6 +4,7 @@ import { computed, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
+import { useAutoFill } from '@/composables/useAutoFill'
 import { useDragType } from '@/composables/useDragType'
 import DanceRow from '@/components/DanceRow.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
@@ -126,6 +127,44 @@ function onRemoveEvent() {
   if (hasContent && !confirm('Remove this event and all its contents?')) return
   store.removeEvent(props.blockId, props.eventId)
 }
+
+// --- Auto-fill ---
+const { autoPlaceDances, autoFillGroups, autoCycleJudges } = useAutoFill()
+const showAutoFillMenu = vueRef(false)
+
+const hasDances = computed(
+  () => !!props.event.dances && Object.keys(props.event.dances).length > 0,
+)
+
+function hasExistingGroups() {
+  return Object.values(props.event.dances ?? {}).some((sd) =>
+    Object.values(sd.platforms).some((a) => a.orderedGroupIds.length > 0),
+  )
+}
+function hasExistingJudges() {
+  return Object.values(props.event.dances ?? {}).some((sd) =>
+    Object.values(sd.platforms).some((a) => a.orderedJudgeIds.length > 0),
+  )
+}
+
+function onAutoPlaceDances() {
+  autoPlaceDances(props.blockId, props.eventId)
+  showAutoFillMenu.value = false
+}
+function onAutoFillGroups() {
+  if (!hasDances.value) return
+  if (hasExistingGroups() && !confirm('This will replace existing group assignments. Continue?'))
+    return
+  autoFillGroups(props.blockId, props.eventId)
+  showAutoFillMenu.value = false
+}
+function onAutoCycleJudges() {
+  if (!hasDances.value) return
+  if (hasExistingJudges() && !confirm('This will replace existing judge assignments. Continue?'))
+    return
+  autoCycleJudges(props.blockId, props.eventId)
+  showAutoFillMenu.value = false
+}
 </script>
 
 <template>
@@ -149,14 +188,61 @@ function onRemoveEvent() {
             @update:model-value="store.renameEvent(blockId, eventId, $event)"
           />
         </div>
-        <button
-          class="ml-2 flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
-          title="Remove event"
-          @click="onRemoveEvent"
-          @keydown.stop
-        >
-          &times;
-        </button>
+        <div class="ml-auto flex items-center gap-1">
+          <div class="relative">
+            <button
+              class="flex items-center gap-1 rounded border border-border bg-card px-2 py-0.5 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
+              title="Auto-fill"
+              @click="showAutoFillMenu = !showAutoFillMenu"
+              @keydown.stop
+            >
+              Auto-fill
+              <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" /></svg>
+            </button>
+            <Teleport to="body">
+              <div
+                v-if="showAutoFillMenu"
+                class="fixed inset-0 z-40"
+                @click="showAutoFillMenu = false"
+              />
+            </Teleport>
+            <div
+              v-if="showAutoFillMenu"
+              class="absolute right-0 top-full z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
+            >
+              <button
+                class="flex w-full rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                @click="onAutoPlaceDances"
+              >
+                Place all dances
+              </button>
+              <button
+                class="flex w-full rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :disabled="!hasDances"
+                @click="onAutoFillGroups"
+              >
+                Fill groups
+              </button>
+              <button
+                class="flex w-full rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :disabled="!hasDances"
+                @click="onAutoCycleJudges"
+              >
+                Cycle judges
+              </button>
+            </div>
+          </div>
+          <button
+            class="flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
+            title="Remove event"
+            @click="onRemoveEvent"
+            @keydown.stop
+          >
+            &times;
+          </button>
+        </div>
       </div>
     </div>
     <div class="col-span-full border-t border-l border-border py-1.5 pr-1 pl-5 text-sm">
