@@ -169,7 +169,11 @@ function onRemoveEvent() {
     </div>
     <div
       class="relative isolate col-span-full grid grid-cols-subgrid"
-      :class="isValidTarget ? 'bg-dance-muted before:absolute before:-inset-1 before:rounded-xl before:bg-dance-muted before:-z-10 before:pointer-events-none' : ''"
+      :class="
+        isValidTarget
+          ? 'bg-dance-muted before:absolute before:-inset-1 before:rounded-xl before:bg-dance-muted before:-z-10 before:pointer-events-none'
+          : ''
+      "
     >
       <template v-if="event.dances && Object.keys(event.dances).length">
         <template

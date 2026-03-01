@@ -61,19 +61,19 @@ const { isDragging } = makeDraggable(
       ref="nameCellEl"
       class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1">
-          <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
-          <div class="text-sm">
-            {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
-            <span v-if="dance?.steps" class="text-muted-foreground">({{ dance.steps }})</span>
-            <span v-if="scheduledDance.name" class="ml-1 text-xs text-muted-foreground">
-              {{ scheduledDance.name }}
-            </span>
-          </div>
-        </div>
+      <div
+        class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground"
+      >
+        <span data-grip tabindex="0" class="opacity-50 -ml-1 outline-none select-none">⠿</span>
+        <span class="flex-1">
+          {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
+          <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
+          <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">
+            {{ scheduledDance.name }}
+          </span>
+        </span>
         <button
-          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cell:opacity-100 group-has-focus-visible/cell:opacity-100"
+          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-dance-foreground/50 opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100"
           title="Remove dance"
           @click="onRemove"
           @keydown.stop
