@@ -133,7 +133,7 @@ function onRemoveEvent() {
     ref="sectionEl"
     data-event-section
     class="col-span-full grid grid-cols-subgrid"
-    :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'bg-dance-muted' : '']"
+    :class="isEventDragging ? 'opacity-40' : ''"
   >
     <div class="group col-span-full">
       <div
@@ -167,43 +167,48 @@ function onRemoveEvent() {
         @update:model-value="store.updateEventDescription(blockId, eventId, $event)"
       />
     </div>
-    <template v-if="event.dances && Object.keys(event.dances).length">
-      <template
-        v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)"
-        :key="danceId"
-      >
+    <div
+      class="col-span-full grid grid-cols-subgrid"
+      :class="isValidTarget ? 'bg-dance-muted' : ''"
+    >
+      <template v-if="event.dances && Object.keys(event.dances).length">
+        <template
+          v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)"
+          :key="danceId"
+        >
+          <DragIndicator
+            v-if="isDragOver && liveDanceInsertIndex === danceIndex"
+            class="col-span-full -my-px"
+          />
+          <DanceRow
+            :scheduled-dance="scheduledDance"
+            :block-id="blockId"
+            :event-id="eventId"
+            :dance-id="danceId"
+            :index="danceIndex"
+          />
+        </template>
         <DragIndicator
-          v-if="isDragOver && liveDanceInsertIndex === danceIndex"
+          v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
           class="col-span-full -my-px"
         />
-        <DanceRow
-          :scheduled-dance="scheduledDance"
-          :block-id="blockId"
-          :event-id="eventId"
-          :dance-id="danceId"
-          :index="danceIndex"
+      </template>
+      <template v-else>
+        <DragIndicator
+          v-if="isDragOver && liveDanceInsertIndex === 0"
+          class="col-span-full -my-px"
+        />
+        <div
+          data-dance-placeholder
+          class="col-span-full border-t border-l border-border px-1 py-1.5 text-center text-sm text-muted-foreground"
+        >
+          <div class="rounded border border-dashed border-input px-2 py-1">Drag dances here</div>
+        </div>
+        <DragIndicator
+          v-if="isDragOver && liveDanceInsertIndex === 1"
+          class="col-span-full -my-px"
         />
       </template>
-      <DragIndicator
-        v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
-        class="col-span-full -my-px"
-      />
-    </template>
-    <template v-if="!(event.dances && Object.keys(event.dances).length)">
-      <DragIndicator
-        v-if="isDragOver && liveDanceInsertIndex === 0"
-        class="col-span-full -my-px"
-      />
-      <div
-        data-dance-placeholder
-        class="col-span-full border-t border-l border-border px-1 py-1.5 text-center text-sm text-muted-foreground"
-      >
-        <div class="rounded border border-dashed border-input px-2 py-1">Drag dances here</div>
-      </div>
-      <DragIndicator
-        v-if="isDragOver && liveDanceInsertIndex === 1"
-        class="col-span-full -my-px"
-      />
-    </template>
+    </div>
   </div>
 </template>
