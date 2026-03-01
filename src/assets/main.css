@@ -39,8 +39,8 @@
   --accent-foreground: var(--color-zinc-900);
   --border: var(--color-zinc-200);
   --input: var(--color-zinc-300);
-  --ring: var(--color-violet-400);
-  --primary: var(--color-violet-500);
+  --ring: var(--color-emerald-500);
+  --primary: var(--color-emerald-600);
   --primary-foreground: var(--color-white);
   --destructive: var(--color-red-500);
   --destructive-foreground: var(--color-white);
@@ -68,9 +68,9 @@
     --accent-foreground: var(--color-zinc-50);
     --border: var(--color-zinc-600);
     --input: var(--color-zinc-500);
-    --ring: var(--color-violet-400);
-    --primary: var(--color-violet-400);
-    --primary-foreground: var(--color-zinc-950);
+    --ring: var(--color-emerald-400);
+    --primary: var(--color-emerald-500);
+    --primary-foreground: var(--color-white);
     --destructive: var(--color-red-400);
     --destructive-foreground: var(--color-zinc-50);
     --dance: oklch(0.18 0.04 155);

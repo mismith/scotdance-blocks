@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -9,7 +9,6 @@ import InlineEdit from '@/components/InlineEdit.vue'
 
 const store = useCompetitionStore()
 const route = useRoute()
-const router = useRouter()
 
 const autoEditId = ref<string | null>(null)
 
@@ -29,18 +28,14 @@ function onRemoveDance(danceId: string) {
     <summary
       class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none"
     >
-      <button
-        class="float-right rounded p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        :class="
-          route.name === 'dance-groups'
-            ? 'bg-dance text-dance-foreground'
-            : 'text-muted-foreground/50 hover:text-muted-foreground'
-        "
-        title="Configure dance groups"
-        @click.prevent="router.push(route.name === 'dance-groups' ? '/' : '/dance-groups')"
-      >
-        ⚙
-      </button>
+      <router-link
+        :to="route.name === 'dance-groups' ? '/' : '/dance-groups'"
+        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        :class="route.name === 'dance-groups'
+          ? 'rounded bg-primary px-1.5 text-primary-foreground hover:bg-primary/80'
+          : 'text-muted-foreground hover:text-foreground'"
+        @click.stop
+      >{{ route.name === 'dance-groups' ? 'Done' : 'Configure' }}</router-link>
       Dances
     </summary>
     <div class="flex flex-col gap-1">

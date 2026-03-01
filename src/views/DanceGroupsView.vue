@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -27,24 +27,12 @@ function categoryDanceState(categoryId: string, danceId: string): 'all' | 'none'
   return 'some'
 }
 
-const danceEntries = Object.entries(store.dances)
-const categoryEntries = Object.entries(store.categories)
+const danceEntries = computed(() => Object.entries(store.dances))
+const categoryEntries = computed(() => Object.entries(store.categories))
 </script>
 
 <template>
-  <main class="flex h-full flex-col overflow-clip">
-    <div class="flex items-center gap-3 border-b border-border bg-muted px-4 py-2.5">
-      <router-link
-        to="/"
-        class="flex size-6 items-center justify-center rounded text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        title="Back to schedule"
-      >
-        &larr;
-      </router-link>
-      <h2 class="text-sm font-semibold text-foreground">Dance Groups</h2>
-    </div>
-
-    <div class="flex-1 overflow-auto bg-card p-4">
+  <main class="h-full overflow-auto bg-card p-4">
       <table class="border-collapse border border-border text-sm">
         <!-- Header: dance names -->
         <thead>
@@ -127,6 +115,5 @@ const categoryEntries = Object.entries(store.categories)
           </template>
         </tbody>
       </table>
-    </div>
   </main>
 </template>

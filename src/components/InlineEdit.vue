@@ -74,8 +74,8 @@ onMounted(() => {
     :value="draft"
     :placeholder
     style="line-height: inherit"
-    class="block m-0 max-w-full field-sizing-content rounded ring-1 ring-ring bg-card p-0 font-inherit text-inherit outline-none focus:ring-2"
-    :class="{ 'resize-none': multiline }"
+    class="m-0 max-w-full field-sizing-content rounded ring-1 ring-ring bg-card p-0 font-inherit text-foreground outline-none focus:ring-2"
+    :class="multiline ? 'block resize-none' : 'inline-block mb-px'"
     @input="draft = ($event.target as HTMLInputElement).value"
     @pointerdown.stop
     @keydown.stop
@@ -87,7 +87,7 @@ onMounted(() => {
     v-else
     ref="displayEl"
     tabindex="0"
-    class="cursor-text border-b border-b-transparent outline-none hover:border-b-muted-foreground focus-visible:border-b-ring"
+    class="cursor-text border-b border-dotted border-b-transparent outline-none hover:border-b-muted-foreground focus-visible:border-b-ring"
     :class="{ 'text-current/50': !modelValue, 'whitespace-pre-wrap': multiline }"
     @click.stop="startEdit"
     @keydown.stop
