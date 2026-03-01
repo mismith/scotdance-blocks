@@ -164,6 +164,7 @@ function onRemoveEvent() {
         :model-value="event.description ?? ''"
         placeholder="Add event description"
         :required="false"
+        multiline
         @update:model-value="store.updateEventDescription(blockId, eventId, $event)"
       />
     </div>
