@@ -19,7 +19,7 @@ const store = useCompetitionStore()
 const { provider } = useDragType()
 
 const gridCols = computed(
-  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, 1fr)${store.collectionsReadonly ? '' : ' minmax(2rem, auto)'}`,
+  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, minmax(14rem, 1fr)) minmax(2rem, auto)`,
 )
 
 const gridEl = ref<HTMLElement | null>(null)
@@ -154,8 +154,8 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 <template>
   <div
     ref="gridEl"
-    class="w-full border-r border-b border-border text-sm"
-    :style="{ display: 'grid', gridTemplateColumns: gridCols }"
+    class="border-r border-b border-border text-sm"
+    :style="{ display: 'grid', gridTemplateColumns: gridCols, minWidth: `max(100%, ${store.platformEntries.length * 16}rem)` }"
   >
       <!-- Header row -->
       <div
@@ -173,9 +173,11 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :readonly="store.collectionsReadonly"
           @remove="onRemovePlatform(platformId)"
         />
-        <div v-if="!store.collectionsReadonly" class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
+        <div class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
           <button
+            :tabindex="store.collectionsReadonly ? -1 : 0"
             class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring comfortable:size-6 comfortable:text-sm"
+            :class="{ 'invisible pointer-events-none': store.collectionsReadonly }"
             title="Add platform"
             @click="onAddPlatform"
           >
@@ -212,7 +214,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
       <!-- Add event -->
       <button
-        class="col-span-full flex items-center gap-1 border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+        class="col-span-full flex items-center gap-1 border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold text-muted-foreground outline-none hover:text-accent-foreground focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
         @click="onAddEvent"
       >
         <span class="select-none">+</span>

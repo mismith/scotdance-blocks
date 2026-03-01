@@ -59,13 +59,14 @@ const { isDragging } = makeDraggable(
   >
     <div
       ref="nameCellEl"
-      class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+      class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     >
       <div
         class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground glass glass-dance comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+        :title="(dance?.shortName ?? dance?.name ?? 'Unknown') + (dance?.steps ? ` (${dance.steps})` : '')"
       >
         <span data-grip tabindex="0" class="opacity-50 -ml-1 outline-none select-none">⠿</span>
-        <span class="flex-1">
+        <span class="max-w-64 flex-1 truncate">
           {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
           <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
           <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">

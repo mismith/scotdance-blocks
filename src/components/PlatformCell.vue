@@ -235,7 +235,9 @@ const liveJudgeInsertIndex = computed(() => {
         :variant="activeDragGroup === 'judge' ? 'judge' : 'group'"
         class="-my-0.5 rounded"
       />
-      <span v-else class="text-xs text-muted-foreground/50">&mdash;</span>
+      <div class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground">
+        Drag groups / judges here
+      </div>
     </template>
   </div>
 </template>

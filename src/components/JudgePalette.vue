@@ -25,7 +25,11 @@ function onRemoveStaff(staffId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm">Judges</summary>
+    <summary
+      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm"
+    >
+      Judges
+    </summary>
     <div class="flex flex-col gap-1">
       <JudgeChip
         v-for="[staffId, member] in Object.entries(store.staff)"
@@ -54,8 +58,12 @@ function onRemoveStaff(staffId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-1 w-full rounded bg-judge/25 px-2 py-1 text-left text-xs font-medium leading-tight text-judge-foreground outline-none hover:bg-judge focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
-      @click="() => { autoEditId = store.addStaffMember() }"
+      class="mt-1 w-full rounded bg-judge/25 px-2 py-1 text-left text-xs font-medium leading-tight text-judge-foreground/50 outline-none glass glass-judge hover:bg-judge hover:text-judge-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+      @click="
+        () => {
+          autoEditId = store.addStaffMember()
+        }
+      "
     >
       <span class="-ml-1">+</span> Add judge
     </button>

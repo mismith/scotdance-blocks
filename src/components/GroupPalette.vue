@@ -35,13 +35,15 @@ function onRemoveCategory(categoryId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm">Groups</summary>
-    <div
-      v-for="[categoryId] in Object.entries(store.categories)"
-      :key="categoryId"
-      class="mb-2"
+    <summary
+      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm"
     >
-      <div class="group/cat mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground comfortable:text-sm">
+      Groups
+    </summary>
+    <div v-for="[categoryId] in Object.entries(store.categories)" :key="categoryId" class="mb-2">
+      <div
+        class="group/cat mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground comfortable:text-sm"
+      >
         <InlineEdit
           :model-value="store.getCategoryName(categoryId)"
           placeholder="Category name"
@@ -60,7 +62,7 @@ function onRemoveCategory(categoryId: string) {
       </div>
       <div class="flex flex-col gap-1">
         <GroupChip
-          v-for="[groupId, group] in (store.groupsByCategory[categoryId] ?? [])"
+          v-for="[groupId, group] in store.groupsByCategory[categoryId] ?? []"
           :key="groupId"
           :group-id="groupId"
           :label="store.getGroupLabel(groupId)"
@@ -79,16 +81,24 @@ function onRemoveCategory(categoryId: string) {
       </div>
       <button
         v-if="!store.collectionsReadonly"
-        class="mt-1 w-full rounded bg-group/25 px-2 py-1 text-left text-xs font-medium leading-tight text-group-foreground outline-none hover:bg-group focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
-        @click="() => { autoEditId = store.addGroup(categoryId) }"
+        class="mt-1 w-full rounded bg-group/25 px-2 py-1 text-left text-xs font-medium leading-tight text-group-foreground/50 outline-none glass glass-group hover:bg-group hover:text-group-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+        @click="
+          () => {
+            autoEditId = store.addGroup(categoryId)
+          }
+        "
       >
         <span class="-ml-1">+</span> Add group
       </button>
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-2 w-full rounded bg-accent/50 px-2 py-1 text-left text-xs font-medium leading-tight text-muted-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
-      @click="() => { autoEditCategoryId = store.addCategory() }"
+      class="mt-2 w-full rounded bg-muted-foreground/5 px-2 py-1 text-left text-xs font-medium leading-tight text-muted-foreground outline-none glass glass-accent hover:bg-muted-foreground/25 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+      @click="
+        () => {
+          autoEditCategoryId = store.addCategory()
+        }
+      "
     >
       <span class="-ml-1">+</span> Add category
     </button>

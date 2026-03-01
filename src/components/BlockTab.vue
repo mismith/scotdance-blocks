@@ -45,7 +45,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring comfortable:px-3"
+    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring comfortable:px-3"
     :class="[
       active
         ? '-mb-px border-border border-b-card bg-card text-foreground glass glass-card'

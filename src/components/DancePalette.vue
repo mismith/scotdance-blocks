@@ -30,12 +30,15 @@ function onRemoveDance(danceId: string) {
     >
       <router-link
         :to="route.name === 'dance-groups' ? '/' : '/dance-groups'"
-        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
-        :class="route.name === 'dance-groups'
-          ? 'rounded bg-primary px-1.5 text-primary-foreground hover:bg-primary/80 comfortable:px-2'
-          : 'text-muted-foreground hover:text-foreground'"
+        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm rounded"
+        :class="
+          route.name === 'dance-groups'
+            ? 'rounded bg-primary px-1.5 text-primary-foreground hover:bg-primary/80 comfortable:px-2'
+            : 'text-muted-foreground hover:text-foreground'
+        "
         @click.stop
-      >{{ route.name === 'dance-groups' ? 'Done' : 'Configure' }}</router-link>
+        >{{ route.name === 'dance-groups' ? 'Done' : 'Configure' }}</router-link
+      >
       Dances
     </summary>
     <div class="flex flex-col gap-1">
@@ -71,7 +74,7 @@ function onRemoveDance(danceId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-1 w-full rounded bg-dance/25 px-2 py-1 text-left text-xs font-medium leading-tight text-dance-foreground outline-none hover:bg-dance focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+      class="mt-1 w-full rounded bg-dance/25 px-2 py-1 text-left text-xs font-medium leading-tight text-dance-foreground/50 outline-none glass glass-dance hover:bg-dance hover:text-dance-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
       @click="
         () => {
           autoEditId = store.addDance()

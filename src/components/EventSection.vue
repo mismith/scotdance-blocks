@@ -135,7 +135,7 @@ function onRemoveEvent() {
     class="col-span-full grid grid-cols-subgrid"
     :class="isEventDragging ? 'opacity-40' : ''"
   >
-    <div class="group col-span-full">
+    <div class="group col-span-full has-[[data-grip]:focus-visible]:z-10">
       <div
         ref="eventHeaderEl"
         class="flex cursor-grab items-center justify-between border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
