@@ -150,7 +150,7 @@ function onRemoveEvent() {
           />
         </div>
         <button
-          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100 comfortable:size-5"
+          class="ml-2 flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
           title="Remove event"
           @click="onRemoveEvent"
           @keydown.stop

@@ -109,7 +109,7 @@ function onRemoveBlock(blockId: string) {
           class="-mx-0.75 self-stretch rounded"
         />
         <button
-          class="rounded px-3 py-2 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-4 comfortable:py-2.5"
+          class="rounded px-4 py-2.5 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
           title="Add block"
           @click="onAddBlock"
         >
@@ -118,10 +118,12 @@ function onRemoveBlock(blockId: string) {
       </div>
 
       <!-- Grid -->
-      <div class="flex-1 overflow-auto bg-card p-4">
-        <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
-        <div v-else class="py-12 text-center text-muted-foreground">
-          No block selected. Click + to add one.
+      <div class="flex-1 overflow-auto bg-card py-4">
+        <div class="w-fit min-w-full px-4">
+          <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
+          <div v-else class="py-12 text-center text-muted-foreground">
+            No block selected. Click + to add one.
+          </div>
         </div>
     </div>
   </div>

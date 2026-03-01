@@ -19,7 +19,7 @@ const store = useCompetitionStore()
 const { provider } = useDragType()
 
 const gridCols = computed(
-  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, minmax(14rem, 1fr)) minmax(2rem, auto)`,
+  () => `minmax(10rem, auto) repeat(${store.platformEntries.length}, minmax(14rem, 1fr)) minmax(2rem, auto)`,
 )
 
 const gridEl = ref<HTMLElement | null>(null)
@@ -176,7 +176,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         <div class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
           <button
             :tabindex="store.collectionsReadonly ? -1 : 0"
-            class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring comfortable:size-6 comfortable:text-sm"
+            class="flex size-6 items-center justify-center rounded text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
             :class="{ 'invisible pointer-events-none': store.collectionsReadonly }"
             title="Add platform"
             @click="onAddPlatform"

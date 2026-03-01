@@ -36,13 +36,13 @@ function onRemoveCategory(categoryId: string) {
 <template>
   <details open>
     <summary
-      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm"
+      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm font-semibold uppercase tracking-wider text-muted-foreground select-none"
     >
       Groups
     </summary>
     <div v-for="[categoryId] in Object.entries(store.categories)" :key="categoryId" class="mb-2">
       <div
-        class="group/cat mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground comfortable:text-sm"
+        class="group/cat mb-1 flex items-center gap-1 text-sm font-medium text-muted-foreground"
       >
         <InlineEdit
           :model-value="store.getCategoryName(categoryId)"
@@ -53,7 +53,7 @@ function onRemoveCategory(categoryId: string) {
         />
         <button
           v-if="!store.collectionsReadonly"
-          class="ml-auto flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100 comfortable:size-5"
+          class="ml-auto flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100"
           title="Remove category"
           @click="onRemoveCategory(categoryId)"
         >
@@ -81,7 +81,7 @@ function onRemoveCategory(categoryId: string) {
       </div>
       <button
         v-if="!store.collectionsReadonly"
-        class="mt-1 w-full rounded bg-group/25 px-2 py-1 text-left text-xs font-medium leading-tight text-group-foreground/50 outline-none glass glass-group hover:bg-group hover:text-group-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+        class="mt-1 w-full rounded bg-group/25 px-3 py-1.5 text-left text-sm font-medium leading-tight text-group-foreground/50 outline-none glass glass-group hover:bg-group hover:text-group-foreground focus-visible:ring-2 focus-visible:ring-ring"
         @click="
           () => {
             autoEditId = store.addGroup(categoryId)
@@ -93,7 +93,7 @@ function onRemoveCategory(categoryId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-2 w-full rounded bg-muted-foreground/5 px-2 py-1 text-left text-xs font-medium leading-tight text-muted-foreground outline-none glass glass-accent hover:bg-muted-foreground/25 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+      class="mt-2 w-full rounded bg-muted-foreground/5 px-3 py-1.5 text-left text-sm font-medium leading-tight text-muted-foreground outline-none glass glass-accent hover:bg-muted-foreground/25 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       @click="
         () => {
           autoEditCategoryId = store.addCategory()

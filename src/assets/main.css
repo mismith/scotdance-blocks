@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@custom-variant comfortable (&:is([data-density="comfortable"] *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -45,7 +45,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring comfortable:px-3"
+    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-3 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[
       active
         ? '-mb-px border-border border-b-card bg-card text-foreground glass glass-card'
@@ -75,7 +75,7 @@ const { isDragging } = makeDraggable(
       </button>
     </div>
     <button
-      class="ml-2 -mr-1 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100 comfortable:size-5"
+      class="ml-2 -mr-1 flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
       title="Remove block"
       @click.stop="emit('remove')"
       @keydown.stop

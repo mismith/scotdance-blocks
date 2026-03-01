@@ -26,14 +26,14 @@ function onRemoveDance(danceId: string) {
 <template>
   <details open>
     <summary
-      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none comfortable:text-sm"
+      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm font-semibold uppercase tracking-wider text-muted-foreground select-none"
     >
       <router-link
         :to="route.name === 'dance-groups' ? '/' : '/dance-groups'"
-        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm rounded"
+        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
         :class="
           route.name === 'dance-groups'
-            ? 'rounded bg-primary px-1.5 text-primary-foreground hover:bg-primary/80 comfortable:px-2'
+            ? 'rounded bg-primary px-2 text-primary-foreground hover:bg-primary/80'
             : 'text-muted-foreground hover:text-foreground'
         "
         @click.stop
@@ -74,7 +74,7 @@ function onRemoveDance(danceId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-1 w-full rounded bg-dance/25 px-2 py-1 text-left text-xs font-medium leading-tight text-dance-foreground/50 outline-none glass glass-dance hover:bg-dance hover:text-dance-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
+      class="mt-1 w-full rounded bg-dance/25 px-3 py-1.5 text-left text-sm font-medium leading-tight text-dance-foreground/50 outline-none glass glass-dance hover:bg-dance hover:text-dance-foreground focus-visible:ring-2 focus-visible:ring-ring"
       @click="
         () => {
           autoEditId = store.addDance()
