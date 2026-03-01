@@ -45,7 +45,7 @@ whenever(
 
 <template>
   <div class="flex h-screen flex-col">
-    <header class="flex items-center gap-4 border-b border-border bg-card px-4 py-3">
+    <header class="flex items-center gap-4 border-b border-border bg-muted px-4 py-3">
       <h1 class="text-lg font-bold text-foreground">ScotDance Blocks</h1>
     </header>
 

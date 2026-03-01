@@ -166,7 +166,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         class="relative col-span-full grid grid-cols-subgrid"
         :class="isPlatformValidTarget ? 'bg-group-muted' : ''"
       >
-        <div class="border-t border-l border-input bg-muted px-1 py-1.5" />
+        <div class="border-t border-l border-input bg-card px-1 py-1.5" />
         <PlatformHeader
           v-for="([platformId, platform], platformIndex) in store.platformEntries"
           :key="platformId"
@@ -176,7 +176,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :auto-edit="autoEditPlatformId === platformId"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="flex items-center justify-center border-t border-l border-input bg-muted px-1 py-1.5">
+        <div class="flex items-center justify-center border-t border-l border-input bg-card px-1 py-1.5">
           <button
             class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
             title="Add platform"

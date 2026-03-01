@@ -1,8 +1,20 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+import { computed } from 'vue'
+
+const props = withDefaults(defineProps<{
   orientation?: 'horizontal' | 'vertical'
+  variant?: 'dance' | 'group' | 'judge'
 }>(), {
   orientation: 'horizontal',
+})
+
+const indicatorStyle = computed(() => {
+  const color = {
+    dance: 'var(--dance-foreground)',
+    group: 'var(--group-foreground)',
+    judge: 'var(--judge-foreground)',
+  }[props.variant!]
+  return color ? { '--indicator': color } : undefined
 })
 </script>
 
@@ -10,6 +22,7 @@ withDefaults(defineProps<{
   <div
     class="relative z-10 bg-indicator"
     :class="orientation === 'vertical' ? 'w-0.5' : 'h-0.5'"
+    :style="indicatorStyle"
   >
     <div
       class="absolute size-2 rounded-full border-2 border-indicator bg-background"

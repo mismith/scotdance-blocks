@@ -168,8 +168,8 @@ function onRemoveEvent() {
       />
     </div>
     <div
-      class="col-span-full grid grid-cols-subgrid"
-      :class="isValidTarget ? 'bg-dance-muted' : ''"
+      class="relative isolate col-span-full grid grid-cols-subgrid"
+      :class="isValidTarget ? 'bg-dance-muted before:absolute before:-inset-1 before:rounded-xl before:bg-dance-muted before:-z-10 before:pointer-events-none' : ''"
     >
       <template v-if="event.dances && Object.keys(event.dances).length">
         <template
@@ -178,6 +178,7 @@ function onRemoveEvent() {
         >
           <DragIndicator
             v-if="isDragOver && liveDanceInsertIndex === danceIndex"
+            variant="dance"
             class="col-span-full -my-px"
           />
           <DanceRow
@@ -190,12 +191,14 @@ function onRemoveEvent() {
         </template>
         <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
+          variant="dance"
           class="col-span-full -my-px"
         />
       </template>
       <template v-else>
         <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === 0"
+          variant="dance"
           class="col-span-full -my-px"
         />
         <div
@@ -206,6 +209,7 @@ function onRemoveEvent() {
         </div>
         <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === 1"
+          variant="dance"
           class="col-span-full -my-px"
         />
       </template>

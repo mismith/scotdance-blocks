@@ -87,7 +87,7 @@ function onRemoveBlock(blockId: string) {
       <!-- Block tabs -->
       <div
         ref="tabBarEl"
-        class="flex gap-1 border-b border-border bg-card px-4 pt-2"
+        class="flex gap-1 border-b border-border bg-muted px-4 pt-2"
         :class="isValidTarget ? 'bg-group-muted' : ''"
       >
         <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
@@ -122,7 +122,7 @@ function onRemoveBlock(blockId: string) {
       </div>
 
       <!-- Grid -->
-      <div class="flex-1 overflow-auto p-4">
+      <div class="flex-1 overflow-auto bg-card p-4">
         <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
         <div v-else class="py-12 text-center text-muted-foreground">
           No block selected. Click + to add one.

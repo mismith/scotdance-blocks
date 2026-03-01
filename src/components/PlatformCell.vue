@@ -135,7 +135,7 @@ const validTargetClass = computed(() => {
       props.assignment?.orderedGroupIds.includes(payload.groupId) &&
       (payload.source === 'palette' || !isSameCell(payload.source))
     ) return ''
-    return 'bg-group-muted'
+    return 'bg-group-muted before:absolute before:-inset-1 before:rounded-xl before:bg-group-muted before:-z-10 before:pointer-events-none'
   }
   if (activeDragGroup.value === 'judge') {
     const payload = activeDragPayload.value
@@ -145,7 +145,7 @@ const validTargetClass = computed(() => {
       props.assignment?.orderedJudgeIds.includes(payload.judgeId) &&
       (payload.source === 'palette' || !isSameCell(payload.source))
     ) return ''
-    return 'bg-judge-muted'
+    return 'bg-judge-muted before:absolute before:-inset-1 before:rounded-xl before:bg-judge-muted before:-z-10 before:pointer-events-none'
   }
   return ''
 })
@@ -157,6 +157,14 @@ const liveGroupInsertIndex = computed(() => {
   const pointerY = provider.pointer.value?.current.y
   if (pointerY === undefined) return -1
   return getInsertIndex('[data-group-chip]', pointerY) ?? -1
+})
+
+// Dim cells that are not valid targets during a relevant drag
+const isInvalidTarget = computed(() => {
+  if (activeDragGroup.value === 'group' || activeDragGroup.value === 'judge') {
+    return !validTargetClass.value
+  }
+  return false
 })
 
 const liveJudgeInsertIndex = computed(() => {
@@ -171,14 +179,15 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="flex flex-col border-t border-l border-border px-2 py-1.5 transition-colors"
-    :class="validTargetClass"
+    class="relative isolate flex flex-col border-t border-l border-border px-2 py-1.5 transition-all"
+    :class="[validTargetClass, { 'opacity-50': isInvalidTarget }]"
   >
     <template v-if="assignment">
       <div class="flex flex-col gap-0.5">
         <template v-for="(groupId, index) in assignment.orderedGroupIds" :key="groupId">
           <DragIndicator
             v-if="isDragOver && liveGroupInsertIndex === index"
+            variant="group"
             class="-my-0.5 rounded"
           />
           <GroupChip
@@ -192,6 +201,7 @@ const liveJudgeInsertIndex = computed(() => {
         </template>
         <DragIndicator
           v-if="isDragOver && liveGroupInsertIndex === (assignment?.orderedGroupIds.length ?? 0)"
+          variant="group"
           class="-my-0.5 rounded"
         />
       </div>
@@ -200,6 +210,7 @@ const liveJudgeInsertIndex = computed(() => {
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
           <DragIndicator
             v-if="isDragOver && liveJudgeInsertIndex === index"
+            variant="judge"
             class="-my-0.5 rounded"
           />
           <JudgeChip
@@ -213,6 +224,7 @@ const liveJudgeInsertIndex = computed(() => {
         </template>
         <DragIndicator
           v-if="isDragOver && liveJudgeInsertIndex === assignment.orderedJudgeIds.length"
+          variant="judge"
           class="-my-0.5 rounded"
         />
       </div>
@@ -220,6 +232,7 @@ const liveJudgeInsertIndex = computed(() => {
     <template v-else>
       <DragIndicator
         v-if="isDragOver && (liveGroupInsertIndex === 0 || liveJudgeInsertIndex === 0)"
+        :variant="activeDragGroup === 'judge' ? 'judge' : 'group'"
         class="-my-0.5 rounded"
       />
       <span v-else class="text-xs text-muted-foreground/50">&mdash;</span>

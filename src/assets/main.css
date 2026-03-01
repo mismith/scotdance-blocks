@@ -30,59 +30,59 @@
 
 :root {
   --background: var(--color-white);
-  --foreground: var(--color-gray-900);
+  --foreground: var(--color-zinc-900);
   --card: var(--color-white);
-  --card-foreground: var(--color-gray-900);
-  --muted: var(--color-gray-50);
-  --muted-foreground: var(--color-gray-500);
-  --accent: var(--color-gray-100);
-  --accent-foreground: var(--color-gray-900);
-  --border: var(--color-gray-200);
-  --input: var(--color-gray-300);
-  --ring: var(--color-blue-400);
-  --primary: var(--color-blue-500);
+  --card-foreground: var(--color-zinc-900);
+  --muted: var(--color-zinc-50);
+  --muted-foreground: var(--color-zinc-500);
+  --accent: var(--color-zinc-100);
+  --accent-foreground: var(--color-zinc-900);
+  --border: var(--color-zinc-200);
+  --input: var(--color-zinc-300);
+  --ring: var(--color-violet-400);
+  --primary: var(--color-violet-500);
   --primary-foreground: var(--color-white);
   --destructive: var(--color-red-500);
   --destructive-foreground: var(--color-white);
-  --dance: var(--color-green-100);
-  --dance-foreground: var(--color-green-800);
-  --dance-muted: var(--color-green-50);
-  --group: var(--color-blue-100);
-  --group-foreground: var(--color-blue-800);
-  --group-muted: var(--color-blue-50);
-  --judge: var(--color-amber-100);
-  --judge-foreground: var(--color-amber-800);
-  --judge-muted: var(--color-amber-50);
-  --indicator: var(--color-blue-500);
+  --dance: oklch(0.93 0.07 155);
+  --dance-foreground: oklch(0.30 0.14 155);
+  --dance-muted: oklch(0.97 0.02 155);
+  --group: oklch(0.92 0.06 230);
+  --group-foreground: oklch(0.32 0.12 230);
+  --group-muted: oklch(0.97 0.02 230);
+  --judge: oklch(0.91 0.07 310);
+  --judge-foreground: oklch(0.32 0.14 310);
+  --judge-muted: oklch(0.97 0.02 310);
+  --indicator: var(--foreground);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: var(--color-gray-950);
-    --foreground: var(--color-gray-50);
-    --card: var(--color-gray-900);
-    --card-foreground: var(--color-gray-50);
-    --muted: var(--color-gray-800);
-    --muted-foreground: var(--color-gray-400);
-    --accent: var(--color-gray-800);
-    --accent-foreground: var(--color-gray-50);
-    --border: var(--color-gray-700);
-    --input: var(--color-gray-600);
-    --ring: var(--color-blue-400);
-    --primary: var(--color-blue-400);
-    --primary-foreground: var(--color-gray-950);
+    --background: var(--color-zinc-950);
+    --foreground: var(--color-zinc-50);
+    --card: var(--color-zinc-800);
+    --card-foreground: var(--color-zinc-50);
+    --muted: var(--color-zinc-900);
+    --muted-foreground: var(--color-zinc-400);
+    --accent: var(--color-zinc-700);
+    --accent-foreground: var(--color-zinc-50);
+    --border: var(--color-zinc-600);
+    --input: var(--color-zinc-500);
+    --ring: var(--color-violet-400);
+    --primary: var(--color-violet-400);
+    --primary-foreground: var(--color-zinc-950);
     --destructive: var(--color-red-400);
-    --destructive-foreground: var(--color-gray-50);
-    --dance: var(--color-green-900);
-    --dance-foreground: var(--color-green-200);
-    --dance-muted: var(--color-green-950);
-    --group: var(--color-blue-900);
-    --group-foreground: var(--color-blue-200);
-    --group-muted: var(--color-blue-950);
-    --judge: var(--color-amber-900);
-    --judge-foreground: var(--color-amber-200);
-    --judge-muted: var(--color-amber-950);
-    --indicator: var(--color-blue-400);
+    --destructive-foreground: var(--color-zinc-50);
+    --dance: oklch(0.18 0.04 155);
+    --dance-foreground: oklch(0.82 0.30 155);
+    --dance-muted: oklch(0.25 0.06 155);
+    --group: oklch(0.18 0.04 230);
+    --group-foreground: oklch(0.78 0.28 230);
+    --group-muted: oklch(0.25 0.06 230);
+    --judge: oklch(0.18 0.04 310);
+    --judge-foreground: oklch(0.72 0.28 310);
+    --judge-muted: oklch(0.25 0.06 310);
+    --indicator: var(--foreground);
   }
 }
 
