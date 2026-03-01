@@ -62,7 +62,7 @@ const { isDragging } = makeDraggable(
       class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     >
       <div
-        class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground"
+        class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground glass glass-dance"
       >
         <span data-grip tabindex="0" class="opacity-50 -ml-1 outline-none select-none">⠿</span>
         <span class="flex-1">

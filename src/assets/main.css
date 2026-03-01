@@ -90,43 +90,31 @@ body {
   @apply bg-background text-foreground;
 }
 
-/* Liquid-glass bevel on chips */
-[data-dance-chip],
-[data-dance-row] .group\/chip {
-  --chip-color: var(--dance);
-}
-[data-group-chip] {
-  --chip-color: var(--group);
-}
-[data-judge-chip] {
-  --chip-color: var(--judge);
-}
+/* Liquid-glass utilities */
+@utility glass-dance { --glass-color: var(--dance); }
+@utility glass-group { --glass-color: var(--group); }
+@utility glass-judge { --glass-color: var(--judge); }
+@utility glass-accent { --glass-color: var(--accent); }
+@utility glass-card { --glass-color: var(--card); }
+@utility glass-muted { --glass-color: var(--muted); }
 
-[data-dance-chip],
-[data-group-chip],
-[data-judge-chip],
-[data-dance-row] .group\/chip {
-  /* Rim light — semi-transparent edge that reads as glass, not stroke */
-  border: 1px solid oklch(from var(--chip-color) calc(l + 0.06) c h / 0.3);
-  /* Layered shadows: specular highlight, inner glow, bevel shadow, contact, ambient */
+@utility glass {
+  border: 1px solid oklch(from var(--glass-color) calc(l + 0.06) c h / 0.3);
   box-shadow:
-    inset 0 1px 0 oklch(from var(--chip-color) calc(l + 0.12) c h / 0.5),
-    inset 0 0 4px oklch(from var(--chip-color) calc(l + 0.08) c h / 0.12),
-    inset 0 -1px 0 oklch(from var(--chip-color) calc(l - 0.15) c h / 0.35),
-    0 1px 2px oklch(from var(--chip-color) calc(l - 0.25) c h / 0.12),
-    0 2px 6px oklch(from var(--chip-color) calc(l - 0.2) c h / 0.06);
+    inset 0 1px 0 oklch(from var(--glass-color) calc(l + 0.12) c h / 0.5),
+    inset 0 0 4px oklch(from var(--glass-color) calc(l + 0.08) c h / 0.12),
+    inset 0 -1px 0 oklch(from var(--glass-color) calc(l - 0.15) c h / 0.35),
+    0 1px 2px oklch(from var(--glass-color) calc(l - 0.25) c h / 0.12),
+    0 2px 6px oklch(from var(--glass-color) calc(l - 0.2) c h / 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
-  [data-dance-chip],
-  [data-group-chip],
-  [data-judge-chip],
-  [data-dance-row] .group\/chip {
-    border-color: oklch(from var(--chip-color) calc(l + 0.15) c h / 0.15);
+  .glass {
+    border-color: oklch(from var(--glass-color) calc(l + 0.15) c h / 0.15);
     box-shadow:
-      inset 0 1px 0 oklch(from var(--chip-color) calc(l + 0.15) c h / 0.3),
-      inset 0 0 4px oklch(from var(--chip-color) calc(l + 0.1) c h / 0.1),
-      inset 0 -1px 0 oklch(from var(--chip-color) calc(l - 0.08) c h / 0.5),
+      inset 0 1px 0 oklch(from var(--glass-color) calc(l + 0.15) c h / 0.3),
+      inset 0 0 4px oklch(from var(--glass-color) calc(l + 0.1) c h / 0.1),
+      inset 0 -1px 0 oklch(from var(--glass-color) calc(l - 0.08) c h / 0.5),
       0 1px 3px oklch(0 0 0 / 0.25),
       0 3px 8px oklch(0 0 0 / 0.15);
   }

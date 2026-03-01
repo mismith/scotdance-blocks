@@ -48,7 +48,7 @@ const { isDragging } = makeDraggable(
     class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[
       active
-        ? '-mb-px border-border border-b-card bg-card text-foreground'
+        ? '-mb-px border-border border-b-card bg-card text-foreground glass glass-card'
         : 'border-transparent text-muted-foreground hover:bg-muted hover:text-accent-foreground',
       isDragging ? 'opacity-40' : '',
     ]"

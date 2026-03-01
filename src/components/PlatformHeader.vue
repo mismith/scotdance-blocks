@@ -43,7 +43,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="headerEl"
     data-platform-header
-    class="group flex items-center gap-1 cursor-grab border-t border-l border-input bg-card px-1 py-1.5 text-center text-xs font-semibold text-muted-foreground has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group flex items-center gap-1 cursor-grab border-t border-l border-border bg-card px-1 py-1.5 text-center text-xs font-semibold text-muted-foreground has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="isDragging ? 'opacity-40' : ''"
   >
     <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>

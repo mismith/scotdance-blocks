@@ -138,7 +138,7 @@ function onRemoveEvent() {
     <div class="group col-span-full">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between border-t border-l border-input bg-accent px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+        class="flex cursor-grab items-center justify-between border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold glass glass-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       >
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -210,7 +210,7 @@ function onRemoveEvent() {
           data-dance-placeholder
           class="col-span-full border-t border-l border-border px-1 py-1.5 text-center text-sm text-muted-foreground"
         >
-          <div class="rounded border border-dashed border-input px-2 py-1">Drag dances here</div>
+          <div class="rounded border border-dashed border-border px-2 py-1">Drag dances here</div>
         </div>
         <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === 1"
