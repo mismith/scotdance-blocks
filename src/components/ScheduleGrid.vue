@@ -16,13 +16,10 @@ const props = defineProps<{
 }>()
 
 const store = useCompetitionStore()
-const { provider, activeDragGroup } = useDragType()
-
-const isEventValidTarget = computed(() => activeDragGroup.value === 'event')
-const isPlatformValidTarget = computed(() => activeDragGroup.value === 'platform')
+const { provider } = useDragType()
 
 const gridCols = computed(
-  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, 1fr) minmax(2rem, auto)`,
+  () => `minmax(2rem, auto) repeat(${store.platformEntries.length}, 1fr)${store.collectionsReadonly ? '' : ' minmax(2rem, auto)'}`,
 )
 
 const gridEl = ref<HTMLElement | null>(null)
@@ -87,6 +84,7 @@ const { isDragOver: isPlatformDragOver } = makeDroppable(headerRowEl, {
   groups: ['platform'],
   events: {
     onDrop(event) {
+      if (store.collectionsReadonly) return
       const dragData = event.payload?.items[0] as DragPlatformData | undefined
       if (!dragData) return
 
@@ -157,14 +155,12 @@ const eventEntries = computed(() => Object.entries(props.block.events))
   <div
     ref="gridEl"
     class="w-full border-r border-b border-border text-sm"
-    :class="isEventValidTarget ? 'bg-group-muted' : ''"
     :style="{ display: 'grid', gridTemplateColumns: gridCols }"
   >
       <!-- Header row -->
       <div
         ref="headerRowEl"
         class="relative col-span-full grid grid-cols-subgrid"
-        :class="isPlatformValidTarget ? 'bg-group-muted' : ''"
       >
         <div class="border-t border-l border-border bg-card px-1 py-1.5" />
         <PlatformHeader
@@ -174,9 +170,10 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :platform-id="platformId"
           :index="platformIndex"
           :auto-edit="autoEditPlatformId === platformId"
+          :readonly="store.collectionsReadonly"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
+        <div v-if="!store.collectionsReadonly" class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
           <button
             class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
             title="Add platform"

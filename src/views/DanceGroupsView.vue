@@ -81,6 +81,7 @@ const categoryEntries = computed(() => Object.entries(store.categories))
                 <input
                   type="checkbox"
                   class="size-4 cursor-default accent-dance-foreground"
+                  :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
                   :checked="categoryDanceState(categoryId, danceId) === 'all'"
                   :indeterminate="categoryDanceState(categoryId, danceId) === 'some'"
                   @change="store.toggleDanceCategoryGroups(danceId, categoryId)"
@@ -106,6 +107,7 @@ const categoryEntries = computed(() => Object.entries(store.categories))
                   <input
                     type="checkbox"
                     class="size-3.5 cursor-default accent-dance-foreground"
+                    :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
                     :checked="!!dance.groupIds[groupId]"
                     @change="store.toggleDanceGroup(danceId, groupId)"
                   />

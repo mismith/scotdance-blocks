@@ -46,9 +46,11 @@ function onRemoveCategory(categoryId: string) {
           :model-value="store.getCategoryName(categoryId)"
           placeholder="Category name"
           :auto-edit="autoEditCategoryId === categoryId"
+          :readonly="store.collectionsReadonly"
           @update:model-value="store.renameCategory(categoryId, $event)"
         />
         <button
+          v-if="!store.collectionsReadonly"
           class="ml-auto flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100"
           title="Remove category"
           @click="onRemoveCategory(categoryId)"
@@ -62,7 +64,7 @@ function onRemoveCategory(categoryId: string) {
           :key="groupId"
           :group-id="groupId"
           :label="store.getGroupLabel(groupId)"
-          removable
+          :removable="!store.collectionsReadonly"
           class="flex-1"
           @remove="onRemoveGroup(groupId)"
         >
@@ -70,11 +72,13 @@ function onRemoveCategory(categoryId: string) {
             :model-value="group.name"
             placeholder="Group name"
             :auto-edit="autoEditId === groupId"
+            :readonly="store.collectionsReadonly"
             @update:model-value="store.renameGroup(groupId, $event)"
           />
         </GroupChip>
       </div>
       <button
+        v-if="!store.collectionsReadonly"
         class="mt-1 w-full rounded bg-group/25 px-2 py-1 text-left text-xs font-medium leading-tight text-group-foreground outline-none hover:bg-group focus-visible:ring-2 focus-visible:ring-ring"
         @click="() => { autoEditId = store.addGroup(categoryId) }"
       >
@@ -82,6 +86,7 @@ function onRemoveCategory(categoryId: string) {
       </button>
     </div>
     <button
+      v-if="!store.collectionsReadonly"
       class="mt-2 w-full rounded bg-accent/50 px-2 py-1 text-left text-xs font-medium leading-tight text-muted-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
       @click="() => { autoEditCategoryId = store.addCategory() }"
     >

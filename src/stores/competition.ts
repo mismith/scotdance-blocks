@@ -7,6 +7,7 @@ import type { CompetitionData, Dance, Group } from '@/types'
 
 export const useCompetitionStore = defineStore('competition', () => {
   const data = ref<CompetitionData>(sampleData as CompetitionData)
+  const collectionsReadonly = ref(false)
 
   // --- Getters ---
 
@@ -93,7 +94,11 @@ export const useCompetitionStore = defineStore('competition', () => {
 
   // --- Helpers (internal) ---
 
-  function reorderRecord<T>(record: Record<string, T>, fromIndex: number, toIndex: number): Record<string, T> {
+  function reorderRecord<T>(
+    record: Record<string, T>,
+    fromIndex: number,
+    toIndex: number,
+  ): Record<string, T> {
     const entries = Object.entries(record)
     if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return record
     if (fromIndex >= entries.length || toIndex >= entries.length) return record
@@ -284,7 +289,10 @@ export const useCompetitionStore = defineStore('competition', () => {
     }
   }
 
-  function updateDance(danceId: string, fields: Partial<Pick<Dance, 'name' | 'shortName' | 'steps'>>) {
+  function updateDance(
+    danceId: string,
+    fields: Partial<Pick<Dance, 'name' | 'shortName' | 'steps'>>,
+  ) {
     const dance = data.value.dances[danceId]
     if (!dance) return
     if (fields.name !== undefined) dance.name = fields.name
@@ -510,6 +518,7 @@ export const useCompetitionStore = defineStore('competition', () => {
 
   return {
     data,
+    collectionsReadonly,
     categories,
     groups,
     dances,

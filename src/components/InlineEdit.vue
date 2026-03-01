@@ -9,6 +9,7 @@ const props = withDefaults(
     autoEdit?: boolean
     required?: boolean
     multiline?: boolean
+    readonly?: boolean
   }>(),
   {
     placeholder: '',
@@ -16,6 +17,7 @@ const props = withDefaults(
     autoEdit: false,
     required: true,
     multiline: false,
+    readonly: false,
   },
 )
 
@@ -67,9 +69,15 @@ onMounted(() => {
 </script>
 
 <template>
+  <span
+    v-if="readonly"
+    :class="{ 'text-current/50': !modelValue, 'whitespace-pre-wrap': multiline }"
+  >
+    {{ modelValue || placeholder }}
+  </span>
   <component
     :is="multiline ? 'textarea' : 'input'"
-    v-if="editing"
+    v-else-if="editing"
     ref="inputEl"
     :value="draft"
     :placeholder
@@ -87,6 +95,7 @@ onMounted(() => {
     v-else
     ref="displayEl"
     tabindex="0"
+    title="Click to edit"
     class="cursor-text border-b border-dotted border-b-transparent outline-none hover:border-b-muted-foreground focus-visible:border-b-ring"
     :class="{ 'text-current/50': !modelValue, 'whitespace-pre-wrap': multiline }"
     @click.stop="startEdit"

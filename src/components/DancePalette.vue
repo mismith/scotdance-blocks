@@ -45,7 +45,7 @@ function onRemoveDance(danceId: string) {
         :dance-id="danceId"
         :label="dance.shortName || dance.name"
         :steps="dance.steps"
-        removable
+        :removable="!store.collectionsReadonly"
         class="flex-1"
         @remove="onRemoveDance(danceId)"
       >
@@ -53,21 +53,24 @@ function onRemoveDance(danceId: string) {
           :model-value="dance.shortName || dance.name"
           placeholder="Name"
           :auto-edit="autoEditId === danceId"
+          :readonly="store.collectionsReadonly"
           @update:model-value="
             store.updateDance(danceId, dance.shortName ? { shortName: $event } : { name: $event })
           "
         />
-        <span class="text-dance-foreground/50"
+        <span v-if="!store.collectionsReadonly || dance.steps" class="text-dance-foreground/50"
           >{{ ' ' }}(<InlineEdit
             :model-value="dance.steps ?? ''"
             placeholder="Steps"
             :required="false"
+            :readonly="store.collectionsReadonly"
             @update:model-value="store.updateDance(danceId, { steps: $event })"
           />)</span
         >
       </DanceChip>
     </div>
     <button
+      v-if="!store.collectionsReadonly"
       class="mt-1 w-full rounded bg-dance/25 px-2 py-1 text-left text-xs font-medium leading-tight text-dance-foreground outline-none hover:bg-dance focus-visible:ring-2 focus-visible:ring-ring"
       @click="
         () => {

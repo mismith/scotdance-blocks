@@ -48,6 +48,15 @@ whenever(
   <div class="flex h-screen select-none flex-col">
     <header class="flex items-center gap-4 border-b border-border bg-muted px-4 py-3">
       <h1 class="text-lg font-bold text-foreground">ScotDance Blocks</h1>
+      <label class="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
+        <input
+          type="checkbox"
+          class="size-3.5 cursor-default accent-primary"
+          :checked="store.collectionsReadonly"
+          @change="store.collectionsReadonly = ($event.target as HTMLInputElement).checked"
+        />
+        Read-only collections
+      </label>
     </header>
 
     <DnDProvider overlay-to="body">

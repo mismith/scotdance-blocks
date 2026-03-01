@@ -32,7 +32,7 @@ function onRemoveStaff(staffId: string) {
         :key="staffId"
         :judge-id="staffId"
         :label="store.getStaffName(staffId)"
-        removable
+        :removable="!store.collectionsReadonly"
         class="flex-1"
         @remove="onRemoveStaff(staffId)"
       >
@@ -40,17 +40,20 @@ function onRemoveStaff(staffId: string) {
           :model-value="member.firstName"
           placeholder="First"
           :auto-edit="autoEditId === staffId"
+          :readonly="store.collectionsReadonly"
           @update:model-value="store.renameStaffMember(staffId, $event, member.lastName)"
         />
         {{ ' ' }}
         <InlineEdit
           :model-value="member.lastName"
           placeholder="Last"
+          :readonly="store.collectionsReadonly"
           @update:model-value="store.renameStaffMember(staffId, member.firstName, $event)"
         />
       </JudgeChip>
     </div>
     <button
+      v-if="!store.collectionsReadonly"
       class="mt-1 w-full rounded bg-judge/25 px-2 py-1 text-left text-xs font-medium leading-tight text-judge-foreground outline-none hover:bg-judge focus-visible:ring-2 focus-visible:ring-ring"
       @click="() => { autoEditId = store.addStaffMember() }"
     >
