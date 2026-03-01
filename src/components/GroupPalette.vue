@@ -35,13 +35,13 @@ function onRemoveCategory(categoryId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-blue-400 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Groups</summary>
+    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none">Groups</summary>
     <div
       v-for="[categoryId] in Object.entries(store.categories)"
       :key="categoryId"
       class="mb-2"
     >
-      <div class="group/cat mb-1 flex items-center gap-1 text-xs font-medium text-gray-400">
+      <div class="group/cat mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground">
         <InlineEdit
           :model-value="store.getCategoryName(categoryId)"
           placeholder="Category name"
@@ -49,7 +49,7 @@ function onRemoveCategory(categoryId: string) {
           @update:model-value="store.renameCategory(categoryId, $event)"
         />
         <button
-          class="ml-auto flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100"
+          class="ml-auto flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cat:opacity-100 group-has-focus-visible/cat:opacity-100"
           title="Remove category"
           @click="onRemoveCategory(categoryId)"
         >
@@ -75,14 +75,14 @@ function onRemoveCategory(categoryId: string) {
         </GroupChip>
       </div>
       <button
-        class="mt-1 w-full rounded bg-blue-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-blue-800 outline-none hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-400"
+        class="mt-1 w-full rounded bg-group/25 px-2 py-1 text-left text-xs font-medium leading-tight text-group-foreground outline-none hover:bg-group focus-visible:ring-2 focus-visible:ring-ring"
         @click="() => { autoEditId = store.addGroup(categoryId) }"
       >
         <span class="-ml-1">+</span> Add group
       </button>
     </div>
     <button
-      class="mt-2 w-full rounded bg-gray-100/50 px-2 py-1 text-left text-xs font-medium leading-tight text-gray-500 outline-none hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-400"
+      class="mt-2 w-full rounded bg-accent/50 px-2 py-1 text-left text-xs font-medium leading-tight text-muted-foreground outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
       @click="() => { autoEditCategoryId = store.addCategory() }"
     >
       <span class="-ml-1">+</span> Add category

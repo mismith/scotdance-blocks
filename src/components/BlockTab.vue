@@ -45,11 +45,11 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
+    class="group flex cursor-grab items-center justify-between rounded-t-lg border px-2 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[
       active
-        ? '-mb-px border-gray-200 border-b-white bg-white text-gray-900'
-        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700',
+        ? '-mb-px border-border border-b-card bg-card text-foreground'
+        : 'border-transparent text-muted-foreground hover:bg-muted hover:text-accent-foreground',
       isDragging ? 'opacity-40' : '',
     ]"
     role="button"
@@ -66,7 +66,7 @@ const { isDragging } = makeDraggable(
       />
       <button
         v-else
-        class="rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+        class="rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
         @click.stop="emit('select')"
         @keydown.enter.stop
         @keydown.space.stop
@@ -75,7 +75,7 @@ const { isDragging } = makeDraggable(
       </button>
     </div>
     <button
-      class="ml-2 -mr-1 flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
+      class="ml-2 -mr-1 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
       title="Remove block"
       @click.stop="emit('remove')"
       @keydown.stop

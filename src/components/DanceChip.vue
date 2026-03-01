@@ -42,14 +42,14 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-dance-chip
-    class="group/chip flex items-center cursor-grab rounded bg-green-100 px-2 py-1 text-xs font-medium leading-tight text-green-800 select-none has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
+    class="group/chip flex items-center cursor-grab rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground select-none has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="{ 'opacity-40': isDragging }"
   >
     <span data-grip tabindex="0" class="mr-1 -ml-1 opacity-50 outline-none select-none">⠿</span>
-    <span class="flex-1"><slot>{{ label }}<span v-if="steps" class="ml-1 text-green-800/50">({{ steps }})</span></slot></span>
+    <span class="flex-1"><slot>{{ label }}<span v-if="steps" class="ml-1 text-dance-foreground/50">({{ steps }})</span></slot></span>
     <button
       v-if="removable"
-      class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-green-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100"
+      class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-dance-foreground/50 opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100"
       title="Remove"
       @click.stop="emit('remove')"
       @keydown.stop

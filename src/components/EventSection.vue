@@ -133,12 +133,12 @@ function onRemoveEvent() {
     ref="sectionEl"
     data-event-section
     class="col-span-full grid grid-cols-subgrid"
-    :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'bg-green-50' : '']"
+    :class="[isEventDragging ? 'opacity-40' : '', isValidTarget ? 'bg-dance-muted' : '']"
   >
     <div class="group col-span-full">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
+        class="flex cursor-grab items-center justify-between border-t border-l border-input bg-accent px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       >
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -150,7 +150,7 @@ function onRemoveEvent() {
           />
         </div>
         <button
-          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
+          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
           title="Remove event"
           @click="onRemoveEvent"
           @keydown.stop
@@ -159,7 +159,7 @@ function onRemoveEvent() {
         </button>
       </div>
     </div>
-    <div class="col-span-full border-t border-l border-gray-200 py-1.5 pr-1 pl-5 text-sm">
+    <div class="col-span-full border-t border-l border-border py-1.5 pr-1 pl-5 text-sm">
       <InlineEdit
         :model-value="event.description ?? ''"
         placeholder="Add event description"
@@ -196,9 +196,9 @@ function onRemoveEvent() {
       />
       <div
         data-dance-placeholder
-        class="col-span-full border-t border-l border-gray-200 px-1 py-1.5 text-center text-sm text-gray-400"
+        class="col-span-full border-t border-l border-border px-1 py-1.5 text-center text-sm text-muted-foreground"
       >
-        <div class="rounded border border-dashed border-gray-300 px-2 py-1">Drag dances here</div>
+        <div class="rounded border border-dashed border-input px-2 py-1">Drag dances here</div>
       </div>
       <DragIndicator
         v-if="isDragOver && liveDanceInsertIndex === 1"

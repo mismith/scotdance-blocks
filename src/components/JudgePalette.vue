@@ -25,7 +25,7 @@ function onRemoveStaff(staffId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-blue-400 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none">Judges</summary>
+    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none">Judges</summary>
     <div class="flex flex-col gap-1">
       <JudgeChip
         v-for="[staffId, member] in Object.entries(store.staff)"
@@ -51,7 +51,7 @@ function onRemoveStaff(staffId: string) {
       </JudgeChip>
     </div>
     <button
-      class="mt-1 w-full rounded bg-amber-100/25 px-2 py-1 text-left text-xs font-medium leading-tight text-amber-800 outline-none hover:bg-amber-100 focus-visible:ring-2 focus-visible:ring-blue-400"
+      class="mt-1 w-full rounded bg-judge/25 px-2 py-1 text-left text-xs font-medium leading-tight text-judge-foreground outline-none hover:bg-judge focus-visible:ring-2 focus-visible:ring-ring"
       @click="() => { autoEditId = store.addStaffMember() }"
     >
       <span class="-ml-1">+</span> Add judge

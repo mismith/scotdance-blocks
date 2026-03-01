@@ -87,8 +87,8 @@ function onRemoveBlock(blockId: string) {
       <!-- Block tabs -->
       <div
         ref="tabBarEl"
-        class="flex gap-1 border-b border-gray-200 bg-white px-4 pt-2"
-        :class="isValidTarget ? 'bg-blue-50' : ''"
+        class="flex gap-1 border-b border-border bg-card px-4 pt-2"
+        :class="isValidTarget ? 'bg-group-muted' : ''"
       >
         <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
           <DragIndicator
@@ -113,7 +113,7 @@ function onRemoveBlock(blockId: string) {
           class="-mx-0.75 self-stretch rounded"
         />
         <button
-          class="rounded px-3 py-2 text-sm text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-blue-400"
+          class="rounded px-3 py-2 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
           title="Add block"
           @click="onAddBlock"
         >
@@ -124,7 +124,7 @@ function onRemoveBlock(blockId: string) {
       <!-- Grid -->
       <div class="flex-1 overflow-auto p-4">
         <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
-        <div v-else class="py-12 text-center text-gray-400">
+        <div v-else class="py-12 text-center text-muted-foreground">
           No block selected. Click + to add one.
         </div>
       </div>

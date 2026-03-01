@@ -72,7 +72,7 @@ onMounted(() => {
     ref="inputEl"
     v-model="draft"
     :placeholder
-    class="field-sizing-content rounded border border-blue-300 bg-white px-0 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-blue-400"
+    class="field-sizing-content rounded border border-ring bg-card px-0 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-ring"
     @pointerdown.stop
     @keydown.stop
     @keydown.enter="commit"
@@ -84,7 +84,7 @@ onMounted(() => {
     v-else
     ref="displayEl"
     tabindex="0"
-    class="cursor-text border-b border-b-transparent outline-none hover:border-b-gray-400 focus-visible:border-b-blue-400"
+    class="cursor-text border-b border-b-transparent outline-none hover:border-b-muted-foreground focus-visible:border-b-ring"
     :class="{ 'text-current/50': !modelValue }"
     @click.stop="startEdit"
     @keydown.stop

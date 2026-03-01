@@ -45,8 +45,8 @@ whenever(
 
 <template>
   <div class="flex h-screen flex-col">
-    <header class="flex items-center gap-4 border-b border-gray-200 bg-white px-4 py-3">
-      <h1 class="text-lg font-bold text-gray-900">ScotDance Blocks</h1>
+    <header class="flex items-center gap-4 border-b border-border bg-card px-4 py-3">
+      <h1 class="text-lg font-bold text-foreground">ScotDance Blocks</h1>
     </header>
 
     <DnDProvider overlay-to="body">

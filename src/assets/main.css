@@ -1,5 +1,95 @@
 @import 'tailwindcss';
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-dance: var(--dance);
+  --color-dance-foreground: var(--dance-foreground);
+  --color-dance-muted: var(--dance-muted);
+  --color-group: var(--group);
+  --color-group-foreground: var(--group-foreground);
+  --color-group-muted: var(--group-muted);
+  --color-judge: var(--judge);
+  --color-judge-foreground: var(--judge-foreground);
+  --color-judge-muted: var(--judge-muted);
+  --color-indicator: var(--indicator);
+}
+
+:root {
+  --background: var(--color-white);
+  --foreground: var(--color-gray-900);
+  --card: var(--color-white);
+  --card-foreground: var(--color-gray-900);
+  --muted: var(--color-gray-50);
+  --muted-foreground: var(--color-gray-500);
+  --accent: var(--color-gray-100);
+  --accent-foreground: var(--color-gray-900);
+  --border: var(--color-gray-200);
+  --input: var(--color-gray-300);
+  --ring: var(--color-blue-400);
+  --primary: var(--color-blue-500);
+  --primary-foreground: var(--color-white);
+  --destructive: var(--color-red-500);
+  --destructive-foreground: var(--color-white);
+  --dance: var(--color-green-100);
+  --dance-foreground: var(--color-green-800);
+  --dance-muted: var(--color-green-50);
+  --group: var(--color-blue-100);
+  --group-foreground: var(--color-blue-800);
+  --group-muted: var(--color-blue-50);
+  --judge: var(--color-amber-100);
+  --judge-foreground: var(--color-amber-800);
+  --judge-muted: var(--color-amber-50);
+  --indicator: var(--color-blue-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-gray-950);
+    --foreground: var(--color-gray-50);
+    --card: var(--color-gray-900);
+    --card-foreground: var(--color-gray-50);
+    --muted: var(--color-gray-800);
+    --muted-foreground: var(--color-gray-400);
+    --accent: var(--color-gray-800);
+    --accent-foreground: var(--color-gray-50);
+    --border: var(--color-gray-700);
+    --input: var(--color-gray-600);
+    --ring: var(--color-blue-400);
+    --primary: var(--color-blue-400);
+    --primary-foreground: var(--color-gray-950);
+    --destructive: var(--color-red-400);
+    --destructive-foreground: var(--color-gray-50);
+    --dance: var(--color-green-900);
+    --dance-foreground: var(--color-green-200);
+    --dance-muted: var(--color-green-950);
+    --group: var(--color-blue-900);
+    --group-foreground: var(--color-blue-200);
+    --group-muted: var(--color-blue-950);
+    --judge: var(--color-amber-900);
+    --judge-foreground: var(--color-amber-200);
+    --judge-muted: var(--color-amber-950);
+    --indicator: var(--color-blue-400);
+  }
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
 /* Ensure drag overlay renders above all content */
 .dnd-kit-overlay-container {
   z-index: 9999;

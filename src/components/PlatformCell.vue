@@ -135,7 +135,7 @@ const validTargetClass = computed(() => {
       props.assignment?.orderedGroupIds.includes(payload.groupId) &&
       (payload.source === 'palette' || !isSameCell(payload.source))
     ) return ''
-    return 'bg-blue-50'
+    return 'bg-group-muted'
   }
   if (activeDragGroup.value === 'judge') {
     const payload = activeDragPayload.value
@@ -145,7 +145,7 @@ const validTargetClass = computed(() => {
       props.assignment?.orderedJudgeIds.includes(payload.judgeId) &&
       (payload.source === 'palette' || !isSameCell(payload.source))
     ) return ''
-    return 'bg-amber-50'
+    return 'bg-judge-muted'
   }
   return ''
 })
@@ -171,7 +171,7 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="flex flex-col border-t border-l border-gray-200 px-2 py-1.5 transition-colors"
+    class="flex flex-col border-t border-l border-border px-2 py-1.5 transition-colors"
     :class="validTargetClass"
   >
     <template v-if="assignment">
@@ -222,7 +222,7 @@ const liveJudgeInsertIndex = computed(() => {
         v-if="isDragOver && (liveGroupInsertIndex === 0 || liveJudgeInsertIndex === 0)"
         class="-my-0.5 rounded"
       />
-      <span v-else class="text-xs text-gray-300">&mdash;</span>
+      <span v-else class="text-xs text-muted-foreground/50">&mdash;</span>
     </template>
   </div>
 </template>

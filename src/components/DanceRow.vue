@@ -59,21 +59,21 @@ const { isDragging } = makeDraggable(
   >
     <div
       ref="nameCellEl"
-      class="group/cell cursor-grab border-t border-l border-gray-200 px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-blue-400"
+      class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
           <div class="text-sm">
             {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
-            <span v-if="dance?.steps" class="text-gray-400">({{ dance.steps }})</span>
-            <span v-if="scheduledDance.name" class="ml-1 text-xs text-gray-500">
+            <span v-if="dance?.steps" class="text-muted-foreground">({{ dance.steps }})</span>
+            <span v-if="scheduledDance.name" class="ml-1 text-xs text-muted-foreground">
               {{ scheduledDance.name }}
             </span>
           </div>
         </div>
         <button
-          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-gray-400 opacity-0 outline-none transition-opacity hover:text-red-500 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:opacity-100 group-hover/cell:opacity-100 group-has-focus-visible/cell:opacity-100"
+          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/cell:opacity-100 group-has-focus-visible/cell:opacity-100"
           title="Remove dance"
           @click="onRemove"
           @keydown.stop
@@ -88,6 +88,6 @@ const { isDragging } = makeDraggable(
       :assignment="scheduledDance.platforms[platformId]"
       :location="{ blockId, eventId, danceId, platformId }"
     />
-    <div class="border-t border-l border-gray-200" />
+    <div class="border-t border-l border-border" />
   </div>
 </template>

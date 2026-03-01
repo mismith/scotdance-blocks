@@ -156,17 +156,17 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 <template>
   <div
     ref="gridEl"
-    class="w-full border-r border-b border-gray-300 text-sm"
-    :class="isEventValidTarget ? 'bg-blue-50' : ''"
+    class="w-full border-r border-b border-input text-sm"
+    :class="isEventValidTarget ? 'bg-group-muted' : ''"
     :style="{ display: 'grid', gridTemplateColumns: gridCols }"
   >
       <!-- Header row -->
       <div
         ref="headerRowEl"
         class="relative col-span-full grid grid-cols-subgrid"
-        :class="isPlatformValidTarget ? 'bg-blue-50' : ''"
+        :class="isPlatformValidTarget ? 'bg-group-muted' : ''"
       >
-        <div class="border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5" />
+        <div class="border-t border-l border-input bg-muted px-1 py-1.5" />
         <PlatformHeader
           v-for="([platformId, platform], platformIndex) in store.platformEntries"
           :key="platformId"
@@ -176,9 +176,9 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :auto-edit="autoEditPlatformId === platformId"
           @remove="onRemovePlatform(platformId)"
         />
-        <div class="flex items-center justify-center border-t border-l border-gray-300 bg-gray-50 px-1 py-1.5">
+        <div class="flex items-center justify-center border-t border-l border-input bg-muted px-1 py-1.5">
           <button
-            class="flex size-5 items-center justify-center rounded text-xs text-gray-400 outline-none hover:text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-400"
+            class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
             title="Add platform"
             @click="onAddPlatform"
           >
@@ -215,7 +215,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
       <!-- Add event -->
       <button
-        class="col-span-full flex items-center gap-1 border-t border-l border-gray-300 bg-gray-100 px-1 py-1.5 text-left text-sm font-semibold text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
+        class="col-span-full flex items-center gap-1 border-t border-l border-input bg-accent px-1 py-1.5 text-left text-sm font-semibold text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         @click="onAddEvent"
       >
         <span class="select-none">+</span>
