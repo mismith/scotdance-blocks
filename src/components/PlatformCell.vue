@@ -5,6 +5,7 @@ import { computed, ref as vueRef } from 'vue'
 import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
+import DragIndicator from '@/components/DragIndicator.vue'
 import GroupChip from '@/components/GroupChip.vue'
 import JudgeChip from '@/components/JudgeChip.vue'
 import type { CellLocation, DragGroupData, DragJudgeData, PlatformAssignment } from '@/types'
@@ -155,15 +156,15 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="border-t border-l border-gray-200 px-2 py-1.5 transition-colors"
+    class="flex flex-col border-t border-l border-gray-200 px-2 py-1.5 transition-colors"
     :class="validTargetClass"
   >
     <template v-if="assignment">
       <div class="flex flex-col gap-0.5">
         <template v-for="(groupId, index) in assignment.orderedGroupIds" :key="groupId">
-          <div
+          <DragIndicator
             v-if="isDragOver && liveGroupInsertIndex === index"
-            class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
+            class="-my-0.5 rounded"
           />
           <GroupChip
             :label="store.getGroupLabel(groupId)"
@@ -174,16 +175,17 @@ const liveJudgeInsertIndex = computed(() => {
             @remove="store.removeGroupFromCell(location.blockId, location.eventId, location.danceId, location.platformId, groupId)"
           />
         </template>
-        <div
+        <DragIndicator
           v-if="isDragOver && liveGroupInsertIndex === (assignment?.orderedGroupIds.length ?? 0)"
-          class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
+          class="-my-0.5 rounded"
         />
       </div>
+      <div class="flex-auto" />
       <div v-if="assignment.orderedJudgeIds.length || (isDragOver && liveJudgeInsertIndex >= 0)" class="mt-1 flex flex-col gap-0.5">
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
-          <div
+          <DragIndicator
             v-if="isDragOver && liveJudgeInsertIndex === index"
-            class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
+            class="-my-0.5 rounded"
           />
           <JudgeChip
             :label="store.getStaffName(judgeId)"
@@ -194,16 +196,16 @@ const liveJudgeInsertIndex = computed(() => {
             @remove="store.removeJudgeFromCell(location.blockId, location.eventId, location.danceId, location.platformId, judgeId)"
           />
         </template>
-        <div
+        <DragIndicator
           v-if="isDragOver && liveJudgeInsertIndex === assignment.orderedJudgeIds.length"
-          class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
+          class="-my-0.5 rounded"
         />
       </div>
     </template>
     <template v-else>
-      <div
+      <DragIndicator
         v-if="isDragOver && (liveGroupInsertIndex === 0 || liveJudgeInsertIndex === 0)"
-        class="h-0.5 -my-0.5 relative z-10 rounded bg-blue-500"
+        class="-my-0.5 rounded"
       />
       <span v-else class="text-xs text-gray-300">&mdash;</span>
     </template>

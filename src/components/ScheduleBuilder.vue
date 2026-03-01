@@ -6,6 +6,7 @@ import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
 import BlockTab from '@/components/BlockTab.vue'
+import DragIndicator from '@/components/DragIndicator.vue'
 import ScheduleGrid from '@/components/ScheduleGrid.vue'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 import type { DragBlockData } from '@/types'
@@ -90,9 +91,10 @@ function onRemoveBlock(blockId: string) {
         :class="isValidTarget ? 'bg-blue-50' : ''"
       >
         <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
-          <div
+          <DragIndicator
             v-if="isDragOver && liveBlockInsertIndex === blockIndex"
-            class="w-0.5 -mx-0.75 relative z-10 self-stretch rounded bg-blue-500"
+            orientation="vertical"
+            class="-mx-0.75 self-stretch rounded"
           />
           <BlockTab
             :block="block"
@@ -105,9 +107,10 @@ function onRemoveBlock(blockId: string) {
             @remove="onRemoveBlock(blockId)"
           />
         </template>
-        <div
+        <DragIndicator
           v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
-          class="w-0.5 -mx-0.75 relative z-10 self-stretch rounded bg-blue-500"
+          orientation="vertical"
+          class="-mx-0.75 self-stretch rounded"
         />
         <button
           class="rounded px-3 py-2 text-sm text-gray-400 outline-none hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-blue-400"

@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
+import DragIndicator from '@/components/DragIndicator.vue'
 import EventSection from '@/components/EventSection.vue'
 import PlatformHeader from '@/components/PlatformHeader.vue'
 import type { DragEventData, DragPlatformData, ScheduleBlock } from '@/types'
@@ -185,18 +186,19 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           </button>
         </div>
         <!-- Platform insertion indicator (absolute, no layout impact) -->
-        <div
+        <DragIndicator
           v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"
-          class="absolute top-0 bottom-0 z-10 w-0.5 bg-blue-500"
+          orientation="vertical"
+          class="absolute! top-0 bottom-0"
           :style="{ left: indicatorLeftPx + 'px' }"
         />
       </div>
 
       <!-- Events -->
       <template v-for="([eventId, event], eventIndex) in eventEntries" :key="eventId">
-        <div
+        <DragIndicator
           v-if="isDragOver && liveEventInsertIndex === eventIndex"
-          class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+          class="col-span-full -my-px"
         />
         <EventSection
           :event="event"
@@ -206,9 +208,9 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :auto-edit="autoEditEventId === eventId"
         />
       </template>
-      <div
+      <DragIndicator
         v-if="isDragOver && liveEventInsertIndex === eventEntries.length"
-        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+        class="col-span-full -my-px"
       />
 
       <!-- Add event -->

@@ -6,6 +6,7 @@ import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
 import DanceRow from '@/components/DanceRow.vue'
+import DragIndicator from '@/components/DragIndicator.vue'
 import InlineEdit from '@/components/InlineEdit.vue'
 import type { DragDanceData, DragEventData, ScheduleEvent } from '@/types'
 
@@ -171,9 +172,9 @@ function onRemoveEvent() {
         v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)"
         :key="danceId"
       >
-        <div
+        <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === danceIndex"
-          class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+          class="col-span-full -my-px"
         />
         <DanceRow
           :scheduled-dance="scheduledDance"
@@ -183,15 +184,15 @@ function onRemoveEvent() {
           :index="danceIndex"
         />
       </template>
-      <div
+      <DragIndicator
         v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
-        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+        class="col-span-full -my-px"
       />
     </template>
     <template v-if="!(event.dances && Object.keys(event.dances).length)">
-      <div
+      <DragIndicator
         v-if="isDragOver && liveDanceInsertIndex === 0"
-        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+        class="col-span-full -my-px"
       />
       <div
         data-dance-placeholder
@@ -199,9 +200,9 @@ function onRemoveEvent() {
       >
         <div class="rounded border border-dashed border-gray-300 px-2 py-1">Drag dances here</div>
       </div>
-      <div
+      <DragIndicator
         v-if="isDragOver && liveDanceInsertIndex === 1"
-        class="col-span-full h-0.5 -my-px relative z-10 bg-blue-500"
+        class="col-span-full -my-px"
       />
     </template>
   </div>
