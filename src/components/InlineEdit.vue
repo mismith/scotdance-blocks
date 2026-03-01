@@ -72,7 +72,7 @@ onMounted(() => {
     ref="inputEl"
     v-model="draft"
     :placeholder
-    class="field-sizing-content rounded border border-ring bg-card px-0 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-ring"
+    class="max-w-full field-sizing-content rounded border border-ring bg-card px-0 py-0 text-inherit leading-tight outline-none focus:ring-1 focus:ring-ring"
     @pointerdown.stop
     @keydown.stop
     @keydown.enter="commit"
