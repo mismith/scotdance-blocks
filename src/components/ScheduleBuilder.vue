@@ -109,7 +109,7 @@ function onRemoveBlock(blockId: string) {
           class="-mx-0.75 self-stretch rounded"
         />
         <button
-          class="rounded px-3 py-2 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          class="rounded px-3 py-2 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:px-4 comfortable:py-2.5"
           title="Add block"
           @click="onAddBlock"
         >

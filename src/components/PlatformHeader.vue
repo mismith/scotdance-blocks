@@ -44,7 +44,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="headerEl"
     data-platform-header
-    class="group flex items-center gap-1 border-t border-l border-border bg-card px-1 py-1.5 text-center text-xs font-semibold text-muted-foreground has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group flex items-center gap-1 border-t border-l border-border bg-card px-1 py-1.5 text-center text-xs font-semibold text-muted-foreground has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring comfortable:text-sm"
     :class="[isDragging ? 'opacity-40' : '', readonly ? 'pointer-events-none' : 'cursor-grab']"
   >
     <span v-if="!readonly" data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -58,7 +58,7 @@ const { isDragging } = makeDraggable(
     />
     <button
       v-if="!readonly"
-      class="ml-1 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
+      class="ml-1 flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100 comfortable:size-5"
       title="Remove platform"
       @click.stop="emit('remove')"
       @keydown.stop

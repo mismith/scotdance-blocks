@@ -62,7 +62,7 @@ const { isDragging } = makeDraggable(
       class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     >
       <div
-        class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground glass glass-dance"
+        class="group/chip flex items-center gap-1 rounded bg-dance px-2 py-1 text-xs font-medium leading-tight text-dance-foreground glass glass-dance comfortable:px-3 comfortable:py-1.5 comfortable:text-sm"
       >
         <span data-grip tabindex="0" class="opacity-50 -ml-1 outline-none select-none">⠿</span>
         <span class="flex-1">
@@ -73,7 +73,7 @@ const { isDragging } = makeDraggable(
           </span>
         </span>
         <button
-          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-dance-foreground/50 opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100"
+          class="ml-2 flex size-4 shrink-0 items-center justify-center rounded text-dance-foreground/50 opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100 comfortable:size-5"
           title="Remove dance"
           @click="onRemove"
           @keydown.stop

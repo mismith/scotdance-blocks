@@ -175,7 +175,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         />
         <div v-if="!store.collectionsReadonly" class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
           <button
-            class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
+            class="flex size-5 items-center justify-center rounded text-xs text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring comfortable:size-6 comfortable:text-sm"
             title="Add platform"
             @click="onAddPlatform"
           >
