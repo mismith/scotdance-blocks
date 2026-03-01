@@ -119,7 +119,7 @@ const { isDragOver } = makeDroppable(el, {
   },
 })
 
-// Valid target: highlight when an eligible group or any judge is being dragged
+// Valid target: highlight when an eligible, non-duplicate group or judge is being dragged
 const validTargetClass = computed(() => {
   if (activeDragGroup.value === 'group') {
     const payload = activeDragPayload.value
@@ -128,11 +128,25 @@ const validTargetClass = computed(() => {
     const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
     const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
     if (!dance) return ''
-    // empty groupIds = any group allowed
-    if (Object.keys(dance.groupIds).length === 0) return 'bg-blue-50'
-    return dance.groupIds[payload.groupId] ? 'bg-blue-50' : ''
+    // reject if group is not eligible for this dance
+    if (Object.keys(dance.groupIds).length > 0 && !dance.groupIds[payload.groupId]) return ''
+    // reject if group already exists in this cell (unless reordering within same cell)
+    if (
+      props.assignment?.orderedGroupIds.includes(payload.groupId) &&
+      (payload.source === 'palette' || !isSameCell(payload.source))
+    ) return ''
+    return 'bg-blue-50'
   }
-  if (activeDragGroup.value === 'judge') return 'bg-amber-50'
+  if (activeDragGroup.value === 'judge') {
+    const payload = activeDragPayload.value
+    if (payload?.type !== 'judge') return ''
+    // reject if judge already exists in this cell (unless reordering within same cell)
+    if (
+      props.assignment?.orderedJudgeIds.includes(payload.judgeId) &&
+      (payload.source === 'palette' || !isSameCell(payload.source))
+    ) return ''
+    return 'bg-amber-50'
+  }
   return ''
 })
 
@@ -147,6 +161,7 @@ const liveGroupInsertIndex = computed(() => {
 
 const liveJudgeInsertIndex = computed(() => {
   if (!isDragOver.value || activeDragGroup.value !== 'judge') return -1
+  if (!validTargetClass.value) return -1
   const pointerY = provider.pointer.value?.current.y
   if (pointerY === undefined) return -1
   return getInsertIndex('[data-judge-chip]', pointerY) ?? -1
