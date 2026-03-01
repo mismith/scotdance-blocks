@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -7,6 +8,8 @@ import DanceChip from '@/components/DanceChip.vue'
 import InlineEdit from '@/components/InlineEdit.vue'
 
 const store = useCompetitionStore()
+const route = useRoute()
+const router = useRouter()
 
 const autoEditId = ref<string | null>(null)
 
@@ -23,7 +26,23 @@ function onRemoveDance(danceId: string) {
 
 <template>
   <details open>
-    <summary class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none">Dances</summary>
+    <summary
+      class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none"
+    >
+      <button
+        class="float-right rounded p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        :class="
+          route.name === 'dance-groups'
+            ? 'bg-dance text-dance-foreground'
+            : 'text-muted-foreground/50 hover:text-muted-foreground'
+        "
+        title="Configure dance groups"
+        @click.prevent="router.push(route.name === 'dance-groups' ? '/' : '/dance-groups')"
+      >
+        ⚙
+      </button>
+      Dances
+    </summary>
     <div class="flex flex-col gap-1">
       <DanceChip
         v-for="[danceId, dance] in Object.entries(store.dances)"
@@ -39,19 +58,27 @@ function onRemoveDance(danceId: string) {
           :model-value="dance.shortName || dance.name"
           placeholder="Name"
           :auto-edit="autoEditId === danceId"
-          @update:model-value="store.updateDance(danceId, dance.shortName ? { shortName: $event } : { name: $event })"
+          @update:model-value="
+            store.updateDance(danceId, dance.shortName ? { shortName: $event } : { name: $event })
+          "
         />
-        <span class="text-dance-foreground/50">{{ ' ' }}(<InlineEdit
-          :model-value="dance.steps ?? ''"
-          placeholder="Steps"
-          :required="false"
-          @update:model-value="store.updateDance(danceId, { steps: $event })"
-        />)</span>
+        <span class="text-dance-foreground/50"
+          >{{ ' ' }}(<InlineEdit
+            :model-value="dance.steps ?? ''"
+            placeholder="Steps"
+            :required="false"
+            @update:model-value="store.updateDance(danceId, { steps: $event })"
+          />)</span
+        >
       </DanceChip>
     </div>
     <button
       class="mt-1 w-full rounded bg-dance/25 px-2 py-1 text-left text-xs font-medium leading-tight text-dance-foreground outline-none hover:bg-dance focus-visible:ring-2 focus-visible:ring-ring"
-      @click="() => { autoEditId = store.addDance() }"
+      @click="
+        () => {
+          autoEditId = store.addDance()
+        }
+      "
     >
       <span class="-ml-1">+</span> Add dance
     </button>

@@ -8,7 +8,6 @@ import { useDragType } from '@/composables/useDragType'
 import BlockTab from '@/components/BlockTab.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
 import ScheduleGrid from '@/components/ScheduleGrid.vue'
-import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 import type { DragBlockData } from '@/types'
 
 const store = useCompetitionStore()
@@ -80,10 +79,7 @@ function onRemoveBlock(blockId: string) {
 </script>
 
 <template>
-  <div class="flex h-full">
-    <ScheduleSidebar />
-
-    <div class="flex flex-1 flex-col overflow-clip">
+  <div class="flex h-full flex-col overflow-clip">
       <!-- Block tabs -->
       <div
         ref="tabBarEl"
@@ -127,7 +123,6 @@ function onRemoveBlock(blockId: string) {
         <div v-else class="py-12 text-center text-muted-foreground">
           No block selected. Click + to add one.
         </div>
-      </div>
     </div>
   </div>
 </template>

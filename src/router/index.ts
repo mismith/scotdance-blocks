@@ -9,6 +9,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/dance-groups',
+      name: 'dance-groups',
+      component: () => import('../views/DanceGroupsView.vue'),
+    },
   ],
 })
 

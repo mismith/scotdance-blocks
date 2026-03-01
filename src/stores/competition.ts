@@ -292,6 +292,24 @@ export const useCompetitionStore = defineStore('competition', () => {
     if (fields.steps !== undefined) dance.steps = fields.steps || undefined
   }
 
+  function toggleDanceGroup(danceId: string, groupId: string) {
+    const dance = data.value.dances[danceId]
+    if (!dance) return
+    if (dance.groupIds[groupId]) delete dance.groupIds[groupId]
+    else dance.groupIds[groupId] = true
+  }
+
+  function toggleDanceCategoryGroups(danceId: string, categoryId: string) {
+    const dance = data.value.dances[danceId]
+    if (!dance) return
+    const catGroups = groupsByCategory.value[categoryId] ?? []
+    const allChecked = catGroups.every(([gId]) => dance.groupIds[gId])
+    for (const [gId] of catGroups) {
+      if (allChecked) delete dance.groupIds[gId]
+      else dance.groupIds[gId] = true
+    }
+  }
+
   function addGroup(categoryId: string): string {
     const id = generateId()
     data.value.groups[id] = { categoryId, name: 'New Group' }
@@ -511,6 +529,8 @@ export const useCompetitionStore = defineStore('competition', () => {
     addDance,
     removeDance,
     updateDance,
+    toggleDanceGroup,
+    toggleDanceCategoryGroups,
     addGroup,
     removeGroup,
     renameGroup,

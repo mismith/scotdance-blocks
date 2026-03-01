@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { RouterView } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
+import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 
 const store = useCompetitionStore()
 const { data } = storeToRefs(store)
@@ -50,7 +51,10 @@ whenever(
     </header>
 
     <DnDProvider overlay-to="body">
-      <RouterView class="flex-1 overflow-hidden" />
+      <div class="flex flex-1 overflow-hidden">
+        <ScheduleSidebar />
+        <RouterView class="flex-1 overflow-hidden" />
+      </div>
     </DnDProvider>
   </div>
 </template>
