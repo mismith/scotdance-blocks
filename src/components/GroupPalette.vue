@@ -5,6 +5,7 @@ import { useCompetitionStore } from '@/stores/competition'
 
 import GroupChip from '@/components/GroupChip.vue'
 import InlineEdit from '@/components/InlineEdit.vue'
+import SpacerChip from '@/components/SpacerChip.vue'
 
 const store = useCompetitionStore()
 
@@ -102,5 +103,8 @@ function onRemoveCategory(categoryId: string) {
     >
       <span class="-ml-1">+</span> Add category
     </button>
+    <div v-if="Object.keys(store.groups).length" class="mt-3">
+      <SpacerChip class="w-full" />
+    </div>
   </details>
 </template>

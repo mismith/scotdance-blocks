@@ -4,10 +4,12 @@ import { computed, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
+import { isPlaceholderId } from '@/utils/id'
 import { useDragType } from '@/composables/useDragType'
 import DragIndicator from '@/components/DragIndicator.vue'
 import GroupChip from '@/components/GroupChip.vue'
 import JudgeChip from '@/components/JudgeChip.vue'
+import SpacerChip from '@/components/SpacerChip.vue'
 import type { CellLocation, DragGroupData, DragJudgeData, PlatformAssignment } from '@/types'
 
 const props = defineProps<{
@@ -50,11 +52,13 @@ const { isDragOver } = makeDroppable(el, {
       const loc = props.location
 
       if (dragData.type === 'group') {
-        // reject if group is not eligible for this dance
-        const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
-        const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
-        if (dance && Object.keys(dance.groupIds).length > 0 && !dance.groupIds[dragData.groupId])
-          return
+        // reject if group is not eligible for this dance (spacers bypass this check)
+        if (!isPlaceholderId(dragData.groupId)) {
+          const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
+          const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
+          if (dance && Object.keys(dance.groupIds).length > 0 && !dance.groupIds[dragData.groupId])
+            return
+        }
 
         const insertIndex = getInsertIndex('[data-group-chip]', pointerY)
 
@@ -128,13 +132,15 @@ const validTargetClass = computed(() => {
     const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
     const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
     if (!dance) return ''
-    // reject if group is not eligible for this dance
-    if (Object.keys(dance.groupIds).length > 0 && !dance.groupIds[payload.groupId]) return ''
-    // reject if group already exists in this cell (unless reordering within same cell)
-    if (
-      props.assignment?.orderedGroupIds.includes(payload.groupId) &&
-      (payload.source === 'palette' || !isSameCell(payload.source))
-    ) return ''
+    if (!isPlaceholderId(payload.groupId)) {
+      // reject if group is not eligible for this dance
+      if (Object.keys(dance.groupIds).length > 0 && !dance.groupIds[payload.groupId]) return ''
+      // reject if group already exists in this cell (unless reordering within same cell)
+      if (
+        props.assignment?.orderedGroupIds.includes(payload.groupId) &&
+        (payload.source === 'palette' || !isSameCell(payload.source))
+      ) return ''
+    }
     return 'bg-group-muted before:absolute before:-inset-1 before:rounded-xl before:bg-group-muted before:-z-10 before:pointer-events-none'
   }
   if (activeDragGroup.value === 'judge') {
@@ -190,7 +196,16 @@ const liveJudgeInsertIndex = computed(() => {
             variant="group"
             class="-my-0.5 rounded"
           />
+          <SpacerChip
+            v-if="isPlaceholderId(groupId)"
+            :group-id="groupId"
+            :index="index"
+            :source="location"
+            removable
+            @remove="store.removeGroupFromCell(location.blockId, location.eventId, location.danceId, location.platformId, groupId)"
+          />
           <GroupChip
+            v-else
             :label="store.getGroupLabel(groupId)"
             :group-id="groupId"
             :index="index"
