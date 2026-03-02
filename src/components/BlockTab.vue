@@ -49,7 +49,7 @@ const { isDragging } = makeDraggable(
     :class="[
       active
         ? 'border-border border-b-card bg-card text-foreground glass glass-card'
-        : 'text-muted-foreground glass glass-muted hover:bg-muted hover:text-accent-foreground',
+        : 'text-muted-foreground glass glass-muted backdrop-blur-3xl hover:bg-muted hover:text-accent-foreground',
       isDragging ? 'opacity-40' : '',
     ]"
     role="button"

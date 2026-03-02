@@ -31,21 +31,21 @@
 :root {
   --background: var(--color-white);
   --foreground: var(--color-zinc-900);
-  --card: var(--color-white);
+  --card: var(--color-zinc-100);
   --card-foreground: var(--color-zinc-900);
-  --muted: var(--color-zinc-50);
+  --muted: var(--color-zinc-200);
   --muted-foreground: var(--color-zinc-500);
-  --accent: var(--color-zinc-100);
+  --accent: var(--color-zinc-200);
   --accent-foreground: var(--color-zinc-900);
-  --border: var(--color-zinc-200);
-  --input: var(--color-zinc-300);
+  --border: var(--color-zinc-300);
+  --input: var(--color-zinc-400);
   --ring: var(--foreground);
   --primary: var(--color-emerald-600);
   --primary-foreground: var(--color-white);
   --destructive: var(--color-red-500);
   --destructive-foreground: var(--color-white);
   --dance: oklch(0.93 0.07 155);
-  --dance-foreground: oklch(0.30 0.14 155);
+  --dance-foreground: oklch(0.3 0.14 155);
   --dance-muted: oklch(0.97 0.02 155);
   --group: oklch(0.92 0.06 230);
   --group-foreground: oklch(0.32 0.12 230);
@@ -60,13 +60,13 @@
   :root {
     --background: var(--color-zinc-950);
     --foreground: var(--color-zinc-50);
-    --card: var(--color-zinc-800);
+    --card: var(--color-zinc-900);
     --card-foreground: var(--color-zinc-50);
-    --muted: var(--color-zinc-900);
+    --muted: var(--color-zinc-800);
     --muted-foreground: var(--color-zinc-400);
     --accent: var(--color-zinc-700);
     --accent-foreground: var(--color-zinc-50);
-    --border: var(--color-zinc-600);
+    --border: var(--color-zinc-700);
     --input: var(--color-zinc-500);
     --ring: var(--foreground);
     --primary: var(--color-emerald-500);
@@ -74,7 +74,7 @@
     --destructive: var(--color-red-400);
     --destructive-foreground: var(--color-zinc-50);
     --dance: oklch(0.18 0.04 155);
-    --dance-foreground: oklch(0.82 0.30 155);
+    --dance-foreground: oklch(0.82 0.3 155);
     --dance-muted: oklch(0.25 0.06 155);
     --group: oklch(0.18 0.04 230);
     --group-foreground: oklch(0.78 0.28 230);
@@ -86,17 +86,40 @@
   }
 }
 
+@utility bg-textured {
+  @media (prefers-color-scheme: dark) {
+    background-image: url('./dark_matter.png');
+    background-repeat: repeat;
+  }
+  @media (prefers-color-scheme: light) {
+    background-image: url('./dark_matter-light.png');
+    background-repeat: repeat;
+  }
+}
+
 body {
-  @apply bg-background text-foreground;
+  @apply bg-background bg-textured text-foreground;
 }
 
 /* Liquid-glass utilities */
-@utility glass-dance { --glass-color: var(--dance); }
-@utility glass-group { --glass-color: var(--group); }
-@utility glass-judge { --glass-color: var(--judge); }
-@utility glass-accent { --glass-color: var(--accent); }
-@utility glass-card { --glass-color: var(--card); }
-@utility glass-muted { --glass-color: var(--muted); }
+@utility glass-dance {
+  --glass-color: var(--dance);
+}
+@utility glass-group {
+  --glass-color: var(--group);
+}
+@utility glass-judge {
+  --glass-color: var(--judge);
+}
+@utility glass-accent {
+  --glass-color: var(--accent);
+}
+@utility glass-card {
+  --glass-color: var(--card);
+}
+@utility glass-muted {
+  --glass-color: var(--muted);
+}
 
 @utility glass {
   border: 1px solid oklch(from var(--glass-color) calc(l + 0.06) c h / 0.3);
@@ -107,7 +130,10 @@ body {
   --tw-shadow:
     0 1px 2px oklch(from var(--glass-color) calc(l - 0.25) c h / 0.12),
     0 2px 6px oklch(from var(--glass-color) calc(l - 0.2) c h / 0.06);
-  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 0 0 transparent), var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent), var(--tw-shadow);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 0 0 transparent),
+    var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent),
+    var(--tw-shadow);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -117,9 +143,7 @@ body {
       inset 0 1px 0 oklch(from var(--glass-color) calc(l + 0.15) c h / 0.3),
       inset 0 0 4px oklch(from var(--glass-color) calc(l + 0.1) c h / 0.1),
       inset 0 -1px 0 oklch(from var(--glass-color) calc(l - 0.08) c h / 0.5);
-    --tw-shadow:
-      0 1px 3px oklch(0 0 0 / 0.25),
-      0 3px 8px oklch(0 0 0 / 0.15);
+    --tw-shadow: 0 1px 3px oklch(0 0 0 / 0.25), 0 3px 8px oklch(0 0 0 / 0.15);
   }
 }
 
