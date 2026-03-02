@@ -183,7 +183,7 @@ function onAutoCycleJudges() {
     <div class="group col-span-full has-[[data-grip]:focus-visible]:z-10">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+        class="flex cursor-grab items-center justify-between rounded-lg bg-accent px-1 py-1.5 text-left text-sm font-semibold glass glass-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       >
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -260,7 +260,7 @@ function onAutoCycleJudges() {
         </div>
       </div>
     </div>
-    <div class="col-span-full border-t border-l border-border py-1.5 pr-1 pl-5 text-sm">
+    <div class="col-span-full border-border py-1.5 pr-1 pl-5 text-sm">
       <InlineEdit
         :model-value="event.description ?? ''"
         placeholder="Add event description"
@@ -309,7 +309,7 @@ function onAutoCycleJudges() {
         />
         <div
           data-dance-placeholder
-          class="col-span-full border-t border-l border-border px-1 py-1.5 text-center text-sm text-muted-foreground"
+          class="col-span-full px-1 py-1.5 text-center text-sm text-muted-foreground"
         >
           <div class="rounded border border-dashed border-border px-2 py-1">Drag dances here</div>
         </div>

@@ -2,9 +2,9 @@
 import { makeDroppable } from '@vue-dnd-kit/core'
 import { computed, ref as vueRef } from 'vue'
 
+import { isPlaceholderId } from '@/utils/id'
 import { useCompetitionStore } from '@/stores/competition'
 
-import { isPlaceholderId } from '@/utils/id'
 import { useDragType } from '@/composables/useDragType'
 import DragIndicator from '@/components/DragIndicator.vue'
 import GroupChip from '@/components/GroupChip.vue'
@@ -54,7 +54,8 @@ const { isDragOver } = makeDroppable(el, {
       if (dragData.type === 'group') {
         // reject if group is not eligible for this dance (spacers bypass this check)
         if (!isPlaceholderId(dragData.groupId)) {
-          const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
+          const scheduledDance =
+            store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
           const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
           if (dance && Object.keys(dance.groupIds).length > 0 && !dance.groupIds[dragData.groupId])
             return
@@ -74,7 +75,14 @@ const { isDragOver } = makeDroppable(el, {
             )
           }
         } else if (dragData.source === 'palette') {
-          store.addGroupToCell(loc.blockId, loc.eventId, loc.danceId, loc.platformId, dragData.groupId, insertIndex)
+          store.addGroupToCell(
+            loc.blockId,
+            loc.eventId,
+            loc.danceId,
+            loc.platformId,
+            dragData.groupId,
+            insertIndex,
+          )
         } else {
           store.moveGroup(
             dragData.source.blockId,
@@ -104,7 +112,14 @@ const { isDragOver } = makeDroppable(el, {
             )
           }
         } else if (dragData.source === 'palette') {
-          store.addJudgeToCell(loc.blockId, loc.eventId, loc.danceId, loc.platformId, dragData.judgeId, insertIndex)
+          store.addJudgeToCell(
+            loc.blockId,
+            loc.eventId,
+            loc.danceId,
+            loc.platformId,
+            dragData.judgeId,
+            insertIndex,
+          )
         } else {
           store.moveJudge(
             dragData.source.blockId,
@@ -139,7 +154,8 @@ const validTargetClass = computed(() => {
       if (
         props.assignment?.orderedGroupIds.includes(payload.groupId) &&
         (payload.source === 'palette' || !isSameCell(payload.source))
-      ) return ''
+      )
+        return ''
     }
     return 'bg-group-muted before:absolute before:-inset-1 before:rounded-xl before:bg-group-muted before:-z-10 before:pointer-events-none'
   }
@@ -150,7 +166,8 @@ const validTargetClass = computed(() => {
     if (
       props.assignment?.orderedJudgeIds.includes(payload.judgeId) &&
       (payload.source === 'palette' || !isSameCell(payload.source))
-    ) return ''
+    )
+      return ''
     return 'bg-judge-muted before:absolute before:-inset-1 before:rounded-xl before:bg-judge-muted before:-z-10 before:pointer-events-none'
   }
   return ''
@@ -185,7 +202,7 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="relative isolate flex flex-col border-t border-l border-border px-2 py-1.5 transition-all"
+    class="relative isolate flex flex-col border-t border-border px-2 py-1.5 transition-all"
     :class="[validTargetClass, { 'opacity-50': isInvalidTarget }]"
   >
     <template v-if="assignment">
@@ -202,7 +219,15 @@ const liveJudgeInsertIndex = computed(() => {
             :index="index"
             :source="location"
             removable
-            @remove="store.removeGroupFromCell(location.blockId, location.eventId, location.danceId, location.platformId, groupId)"
+            @remove="
+              store.removeGroupFromCell(
+                location.blockId,
+                location.eventId,
+                location.danceId,
+                location.platformId,
+                groupId,
+              )
+            "
           />
           <GroupChip
             v-else
@@ -211,7 +236,15 @@ const liveJudgeInsertIndex = computed(() => {
             :index="index"
             :source="location"
             removable
-            @remove="store.removeGroupFromCell(location.blockId, location.eventId, location.danceId, location.platformId, groupId)"
+            @remove="
+              store.removeGroupFromCell(
+                location.blockId,
+                location.eventId,
+                location.danceId,
+                location.platformId,
+                groupId,
+              )
+            "
           />
         </template>
         <DragIndicator
@@ -221,7 +254,10 @@ const liveJudgeInsertIndex = computed(() => {
         />
       </div>
       <div class="flex-auto" />
-      <div v-if="assignment.orderedJudgeIds.length || (isDragOver && liveJudgeInsertIndex >= 0)" class="mt-1 flex flex-col gap-0.5">
+      <div
+        v-if="assignment.orderedJudgeIds.length || (isDragOver && liveJudgeInsertIndex >= 0)"
+        class="mt-1 flex flex-col gap-0.5"
+      >
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
           <DragIndicator
             v-if="isDragOver && liveJudgeInsertIndex === index"
@@ -234,7 +270,15 @@ const liveJudgeInsertIndex = computed(() => {
             :index="index"
             :source="location"
             removable
-            @remove="store.removeJudgeFromCell(location.blockId, location.eventId, location.danceId, location.platformId, judgeId)"
+            @remove="
+              store.removeJudgeFromCell(
+                location.blockId,
+                location.eventId,
+                location.danceId,
+                location.platformId,
+                judgeId,
+              )
+            "
           />
         </template>
         <DragIndicator
@@ -250,7 +294,9 @@ const liveJudgeInsertIndex = computed(() => {
         :variant="activeDragGroup === 'judge' ? 'judge' : 'group'"
         class="-my-0.5 rounded"
       />
-      <div class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground">
+      <div
+        class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground"
+      >
         Drag groups / judges here
       </div>
     </template>

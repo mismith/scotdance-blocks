@@ -44,10 +44,16 @@ const { isDragging } = makeDraggable(
   <div
     ref="headerEl"
     data-platform-header
-    class="group flex items-center gap-1 border-t border-l border-border bg-card px-1 py-1.5 text-center text-sm font-semibold text-muted-foreground has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group flex items-center gap-1 rounded-lg bg-card px-1 py-1.5 text-center text-sm font-semibold text-muted-foreground glass glass-card has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[isDragging ? 'opacity-40' : '', readonly ? 'pointer-events-none' : 'cursor-grab']"
   >
-    <span data-grip :tabindex="readonly ? -1 : 0" class="outline-none select-none" :class="readonly ? 'invisible' : 'opacity-50'">⠿</span>
+    <span
+      data-grip
+      :tabindex="readonly ? -1 : 0"
+      class="outline-none select-none"
+      :class="readonly ? 'invisible' : 'opacity-50'"
+      >⠿</span
+    >
     <InlineEdit
       :model-value="platform.name"
       placeholder="Name"

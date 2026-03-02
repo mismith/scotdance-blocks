@@ -65,7 +65,7 @@ const autoFillBtnEl = vueRef<HTMLElement | null>(null)
 const autoFillBtnBounds = useElementBounding(autoFillBtnEl)
 const autoFillMenuStyle = computed(() => ({
   top: autoFillBtnBounds.bottom.value + 'px',
-  right: (document.documentElement.clientWidth - autoFillBtnBounds.right.value) + 'px',
+  right: document.documentElement.clientWidth - autoFillBtnBounds.right.value + 'px',
 }))
 
 const autoEditBlockId = ref<string | null>(null)
@@ -91,9 +91,7 @@ const { autoFillSchedule } = useAutoFill()
 const showAutoFillMenu = ref(false)
 
 function onAutoFillSchedule() {
-  const hasContent = blockEntries.value.some(([, block]) =>
-    Object.keys(block.events).length > 0,
-  )
+  const hasContent = blockEntries.value.some(([, block]) => Object.keys(block.events).length > 0)
   if (hasContent && !confirm('This will replace the current schedule. Continue?')) return
   const firstBlockId = autoFillSchedule()
   if (firstBlockId) activeBlockId.value = firstBlockId
@@ -113,98 +111,112 @@ function onAddResults() {
 </script>
 
 <template>
-  <div class="flex h-full flex-col overflow-clip">
-      <!-- Block tabs -->
-      <div
-        ref="tabBarEl"
-        class="flex gap-1 overflow-x-auto border-b border-border bg-muted px-4 pt-2"
-        :class="isValidTarget ? 'bg-group-muted' : ''"
-      >
-        <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
-          <DragIndicator
-            v-if="isDragOver && liveBlockInsertIndex === blockIndex"
-            orientation="vertical"
-            class="-mx-0.75 self-stretch rounded"
-          />
-          <BlockTab
-            :block="block"
-            :block-id="blockId"
-            :index="blockIndex"
-            :active="activeBlockId === blockId"
-            :auto-edit="autoEditBlockId === blockId"
-            @select="activeBlockId = blockId"
-            class="pt-0"
-            @remove="onRemoveBlock(blockId)"
-          />
-        </template>
+  <div class="flex h-full flex-col overflow-clip bg-card">
+    <!-- Block tabs -->
+    <div
+      ref="tabBarEl"
+      class="flex gap-1 overflow-x-auto bg-muted px-4 pt-2"
+      :class="isValidTarget ? 'bg-group-muted' : ''"
+    >
+      <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
         <DragIndicator
-          v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
+          v-if="isDragOver && liveBlockInsertIndex === blockIndex"
           orientation="vertical"
           class="-mx-0.75 self-stretch rounded"
         />
+        <BlockTab
+          :block="block"
+          :block-id="blockId"
+          :index="blockIndex"
+          :active="activeBlockId === blockId"
+          :auto-edit="autoEditBlockId === blockId"
+          @select="activeBlockId = blockId"
+          class="pt-0"
+          @remove="onRemoveBlock(blockId)"
+        />
+      </template>
+      <DragIndicator
+        v-if="isDragOver && liveBlockInsertIndex === blockEntries.length"
+        orientation="vertical"
+        class="-mx-0.75 self-stretch rounded"
+      />
+      <button
+        class="inline-flex rounded px-4 py-2.5 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        title="Add block"
+        @click="onAddBlock"
+      >
+        +
+      </button>
+      <div class="ml-auto self-center">
         <button
-          class="rounded px-4 py-2.5 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          title="Add block"
-          @click="onAddBlock"
+          ref="autoFillBtnEl"
+          class="flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          title="Autofill"
+          @click="showAutoFillMenu = !showAutoFillMenu"
         >
-          +
-        </button>
-        <div class="ml-auto self-center">
-          <button
-            ref="autoFillBtnEl"
-            class="flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            title="Autofill"
-            @click="showAutoFillMenu = !showAutoFillMenu"
-          >
-            Autofill
-            <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" /></svg>
-          </button>
-          <Teleport to="body">
-            <div
-              v-if="showAutoFillMenu"
-              class="fixed inset-0 z-40"
-              @click="showAutoFillMenu = false"
+          Autofill
+          <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z"
+              clip-rule="evenodd"
             />
-            <div
-              v-if="showAutoFillMenu"
-              class="fixed z-50 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
-              :style="autoFillMenuStyle"
+          </svg>
+        </button>
+        <Teleport to="body">
+          <div
+            v-if="showAutoFillMenu"
+            class="fixed inset-0 z-40"
+            @click="showAutoFillMenu = false"
+          />
+          <div
+            v-if="showAutoFillMenu"
+            class="fixed z-50 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
+            :style="autoFillMenuStyle"
+          >
+            <button
+              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+              @click="onAutoFillSchedule"
             >
-              <button
-                class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-                @click="onAutoFillSchedule"
-              >
-                Autofill schedule
-              </button>
-              <button
-                class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="activeBlock ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
-                :disabled="!activeBlock"
-                @click="onAddRegistration"
-              >
-                Add Registration
-              </button>
-              <button
-                class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="activeBlock ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
-                :disabled="!activeBlock"
-                @click="onAddResults"
-              >
-                Add Results
-              </button>
-            </div>
-          </Teleport>
+              Autofill schedule
+            </button>
+            <button
+              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              :class="
+                activeBlock
+                  ? 'text-foreground hover:bg-muted'
+                  : 'text-muted-foreground/50 pointer-events-none'
+              "
+              :disabled="!activeBlock"
+              @click="onAddRegistration"
+            >
+              Add Registration
+            </button>
+            <button
+              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              :class="
+                activeBlock
+                  ? 'text-foreground hover:bg-muted'
+                  : 'text-muted-foreground/50 pointer-events-none'
+              "
+              :disabled="!activeBlock"
+              @click="onAddResults"
+            >
+              Add Results
+            </button>
+          </div>
+        </Teleport>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="flex-1 overflow-auto py-4">
+      <div class="w-fit min-w-full px-4">
+        <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
+        <div v-else class="py-12 text-center text-muted-foreground">
+          No block selected. Click + to add one.
         </div>
       </div>
-
-      <!-- Grid -->
-      <div class="flex-1 overflow-auto bg-card py-4">
-        <div class="w-fit min-w-full px-4">
-          <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
-          <div v-else class="py-12 text-center text-muted-foreground">
-            No block selected. Click + to add one.
-          </div>
-        </div>
     </div>
   </div>
 </template>

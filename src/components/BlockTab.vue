@@ -45,11 +45,11 @@ const { isDragging } = makeDraggable(
   <div
     ref="tabEl"
     data-block-tab
-    class="group flex cursor-grab items-center justify-between whitespace-nowrap rounded-t-lg border px-3 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group -mb-[2px] flex cursor-grab items-center justify-between whitespace-nowrap rounded-t-lg px-3 text-sm font-medium transition-colors has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[
       active
-        ? '-mb-px border-border border-b-card bg-card text-foreground glass glass-card'
-        : 'border-transparent text-muted-foreground hover:bg-muted hover:text-accent-foreground',
+        ? 'border-border border-b-card bg-card text-foreground glass glass-card'
+        : 'text-muted-foreground glass glass-muted hover:bg-muted hover:text-accent-foreground',
       isDragging ? 'opacity-40' : '',
     ]"
     role="button"

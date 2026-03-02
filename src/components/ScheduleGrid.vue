@@ -19,7 +19,8 @@ const store = useCompetitionStore()
 const { provider } = useDragType()
 
 const gridCols = computed(
-  () => `minmax(10rem, auto) repeat(${store.platformEntries.length}, minmax(14rem, 1fr)) minmax(2rem, auto)`,
+  () =>
+    `minmax(10rem, auto) repeat(${store.platformEntries.length}, minmax(14rem, 1fr)) minmax(2rem, auto)`,
 )
 
 const gridEl = ref<HTMLElement | null>(null)
@@ -154,71 +155,72 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 <template>
   <div
     ref="gridEl"
-    class="border-r border-b border-border text-sm"
-    :style="{ display: 'grid', gridTemplateColumns: gridCols, minWidth: `max(100%, ${store.platformEntries.length * 12}rem)` }"
+    class="text-sm"
+    :style="{
+      display: 'grid',
+      gridTemplateColumns: gridCols,
+      minWidth: `max(100%, ${store.platformEntries.length * 12}rem)`,
+    }"
   >
-      <!-- Header row -->
-      <div
-        ref="headerRowEl"
-        class="relative col-span-full grid grid-cols-subgrid"
-      >
-        <div class="border-t border-l border-border bg-card px-1 py-1.5" />
-        <PlatformHeader
-          v-for="([platformId, platform], platformIndex) in store.platformEntries"
-          :key="platformId"
-          :platform="platform"
-          :platform-id="platformId"
-          :index="platformIndex"
-          :auto-edit="autoEditPlatformId === platformId"
-          :readonly="store.collectionsReadonly"
-          @remove="onRemovePlatform(platformId)"
-        />
-        <div class="flex items-center justify-center border-t border-l border-border bg-card px-1 py-1.5">
-          <button
-            :tabindex="store.collectionsReadonly ? -1 : 0"
-            class="flex size-6 items-center justify-center rounded text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
-            :class="{ 'invisible pointer-events-none': store.collectionsReadonly }"
-            title="Add platform"
-            @click="onAddPlatform"
-          >
-            +
-          </button>
-        </div>
-        <!-- Platform insertion indicator (absolute, no layout impact) -->
-        <DragIndicator
-          v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"
-          orientation="vertical"
-          class="absolute! top-0 bottom-0"
-          :style="{ left: indicatorLeftPx + 'px' }"
-        />
+    <!-- Header row -->
+    <div ref="headerRowEl" class="relative col-span-full grid grid-cols-subgrid gap-1 mb-1">
+      <div class="px-1 py-1.5" />
+      <PlatformHeader
+        v-for="([platformId, platform], platformIndex) in store.platformEntries"
+        :key="platformId"
+        :platform="platform"
+        :platform-id="platformId"
+        :index="platformIndex"
+        :auto-edit="autoEditPlatformId === platformId"
+        :readonly="store.collectionsReadonly"
+        @remove="onRemovePlatform(platformId)"
+      />
+      <div class="flex items-center justify-center px-1 py-1.5">
+        <button
+          :tabindex="store.collectionsReadonly ? -1 : 0"
+          class="flex size-6 items-center justify-center rounded text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
+          :class="{ 'invisible pointer-events-none': store.collectionsReadonly }"
+          title="Add platform"
+          @click="onAddPlatform"
+        >
+          +
+        </button>
       </div>
-
-      <!-- Events -->
-      <template v-for="([eventId, event], eventIndex) in eventEntries" :key="eventId">
-        <DragIndicator
-          v-if="isDragOver && liveEventInsertIndex === eventIndex"
-          class="col-span-full -my-px"
-        />
-        <EventSection
-          :event="event"
-          :block-id="blockId"
-          :event-id="eventId"
-          :index="eventIndex"
-          :auto-edit="autoEditEventId === eventId"
-        />
-      </template>
+      <!-- Platform insertion indicator (absolute, no layout impact) -->
       <DragIndicator
-        v-if="isDragOver && liveEventInsertIndex === eventEntries.length"
+        v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"
+        orientation="vertical"
+        class="absolute! top-0 bottom-0"
+        :style="{ left: indicatorLeftPx + 'px' }"
+      />
+    </div>
+
+    <!-- Events -->
+    <template v-for="([eventId, event], eventIndex) in eventEntries" :key="eventId">
+      <DragIndicator
+        v-if="isDragOver && liveEventInsertIndex === eventIndex"
         class="col-span-full -my-px"
       />
+      <EventSection
+        :event="event"
+        :block-id="blockId"
+        :event-id="eventId"
+        :index="eventIndex"
+        :auto-edit="autoEditEventId === eventId"
+      />
+    </template>
+    <DragIndicator
+      v-if="isDragOver && liveEventInsertIndex === eventEntries.length"
+      class="col-span-full -my-px"
+    />
 
-      <!-- Add event -->
-      <button
-        class="col-span-full flex items-center gap-1 border-t border-l border-border bg-accent px-1 py-1.5 text-left text-sm font-semibold text-muted-foreground outline-none hover:text-accent-foreground focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
-        @click="onAddEvent"
-      >
-        <span class="select-none">+</span>
-        Add event
-      </button>
-    </div>
+    <!-- Add event -->
+    <button
+      class="col-span-full flex items-center gap-1 rounded-lg bg-accent/25 px-1 py-1.5 text-left text-sm font-semibold text-muted-foreground/50 outline-none glass glass-accent hover:bg-accent hover:text-accent-foreground focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
+      @click="onAddEvent"
+    >
+      <span class="select-none">+</span>
+      Add event
+    </button>
+  </div>
 </template>

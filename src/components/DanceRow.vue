@@ -30,11 +30,8 @@ function onRemove() {
 </script>
 
 <template>
-  <div
-    data-dance-row
-    class="group col-span-full grid grid-cols-subgrid"
-  >
-    <div class="border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap">
+  <div data-dance-row class="group col-span-full grid grid-cols-subgrid">
+    <div class="border-t border-border px-1 py-1.5 font-medium whitespace-nowrap">
       <DanceChip
         :dance-id="scheduledDance.danceId"
         :label="dance?.shortName ?? dance?.name ?? 'Unknown'"
@@ -58,6 +55,6 @@ function onRemove() {
       :assignment="scheduledDance.platforms[platformId]"
       :location="{ blockId, eventId, danceId, platformId }"
     />
-    <div class="border-t border-l border-border" />
+    <div class="border-t border-border" />
   </div>
 </template>
