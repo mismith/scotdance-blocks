@@ -40,19 +40,19 @@
   --border: var(--color-zinc-300);
   --input: var(--color-zinc-400);
   --ring: var(--foreground);
-  --primary: var(--dance-foreground);
-  --primary-foreground: var(--color-white);
+  --primary: oklch(0.848 0.213 132);
+  --primary-foreground: var(--dance-foreground);
   --destructive: var(--color-red-500);
   --destructive-foreground: var(--color-white);
-  --dance: oklch(0.93 0.07 155);
-  --dance-foreground: oklch(0.3 0.14 155);
-  --dance-muted: oklch(0.97 0.02 155);
-  --group: oklch(0.92 0.06 230);
-  --group-foreground: oklch(0.32 0.12 230);
-  --group-muted: oklch(0.97 0.02 230);
-  --judge: oklch(0.91 0.07 310);
-  --judge-foreground: oklch(0.32 0.14 310);
-  --judge-muted: oklch(0.97 0.02 310);
+  --dance: oklch(0.93 0.07 132);
+  --dance-foreground: oklch(0.3 0.14 132);
+  --dance-muted: oklch(0.97 0.02 132);
+  --group: oklch(0.92 0.06 233);
+  --group-foreground: oklch(0.32 0.12 233);
+  --group-muted: oklch(0.97 0.02 233);
+  --judge: oklch(0.91 0.07 349);
+  --judge-foreground: oklch(0.32 0.14 349);
+  --judge-muted: oklch(0.97 0.02 349);
   --indicator: var(--foreground);
 }
 
@@ -73,15 +73,15 @@
     --primary-foreground: var(--dance);
     --destructive: var(--color-red-400);
     --destructive-foreground: var(--color-zinc-50);
-    --dance: oklch(0.18 0.04 155);
-    --dance-foreground: oklch(0.82 0.3 155);
-    --dance-muted: oklch(0.25 0.06 155);
-    --group: oklch(0.18 0.04 230);
-    --group-foreground: oklch(0.78 0.28 230);
-    --group-muted: oklch(0.25 0.06 230);
-    --judge: oklch(0.18 0.04 310);
-    --judge-foreground: oklch(0.72 0.28 310);
-    --judge-muted: oklch(0.25 0.06 310);
+    --dance: oklch(0.18 0.04 132);
+    --dance-foreground: oklch(0.82 0.3 132);
+    --dance-muted: oklch(0.25 0.06 132);
+    --group: oklch(0.18 0.04 233);
+    --group-foreground: oklch(0.78 0.28 233);
+    --group-muted: oklch(0.25 0.06 233);
+    --judge: oklch(0.18 0.04 349);
+    --judge-foreground: oklch(0.72 0.28 349);
+    --judge-muted: oklch(0.25 0.06 349);
     --indicator: var(--foreground);
   }
 }
