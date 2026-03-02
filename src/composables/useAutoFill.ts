@@ -135,7 +135,8 @@ export function useAutoFill() {
     const danceEntries = Object.entries(event.dances)
 
     for (let danceIndex = 0; danceIndex < danceEntries.length; danceIndex++) {
-      const [sdId] = danceEntries[danceIndex]
+      const [sdId, scheduledDance] = danceEntries[danceIndex]
+      if (!scheduledDance.danceId) continue // skip arbitrary dances
       for (let pIdx = 0; pIdx < platformIds.length; pIdx++) {
         if (pIdx >= numJudges) break // more platforms than judges
         const judgeIndex = ((pIdx - danceIndex) % numJudges + numJudges) % numJudges

@@ -5,7 +5,7 @@ import { ref as vueRef } from 'vue'
 import type { DragDanceData } from '@/types'
 
 const props = defineProps<{
-  danceId: string
+  danceId?: string
   label: string
   steps?: string
   index?: number

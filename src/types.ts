@@ -35,8 +35,9 @@ export interface PlatformAssignment {
 }
 
 export interface ScheduledDance {
-  danceId: string
-  name: string // display override or number label
+  danceId?: string // omit for arbitrary items (e.g. "March Past", "Registration")
+  name: string // display override or number label; primary name when no danceId
+  description?: string // optional detail text (only used for arbitrary items)
   platforms: Record<string, PlatformAssignment>
 }
 
@@ -82,7 +83,7 @@ export interface DragJudgeData {
 
 export interface DragDanceData {
   type: 'dance'
-  danceId: string
+  danceId?: string
   scheduledDanceId: string
   index: number
   source: { blockId: string; eventId: string } | 'palette'

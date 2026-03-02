@@ -163,7 +163,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
     }"
   >
     <!-- Header row -->
-    <div ref="headerRowEl" class="relative col-span-full grid grid-cols-subgrid gap-1 mb-1">
+    <div ref="headerRowEl" class="relative col-span-full grid grid-cols-subgrid gap-1 mb-4">
       <div class="px-1 py-1.5" />
       <PlatformHeader
         v-for="([platformId, platform], platformIndex) in store.platformEntries"

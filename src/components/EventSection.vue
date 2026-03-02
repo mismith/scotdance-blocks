@@ -131,10 +131,14 @@ function onRemoveEvent() {
 // --- Autofill ---
 const { autoPlaceDances, autoFillGroups, autoCycleJudges } = useAutoFill()
 const showAutoFillMenu = vueRef(false)
+const autoEditDanceId = vueRef<string | null>(null)
 
-const hasDances = computed(
-  () => !!props.event.dances && Object.keys(props.event.dances).length > 0,
-)
+function onAddArbitraryDance() {
+  const id = store.addDanceToEvent(props.blockId, props.eventId, undefined, 'New Item')
+  autoEditDanceId.value = id
+}
+
+const hasDances = computed(() => !!props.event.dances && Object.keys(props.event.dances).length > 0)
 
 function hasExistingGroups() {
   return Object.values(props.event.dances ?? {}).some((sd) =>
@@ -177,7 +181,7 @@ function onAutoCycleJudges() {
   <div
     ref="sectionEl"
     data-event-section
-    class="col-span-full grid grid-cols-subgrid"
+    class="col-span-full grid grid-cols-subgrid mb-4"
     :class="isEventDragging ? 'opacity-40' : ''"
   >
     <div class="group col-span-full has-[[data-grip]:focus-visible]:z-10">
@@ -203,7 +207,13 @@ function onAutoCycleJudges() {
               @keydown.stop
             >
               Autofill
-              <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" /></svg>
+              <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </button>
             <Teleport to="body">
               <div
@@ -233,7 +243,11 @@ function onAutoCycleJudges() {
               <div class="my-1 border-t border-border" />
               <button
                 class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :class="
+                  hasDances
+                    ? 'text-foreground hover:bg-muted'
+                    : 'text-muted-foreground/50 pointer-events-none'
+                "
                 :disabled="!hasDances"
                 @click="onAutoFillGroups"
               >
@@ -241,7 +255,11 @@ function onAutoCycleJudges() {
               </button>
               <button
                 class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :class="
+                  hasDances
+                    ? 'text-foreground hover:bg-muted'
+                    : 'text-muted-foreground/50 pointer-events-none'
+                "
                 :disabled="!hasDances"
                 @click="onAutoCycleJudges"
               >
@@ -277,48 +295,36 @@ function onAutoCycleJudges() {
           : ''
       "
     >
-      <template v-if="event.dances && Object.keys(event.dances).length">
-        <template
-          v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances)"
-          :key="danceId"
-        >
-          <DragIndicator
-            v-if="isDragOver && liveDanceInsertIndex === danceIndex"
-            variant="dance"
-            class="col-span-full -my-px"
-          />
-          <DanceRow
-            :scheduled-dance="scheduledDance"
-            :block-id="blockId"
-            :event-id="eventId"
-            :dance-id="danceId"
-            :index="danceIndex"
-          />
-        </template>
+      <template
+        v-for="([danceId, scheduledDance], danceIndex) in Object.entries(event.dances ?? {})"
+        :key="danceId"
+      >
         <DragIndicator
-          v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances).length"
+          v-if="isDragOver && liveDanceInsertIndex === danceIndex"
           variant="dance"
           class="col-span-full -my-px"
+        />
+        <DanceRow
+          :scheduled-dance="scheduledDance"
+          :block-id="blockId"
+          :event-id="eventId"
+          :dance-id="danceId"
+          :index="danceIndex"
+          :auto-edit="autoEditDanceId === danceId"
         />
       </template>
-      <template v-else>
-        <DragIndicator
-          v-if="isDragOver && liveDanceInsertIndex === 0"
-          variant="dance"
-          class="col-span-full -my-px"
-        />
-        <div
-          data-dance-placeholder
-          class="col-span-full px-1 py-1.5 text-center text-sm text-muted-foreground"
-        >
-          <div class="rounded border border-dashed border-border px-2 py-1">Drag dances here</div>
-        </div>
-        <DragIndicator
-          v-if="isDragOver && liveDanceInsertIndex === 1"
-          variant="dance"
-          class="col-span-full -my-px"
-        />
-      </template>
+      <DragIndicator
+        v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances ?? {}).length"
+        variant="dance"
+        class="col-span-full -my-px"
+      />
+      <button
+        data-dance-placeholder
+        class="col-span-full rounded bg-muted/50 px-3 py-1.5 text-left text-sm font-medium leading-tight text-muted-foreground outline-none glass hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        @click="onAddArbitraryDance"
+      >
+        <span class="-ml-1">+</span> Add item or drag dances
+      </button>
     </div>
   </div>
 </template>

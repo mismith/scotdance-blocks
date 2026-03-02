@@ -202,7 +202,7 @@ const liveJudgeInsertIndex = computed(() => {
 <template>
   <div
     ref="el"
-    class="relative isolate flex flex-col border-t border-border px-2 py-1.5 transition-all"
+    class="relative isolate flex flex-col px-2 py-1.5 transition-all"
     :class="[validTargetClass, { 'opacity-50': isInvalidTarget }]"
   >
     <template v-if="assignment">
@@ -297,7 +297,7 @@ const liveJudgeInsertIndex = computed(() => {
       <div
         class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground"
       >
-        Drag groups / judges here
+        Drag groups + judges
       </div>
     </template>
   </div>

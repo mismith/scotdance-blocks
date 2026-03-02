@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Arbitrary dances — name/description-only scheduled dances with no reference `danceId` (e.g. "March Past", custom demos)
 - [ ] Print-friendly layout
 - [ ] JSON export (scotdance.app-compatible)
 - [ ] JSON import

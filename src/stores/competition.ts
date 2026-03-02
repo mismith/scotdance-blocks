@@ -419,7 +419,7 @@ export const useCompetitionStore = defineStore('competition', () => {
   function addDanceToEvent(
     blockId: string,
     eventId: string,
-    danceId: string,
+    danceId?: string,
     name?: string,
     insertIndex?: number,
   ): string {
@@ -427,7 +427,11 @@ export const useCompetitionStore = defineStore('competition', () => {
     const event = data.value.schedule.blocks[blockId]?.events[eventId]
     if (event) {
       if (!event.dances) event.dances = {}
-      const newDance = { danceId, name: name ?? '', platforms: {} }
+      const newDance: { danceId?: string; name: string; platforms: Record<string, never> } = {
+        name: name ?? '',
+        platforms: {},
+      }
+      if (danceId) newDance.danceId = danceId
       if (insertIndex !== undefined) {
         const entries = Object.entries(event.dances)
         entries.splice(insertIndex, 0, [id, newDance])
@@ -437,6 +441,26 @@ export const useCompetitionStore = defineStore('competition', () => {
       }
     }
     return id
+  }
+
+  function updateScheduledDanceName(
+    blockId: string,
+    eventId: string,
+    scheduledDanceId: string,
+    name: string,
+  ) {
+    const dance = data.value.schedule.blocks[blockId]?.events[eventId]?.dances?.[scheduledDanceId]
+    if (dance) dance.name = name
+  }
+
+  function updateScheduledDanceDescription(
+    blockId: string,
+    eventId: string,
+    scheduledDanceId: string,
+    description: string,
+  ) {
+    const dance = data.value.schedule.blocks[blockId]?.events[eventId]?.dances?.[scheduledDanceId]
+    if (dance) dance.description = description || undefined
   }
 
   function moveDance(
@@ -563,6 +587,8 @@ export const useCompetitionStore = defineStore('competition', () => {
     renameEvent,
     updateEventDescription,
     addDanceToEvent,
+    updateScheduledDanceName,
+    updateScheduledDanceDescription,
     moveDance,
     removeDanceFromEvent,
     addPlatform,
