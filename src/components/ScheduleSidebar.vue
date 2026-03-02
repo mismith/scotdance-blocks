@@ -12,6 +12,6 @@ const route = useRoute()
   <aside class="flex min-w-64 flex-col gap-4 overflow-y-auto border-r border-border p-3">
     <DancePalette />
     <GroupPalette />
-    <JudgePalette v-if="route.name !== 'dance-groups'" />
+    <JudgePalette v-if="!route.meta.isDanceGroups" />
   </aside>
 </template>

@@ -56,7 +56,7 @@ const { isDragOver } = makeDroppable(el, {
         if (!isPlaceholderId(dragData.groupId)) {
           const scheduledDance =
             store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
-          const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
+          const dance = scheduledDance?.danceId ? store.getDance(scheduledDance.danceId) : undefined
           if (dance && Object.keys(dance.groupIds).length > 0 && !dance.groupIds[dragData.groupId])
             return
         }
@@ -145,7 +145,7 @@ const validTargetClass = computed(() => {
     if (payload?.type !== 'group') return ''
     const loc = props.location
     const scheduledDance = store.blocks[loc.blockId]?.events[loc.eventId]?.dances?.[loc.danceId]
-    const dance = scheduledDance ? store.getDance(scheduledDance.danceId) : undefined
+    const dance = scheduledDance?.danceId ? store.getDance(scheduledDance.danceId) : undefined
     if (!dance) return ''
     if (!isPlaceholderId(payload.groupId)) {
       // reject if group is not eligible for this dance

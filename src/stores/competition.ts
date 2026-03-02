@@ -2,11 +2,21 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { generateId } from '@/utils/id'
-import sampleData from '@/data/sample-data.json'
 import type { CompetitionData, Dance, Group } from '@/types'
 
+export function createEmptyData(): CompetitionData {
+  return {
+    categories: {},
+    groups: {},
+    dances: {},
+    platforms: {},
+    staff: {},
+    schedule: { name: '', date: '', blocks: {} },
+  }
+}
+
 export const useCompetitionStore = defineStore('competition', () => {
-  const data = ref<CompetitionData>(sampleData as CompetitionData)
+  const data = ref<CompetitionData>(createEmptyData())
   const collectionsReadonly = ref(false)
 
   // --- Getters ---

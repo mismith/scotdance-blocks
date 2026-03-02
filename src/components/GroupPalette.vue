@@ -105,7 +105,7 @@ function onRemoveCategory(categoryId: string) {
     >
       <span class="-ml-1">+</span> Add category
     </button>
-    <div v-if="route.name !== 'dance-groups' && Object.keys(store.groups).length" class="mt-3">
+    <div v-if="!route.meta.isDanceGroups && Object.keys(store.groups).length" class="mt-3">
       <SpacerChip class="w-full" />
     </div>
   </details>

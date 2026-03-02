@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
+import type { CompetitionData } from '@/types'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,12 +8,47 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
     },
     {
-      path: '/dance-groups',
-      name: 'dance-groups',
-      component: () => import('../views/DanceGroupsView.vue'),
+      path: '/blocks',
+      component: () => import('../layouts/BlocksLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'blocks',
+          component: () => import('../views/BlocksView.vue'),
+        },
+        {
+          path: 'dance-groups',
+          name: 'dance-groups',
+          meta: { isDanceGroups: true },
+          component: () => import('../views/DanceGroupsView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/demo',
+      component: () => import('../layouts/BlocksLayout.vue'),
+      beforeEnter: async () => {
+        const { useCompetitionStore } = await import('../stores/competition')
+        const { default: sampleData } = await import('../data/sample-data.json')
+        const store = useCompetitionStore()
+        store.loadData(sampleData as CompetitionData)
+      },
+      children: [
+        {
+          path: '',
+          name: 'demo',
+          component: () => import('../views/BlocksView.vue'),
+        },
+        {
+          path: 'dance-groups',
+          name: 'demo-dance-groups',
+          meta: { isDanceGroups: true },
+          component: () => import('../views/DanceGroupsView.vue'),
+        },
+      ],
     },
   ],
 })

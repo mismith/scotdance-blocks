@@ -82,6 +82,7 @@ export function useAutoFill() {
 
     // Fill each dance with eligible groups via round-robin
     for (const [sdId, scheduledDance] of Object.entries(event.dances)) {
+      if (!scheduledDance.danceId) continue
       const dance = store.getDance(scheduledDance.danceId)
       if (!dance) continue
 
