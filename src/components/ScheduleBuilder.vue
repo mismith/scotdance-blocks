@@ -99,6 +99,17 @@ function onAutoFillSchedule() {
   if (firstBlockId) activeBlockId.value = firstBlockId
   showAutoFillMenu.value = false
 }
+function onAddRegistration() {
+  if (!activeBlockId.value) return
+  const eventId = store.addEvent(activeBlockId.value, 'Registration')
+  store.updateEventDescription(activeBlockId.value, eventId, '9:00 AM')
+  showAutoFillMenu.value = false
+}
+function onAddResults() {
+  if (!activeBlockId.value) return
+  store.addEvent(activeBlockId.value, 'Results')
+  showAutoFillMenu.value = false
+}
 </script>
 
 <template>
@@ -164,6 +175,22 @@ function onAutoFillSchedule() {
                 @click="onAutoFillSchedule"
               >
                 Autofill schedule
+              </button>
+              <button
+                class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                :class="activeBlock ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :disabled="!activeBlock"
+                @click="onAddRegistration"
+              >
+                Add Registration
+              </button>
+              <button
+                class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                :class="activeBlock ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
+                :disabled="!activeBlock"
+                @click="onAddResults"
+              >
+                Add Results
               </button>
             </div>
           </Teleport>

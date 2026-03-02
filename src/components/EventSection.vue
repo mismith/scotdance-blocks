@@ -147,8 +147,14 @@ function hasExistingJudges() {
   )
 }
 
+const categoryEntries = computed(() => Object.entries(store.categories))
+
 function onAutoPlaceDances() {
   autoPlaceDances(props.blockId, props.eventId)
+  showAutoFillMenu.value = false
+}
+function onAutoPlaceCategoryDances(categoryId: string) {
+  autoPlaceDances(props.blockId, props.eventId, new Set([categoryId]))
   showAutoFillMenu.value = false
 }
 function onAutoFillGroups() {
@@ -191,7 +197,7 @@ function onAutoCycleJudges() {
         <div class="ml-auto flex items-center gap-1">
           <div class="relative">
             <button
-              class="flex items-center gap-1 rounded border border-border bg-card px-2 py-0.5 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
+              class="-my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
               title="Autofill"
               @click="showAutoFillMenu = !showAutoFillMenu"
               @keydown.stop
@@ -211,26 +217,35 @@ function onAutoCycleJudges() {
               class="absolute right-0 top-full z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
             >
               <button
-                class="flex w-full rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                v-for="[categoryId, category] in categoryEntries"
+                :key="categoryId"
+                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                @click="onAutoPlaceCategoryDances(categoryId)"
+              >
+                Place {{ category.name }} dances
+              </button>
+              <button
+                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
                 @click="onAutoPlaceDances"
               >
                 Place all dances
               </button>
+              <div class="my-1 border-t border-border" />
               <button
-                class="flex w-full rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
                 :disabled="!hasDances"
                 @click="onAutoFillGroups"
               >
-                Fill groups
+                Assign groups
               </button>
               <button
-                class="flex w-full rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 :class="hasDances ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50 pointer-events-none'"
                 :disabled="!hasDances"
                 @click="onAutoCycleJudges"
               >
-                Cycle judges
+                Assign judges
               </button>
             </div>
           </div>

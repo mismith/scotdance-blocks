@@ -4,10 +4,13 @@ export function useAutoFill() {
   const store = useCompetitionStore()
 
   /**
-   * Add all reference dances to the event that aren't already scheduled.
+   * Add reference dances to the event that aren't already scheduled.
    * Preserves palette insertion order; purely additive (no clearing).
+   *
+   * When categoryFilter is provided, only places dances that have at least
+   * one eligible group in those categories (unrestricted dances always included).
    */
-  function autoPlaceDances(blockId: string, eventId: string) {
+  function autoPlaceDances(blockId: string, eventId: string, categoryFilter?: Set<string>) {
     const event = store.blocks[blockId]?.events[eventId]
     if (!event) return
 
@@ -15,10 +18,28 @@ export function useAutoFill() {
       Object.values(event.dances ?? {}).map((sd) => sd.danceId),
     )
 
-    for (const [danceId] of Object.entries(store.dances)) {
-      if (!alreadyPlaced.has(danceId)) {
-        store.addDanceToEvent(blockId, eventId, danceId)
+    // When filtering by category, build set of eligible group IDs
+    const filterGroupIds = categoryFilter
+      ? new Set(
+          Object.entries(store.groups)
+            .filter(([, group]) => categoryFilter.has(group.categoryId))
+            .map(([id]) => id),
+        )
+      : undefined
+
+    for (const [danceId, dance] of Object.entries(store.dances)) {
+      if (alreadyPlaced.has(danceId)) continue
+
+      if (filterGroupIds) {
+        const danceGroupIds = Object.keys(dance.groupIds)
+        const hasRestrictions = danceGroupIds.length > 0
+        const isRelevant = hasRestrictions
+          ? danceGroupIds.some((gId) => filterGroupIds.has(gId))
+          : true // unrestricted dances are always relevant
+        if (!isRelevant) continue
       }
+
+      store.addDanceToEvent(blockId, eventId, danceId)
     }
   }
 
@@ -140,24 +161,14 @@ export function useAutoFill() {
     // Split categories in half: younger → Morning, older → Afternoon
     const midpoint = Math.ceil(categoryIds.length / 2)
     const halves = [
-      { name: 'Morning', categoryIds: categoryIds.slice(0, midpoint) },
-      { name: 'Afternoon', categoryIds: categoryIds.slice(midpoint) },
+      { name: 'Morning', categoryIds: categoryIds.slice(0, midpoint), time: '9:00 AM' },
+      { name: 'Afternoon', categoryIds: categoryIds.slice(midpoint), time: '1:00 PM' },
     ]
-
-    // Collect all group IDs for quick lookup
-    const groupEntries = Object.entries(store.groups)
 
     let firstBlockId: string | undefined
 
     for (const half of halves) {
       const categorySet = new Set(half.categoryIds)
-
-      // Groups belonging to this half's categories
-      const halfGroupIds = new Set(
-        groupEntries
-          .filter(([, group]) => categorySet.has(group.categoryId))
-          .map(([id]) => id),
-      )
 
       // Build event name from category names
       const eventName = half.categoryIds
@@ -167,27 +178,18 @@ export function useAutoFill() {
       const blockId = store.addBlock(half.name)
       if (!firstBlockId) firstBlockId = blockId
 
-      const eventId = store.addEvent(blockId, eventName)
+      // Registration event with time placeholder
+      const regEventId = store.addEvent(blockId, 'Registration')
+      store.updateEventDescription(blockId, regEventId, half.time)
 
-      // Place dances that have at least 1 eligible group in this half
-      for (const [danceId, dance] of Object.entries(store.dances)) {
-        const danceGroupIds = Object.keys(dance.groupIds)
-        const hasRestrictions = danceGroupIds.length > 0
+      // Dance event
+      const danceEventId = store.addEvent(blockId, eventName)
+      autoPlaceDances(blockId, danceEventId, categorySet)
+      autoFillGroups(blockId, danceEventId, categorySet)
+      autoCycleJudges(blockId, danceEventId)
 
-        const isRelevant = hasRestrictions
-          ? danceGroupIds.some((gId) => halfGroupIds.has(gId))
-          : true // unrestricted dances go in both blocks
-
-        if (isRelevant) {
-          store.addDanceToEvent(blockId, eventId, danceId)
-        }
-      }
-
-      // Fill groups (filtered to this half's categories)
-      autoFillGroups(blockId, eventId, categorySet)
-
-      // Cycle judges
-      autoCycleJudges(blockId, eventId)
+      // Results event
+      store.addEvent(blockId, 'Results')
     }
 
     return firstBlockId

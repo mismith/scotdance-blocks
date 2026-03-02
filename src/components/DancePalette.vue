@@ -30,11 +30,11 @@ function onRemoveDance(danceId: string) {
     >
       <router-link
         :to="route.name === 'dance-groups' ? '/' : '/dance-groups'"
-        class="float-right font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+        class="float-right rounded border border-border px-2 py-1 -mt-1 text-xs font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring"
         :class="
           route.name === 'dance-groups'
-            ? 'rounded bg-primary px-2 text-primary-foreground hover:bg-primary/80'
-            : 'text-muted-foreground hover:text-foreground'
+            ? 'bg-primary text-primary-foreground hover:bg-primary/80'
+            : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground'
         "
         @click.stop
         >{{ route.name === 'dance-groups' ? 'Done' : 'Configure' }}</router-link
