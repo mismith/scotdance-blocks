@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -8,6 +9,7 @@ import InlineEdit from '@/components/InlineEdit.vue'
 import SpacerChip from '@/components/SpacerChip.vue'
 
 const store = useCompetitionStore()
+const route = useRoute()
 
 const autoEditId = ref<string | null>(null)
 const autoEditCategoryId = ref<string | null>(null)
@@ -103,7 +105,7 @@ function onRemoveCategory(categoryId: string) {
     >
       <span class="-ml-1">+</span> Add category
     </button>
-    <div v-if="Object.keys(store.groups).length" class="mt-3">
+    <div v-if="route.name !== 'dance-groups' && Object.keys(store.groups).length" class="mt-3">
       <SpacerChip class="w-full" />
     </div>
   </details>

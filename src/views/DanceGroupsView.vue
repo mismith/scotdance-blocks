@@ -37,21 +37,21 @@ const gridCols = computed(
 
 <template>
   <main class="h-full overflow-auto bg-card">
-    <div class="w-fit min-w-full p-4">
+    <div class="w-fit min-w-full">
     <div
-      class="border-t border-l border-border text-sm"
+      class="text-sm"
       :style="{ display: 'grid', gridTemplateColumns: gridCols }"
     >
       <!-- Header row -->
       <div
-        class="sticky left-0 z-10 border-r border-b border-border bg-card px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+        class="sticky left-0 z-10 bg-card px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
       >
         Category / Group
       </div>
       <div
         v-for="[danceId, dance] in danceEntries"
         :key="danceId"
-        class="border-r border-b border-border px-3 py-2 text-center text-xs font-medium text-muted-foreground whitespace-nowrap"
+        class="px-3 py-2 text-center text-xs font-medium text-muted-foreground whitespace-nowrap"
       >
         {{ dance.shortName || dance.name
         }}<template v-if="dance.steps"> ({{ dance.steps }})</template>
@@ -59,7 +59,7 @@ const gridCols = computed(
 
       <template v-for="[categoryId, category] in categoryEntries" :key="categoryId">
         <!-- Category row -->
-        <div class="sticky left-0 z-10 border-r border-b border-border bg-muted px-3 py-2 font-semibold text-foreground">
+        <div class="sticky left-0 z-10 bg-muted px-3 py-2 font-semibold text-foreground">
           <details
             v-if="(store.groupsByCategory[categoryId]?.length ?? 0) > 1"
             :open="expandedCategories.has(categoryId) || undefined"
@@ -82,7 +82,7 @@ const gridCols = computed(
         <div
           v-for="[danceId] in danceEntries"
           :key="danceId"
-          class="border-r border-b border-border bg-muted px-3 py-2 text-center"
+          class="bg-muted px-3 py-2 text-center"
         >
           <input
             type="checkbox"
@@ -100,13 +100,13 @@ const gridCols = computed(
             v-for="[groupId, group] in store.groupsByCategory[categoryId] ?? []"
             :key="groupId"
           >
-            <div class="sticky left-0 z-10 border-r border-b border-border/50 bg-card py-1.5 pl-10 pr-3 text-muted-foreground">
+            <div class="sticky left-0 z-10 bg-card py-1.5 pl-10 pr-3 text-muted-foreground">
               {{ group.name }}
             </div>
             <div
               v-for="[danceId, dance] in danceEntries"
               :key="danceId"
-              class="border-r border-b border-border/50 px-3 py-1.5 text-center"
+              class="px-3 py-1.5 text-center"
             >
               <input
                 type="checkbox"
