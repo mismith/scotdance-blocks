@@ -7,4 +7,3 @@
 - [ ] JSON export (scotdance.app-compatible)
 - [ ] JSON import
 - [ ] Persistence — save/load state
-- [ ] auto-suggest/fill things in (e.g. place dances, fill them with groups, cycle juges)

@@ -10,6 +10,7 @@ const props = defineProps<{
   steps?: string
   index?: number
   source?: { blockId: string; eventId: string } | 'palette'
+  scheduledDanceId?: string
   removable?: boolean
 }>()
 
@@ -29,7 +30,7 @@ const { isDragging } = makeDraggable(
         {
           type: 'dance',
           danceId: props.danceId,
-          scheduledDanceId: '',
+          scheduledDanceId: props.scheduledDanceId ?? '',
           index: props.index ?? 0,
           source: props.source ?? 'palette',
         } satisfies DragDanceData,

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { makeDraggable } from '@vue-dnd-kit/core'
-import { ref as vueRef } from 'vue'
-
 import { useCompetitionStore } from '@/stores/competition'
 
+import DanceChip from '@/components/DanceChip.vue'
 import PlatformCell from '@/components/PlatformCell.vue'
-import type { DragDanceData, ScheduledDance } from '@/types'
+import type { ScheduledDance } from '@/types'
 
 const props = defineProps<{
   scheduledDance: ScheduledDance
@@ -29,59 +27,30 @@ function onRemove() {
   if (hasAssignments() && !confirm('Remove this dance? It has group/judge assignments.')) return
   store.removeDanceFromEvent(props.blockId, props.eventId, props.danceId)
 }
-
-const nameCellEl = vueRef<HTMLElement | null>(null)
-
-const { isDragging } = makeDraggable(
-  nameCellEl,
-  { groups: ['dance'], activation: { distance: 3 } },
-  () =>
-    [
-      props.index,
-      [
-        {
-          type: 'dance',
-          danceId: props.scheduledDance.danceId,
-          scheduledDanceId: props.danceId,
-          index: props.index,
-          source: { blockId: props.blockId, eventId: props.eventId },
-        } satisfies DragDanceData,
-      ],
-    ] as [number, DragDanceData[]],
-)
 </script>
 
 <template>
   <div
     data-dance-row
     class="group col-span-full grid grid-cols-subgrid"
-    :class="{ 'opacity-40': isDragging }"
   >
-    <div
-      ref="nameCellEl"
-      class="group/cell cursor-grab border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
-    >
-      <div
-        class="group/chip flex min-w-0 items-center gap-1 rounded bg-dance px-3 py-1.5 text-sm font-medium leading-tight text-dance-foreground glass glass-dance"
-        :title="(dance?.shortName ?? dance?.name ?? 'Unknown') + (dance?.steps ? ` (${dance.steps})` : '')"
+    <div class="border-t border-l border-border px-1 py-1.5 font-medium whitespace-nowrap">
+      <DanceChip
+        :dance-id="scheduledDance.danceId"
+        :label="dance?.shortName ?? dance?.name ?? 'Unknown'"
+        :steps="dance?.steps"
+        :index
+        :source="{ blockId, eventId }"
+        :scheduled-dance-id="danceId"
+        removable
+        @remove="onRemove"
       >
-        <span data-grip tabindex="0" class="opacity-50 -ml-1 outline-none select-none">⠿</span>
-        <span class="flex-1 truncate">
-          {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
-          <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
-          <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">
-            {{ scheduledDance.name }}
-          </span>
+        {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
+        <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
+        <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">
+          {{ scheduledDance.name }}
         </span>
-        <button
-          class="ml-2 flex size-5 shrink-0 items-center justify-center rounded text-dance-foreground/50 opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover/chip:opacity-100 group-has-focus-visible/chip:opacity-100"
-          title="Remove dance"
-          @click="onRemove"
-          @keydown.stop
-        >
-          &times;
-        </button>
-      </div>
+      </DanceChip>
     </div>
     <PlatformCell
       v-for="[platformId] in store.platformEntries"
