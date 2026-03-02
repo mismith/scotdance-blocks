@@ -50,8 +50,9 @@ whenever(
 
 <template>
   <div class="flex h-screen select-none flex-col">
-    <header class="flex items-center gap-4 border-b border-border px-4 py-3">
-      <h1 class="text-lg font-bold text-foreground">ScotDance Blocks</h1>
+    <header class="flex items-center gap-3 border-b border-border px-4 py-3">
+      <img src="/touchicon.png" alt="" class="size-7 rounded" />
+      <h1 class="text-lg font-bold text-foreground">Blocks</h1>
       <div class="ml-auto flex items-center gap-3">
         <label class="flex items-center gap-1.5 text-sm text-muted-foreground">
           <input
