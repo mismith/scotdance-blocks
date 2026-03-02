@@ -155,7 +155,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
   <div
     ref="gridEl"
     class="border-r border-b border-border text-sm"
-    :style="{ display: 'grid', gridTemplateColumns: gridCols, minWidth: `max(100%, ${store.platformEntries.length * 16}rem)` }"
+    :style="{ display: 'grid', gridTemplateColumns: gridCols, minWidth: `max(100%, ${store.platformEntries.length * 12}rem)` }"
   >
       <!-- Header row -->
       <div

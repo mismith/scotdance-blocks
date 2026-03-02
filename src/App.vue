@@ -18,7 +18,11 @@ const { undo, redo } = useRefHistory(data, {
 
 function isEditingText() {
   const el = document.activeElement
-  return el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || (el instanceof HTMLElement && el.isContentEditable)
+  return (
+    el instanceof HTMLInputElement ||
+    el instanceof HTMLTextAreaElement ||
+    (el instanceof HTMLElement && el.isContentEditable)
+  )
 }
 
 const keys = useMagicKeys()
@@ -62,9 +66,9 @@ whenever(
     </header>
 
     <DnDProvider overlay-to="body">
-      <div class="flex flex-1 overflow-hidden">
+      <div class="flex flex-auto min-h-0">
         <ScheduleSidebar />
-        <RouterView class="flex-1 overflow-hidden" />
+        <RouterView class="flex-auto min-w-0" />
       </div>
     </DnDProvider>
   </div>

@@ -128,7 +128,7 @@ function onRemoveEvent() {
   store.removeEvent(props.blockId, props.eventId)
 }
 
-// --- Auto-fill ---
+// --- Autofill ---
 const { autoPlaceDances, autoFillGroups, autoCycleJudges } = useAutoFill()
 const showAutoFillMenu = vueRef(false)
 
@@ -192,11 +192,11 @@ function onAutoCycleJudges() {
           <div class="relative">
             <button
               class="flex items-center gap-1 rounded border border-border bg-card px-2 py-0.5 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
-              title="Auto-fill"
+              title="Autofill"
               @click="showAutoFillMenu = !showAutoFillMenu"
               @keydown.stop
             >
-              Auto-fill
+              Autofill
               <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" /></svg>
             </button>
             <Teleport to="body">

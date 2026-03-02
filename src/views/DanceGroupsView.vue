@@ -29,93 +29,97 @@ function categoryDanceState(categoryId: string, danceId: string): 'all' | 'none'
 
 const danceEntries = computed(() => Object.entries(store.dances))
 const categoryEntries = computed(() => Object.entries(store.categories))
+
+const gridCols = computed(
+  () => `auto repeat(${danceEntries.value.length}, auto)`,
+)
 </script>
 
 <template>
-  <main class="h-full overflow-auto bg-card p-4">
-      <table class="border-collapse border border-border text-sm">
-        <!-- Header: dance names -->
-        <thead>
-          <tr class="bg-card">
-            <th
-              class="sticky left-0 z-10 bg-card px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+  <main class="h-full overflow-auto bg-card">
+    <div class="w-fit min-w-full p-4">
+    <div
+      class="border-t border-l border-border text-sm"
+      :style="{ display: 'grid', gridTemplateColumns: gridCols }"
+    >
+      <!-- Header row -->
+      <div
+        class="sticky left-0 z-10 border-r border-b border-border bg-card px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+      >
+        Category / Group
+      </div>
+      <div
+        v-for="[danceId, dance] in danceEntries"
+        :key="danceId"
+        class="border-r border-b border-border px-3 py-2 text-center text-xs font-medium text-muted-foreground whitespace-nowrap"
+      >
+        {{ dance.shortName || dance.name
+        }}<template v-if="dance.steps"> ({{ dance.steps }})</template>
+      </div>
+
+      <template v-for="[categoryId, category] in categoryEntries" :key="categoryId">
+        <!-- Category row -->
+        <div class="sticky left-0 z-10 border-r border-b border-border bg-muted px-3 py-2 font-semibold text-foreground">
+          <details
+            v-if="(store.groupsByCategory[categoryId]?.length ?? 0) > 1"
+            :open="expandedCategories.has(categoryId) || undefined"
+            @toggle="
+              (e: Event) => {
+                ;(e.target as HTMLDetailsElement).open
+                  ? expandedCategories.add(categoryId)
+                  : expandedCategories.delete(categoryId)
+              }
+            "
+          >
+            <summary
+              class="cursor-default whitespace-nowrap rounded outline-none select-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              Category / Group
-            </th>
-            <th
+              {{ category.name }}
+            </summary>
+          </details>
+          <span v-else class="ml-[1.2em]">{{ category.name }}</span>
+        </div>
+        <div
+          v-for="[danceId] in danceEntries"
+          :key="danceId"
+          class="border-r border-b border-border bg-muted px-3 py-2 text-center"
+        >
+          <input
+            type="checkbox"
+            class="size-4 cursor-default accent-dance-foreground"
+            :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
+            :checked="categoryDanceState(categoryId, danceId) === 'all'"
+            :indeterminate="categoryDanceState(categoryId, danceId) === 'some'"
+            @change="store.toggleDanceCategoryGroups(danceId, categoryId)"
+          />
+        </div>
+
+        <!-- Individual group sub-rows (when expanded) -->
+        <template v-if="expandedCategories.has(categoryId)">
+          <template
+            v-for="[groupId, group] in store.groupsByCategory[categoryId] ?? []"
+            :key="groupId"
+          >
+            <div class="sticky left-0 z-10 border-r border-b border-border/50 bg-card py-1.5 pl-10 pr-3 text-muted-foreground">
+              {{ group.name }}
+            </div>
+            <div
               v-for="[danceId, dance] in danceEntries"
               :key="danceId"
-              class="px-3 py-2 text-center text-xs font-medium text-muted-foreground whitespace-nowrap"
+              class="border-r border-b border-border/50 px-3 py-1.5 text-center"
             >
-              {{ dance.shortName || dance.name
-              }}<template v-if="dance.steps"> ({{ dance.steps }})</template>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <template v-for="[categoryId, category] in categoryEntries" :key="categoryId">
-            <!-- Category row -->
-            <tr class="border-t border-border bg-muted">
-              <td class="sticky left-0 z-10 bg-muted px-3 py-2 font-semibold text-foreground">
-                <details
-                  v-if="(store.groupsByCategory[categoryId]?.length ?? 0) > 1"
-                  :open="expandedCategories.has(categoryId) || undefined"
-                  @toggle="
-                    (e: Event) => {
-                      ;(e.target as HTMLDetailsElement).open
-                        ? expandedCategories.add(categoryId)
-                        : expandedCategories.delete(categoryId)
-                    }
-                  "
-                >
-                  <summary
-                    class="cursor-default rounded outline-none select-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {{ category.name }}
-                  </summary>
-                </details>
-                <span v-else class="ml-[1.2em]">{{ category.name }}</span>
-              </td>
-              <td v-for="[danceId] in danceEntries" :key="danceId" class="px-3 py-2 text-center">
-                <input
-                  type="checkbox"
-                  class="size-4 cursor-default accent-dance-foreground"
-                  :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
-                  :checked="categoryDanceState(categoryId, danceId) === 'all'"
-                  :indeterminate="categoryDanceState(categoryId, danceId) === 'some'"
-                  @change="store.toggleDanceCategoryGroups(danceId, categoryId)"
-                />
-              </td>
-            </tr>
-
-            <!-- Individual group sub-rows (when expanded) -->
-            <template v-if="expandedCategories.has(categoryId)">
-              <tr
-                v-for="[groupId, group] in store.groupsByCategory[categoryId] ?? []"
-                :key="groupId"
-                class="border-t border-border/50"
-              >
-                <td class="sticky left-0 z-10 bg-card py-1.5 pl-10 pr-3 text-muted-foreground">
-                  {{ group.name }}
-                </td>
-                <td
-                  v-for="[danceId, dance] in danceEntries"
-                  :key="danceId"
-                  class="px-3 py-1.5 text-center"
-                >
-                  <input
-                    type="checkbox"
-                    class="size-3.5 cursor-default accent-dance-foreground"
-                    :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
-                    :checked="!!dance.groupIds[groupId]"
-                    @change="store.toggleDanceGroup(danceId, groupId)"
-                  />
-                </td>
-              </tr>
-            </template>
+              <input
+                type="checkbox"
+                class="size-3.5 cursor-default accent-dance-foreground"
+                :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
+                :checked="!!dance.groupIds[groupId]"
+                @change="store.toggleDanceGroup(danceId, groupId)"
+              />
+            </div>
           </template>
-        </tbody>
-      </table>
+        </template>
+      </template>
+    </div>
+    </div>
   </main>
 </template>
