@@ -47,14 +47,7 @@ const { isDragging: isEventDragging } = makeDraggable(
 function getInsertIndex(pointerY: number): number | undefined {
   if (!sectionEl.value) return undefined
   const rows = sectionEl.value.querySelectorAll('[data-dance-row]')
-  if (!rows.length) {
-    const placeholder = sectionEl.value.querySelector('[data-dance-placeholder]')
-    if (placeholder) {
-      const rect = placeholder.getBoundingClientRect()
-      return pointerY < rect.top + rect.height / 2 ? 0 : 1
-    }
-    return 0
-  }
+  if (!rows.length) return 0
   for (let i = 0; i < rows.length; i++) {
     const rect = rows[i].getBoundingClientRect()
     if (pointerY < rect.top + rect.height / 2) return i
