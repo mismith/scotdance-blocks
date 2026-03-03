@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { makeDraggable, makeDroppable } from '@vue-dnd-kit/core'
+import { useElementBounding } from '@vueuse/core'
 import { computed, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
@@ -124,6 +125,12 @@ function onRemoveEvent() {
 // --- Autofill ---
 const { autoPlaceDances, autoFillGroups, autoCycleJudges } = useAutoFill()
 const showAutoFillMenu = vueRef(false)
+const autoFillBtnEl = vueRef<HTMLElement | null>(null)
+const autoFillBtnBounds = useElementBounding(autoFillBtnEl)
+const autoFillMenuStyle = computed(() => ({
+  top: autoFillBtnBounds.bottom.value + 'px',
+  right: document.documentElement.clientWidth - autoFillBtnBounds.right.value + 'px',
+}))
 const autoEditDanceId = vueRef<string | null>(null)
 
 function onAddArbitraryDance() {
@@ -194,6 +201,7 @@ function onAutoCycleJudges() {
         <div class="ml-auto flex items-center gap-1">
           <div class="relative">
             <button
+              ref="autoFillBtnEl"
               class="rainbow-rounded rainbow-border -my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
               title="Autofill"
               @click="showAutoFillMenu = !showAutoFillMenu"
@@ -214,11 +222,11 @@ function onAutoCycleJudges() {
                 class="fixed inset-0 z-40"
                 @click="showAutoFillMenu = false"
               />
-            </Teleport>
-            <div
-              v-if="showAutoFillMenu"
-              class="absolute right-0 top-full z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
-            >
+              <div
+                v-if="showAutoFillMenu"
+                class="fixed z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
+                :style="autoFillMenuStyle"
+              >
               <button
                 v-for="[categoryId, category] in categoryEntries"
                 :key="categoryId"
@@ -259,6 +267,7 @@ function onAutoCycleJudges() {
                 Assign judges
               </button>
             </div>
+            </Teleport>
           </div>
           <button
             class="flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 outline-none transition-opacity hover:text-destructive focus-visible:ring-2 focus-visible:ring-ring focus-visible:opacity-100 group-hover:opacity-100 group-has-focus-visible:opacity-100"
