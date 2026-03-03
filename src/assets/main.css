@@ -130,6 +130,8 @@ body {
   }
   &:active {
     cursor: grabbing;
+    border-bottom-width: 0;
+    border-top-width: 2px;
   }
 }
 
