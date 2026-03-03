@@ -79,7 +79,7 @@ function onRemoveDance(danceId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-1 w-full rounded bg-dance/25 px-3 py-1.5 text-left text-sm font-medium leading-tight text-dance-foreground/50 outline-none glass glass-dance hover:bg-dance hover:text-dance-foreground focus-visible:ring-2 focus-visible:ring-ring"
+      class="mt-1 w-full rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
       @click="
         () => {
           autoEditId = store.addDance()

@@ -194,7 +194,7 @@ function onAutoCycleJudges() {
         <div class="ml-auto flex items-center gap-1">
           <div class="relative">
             <button
-              class="-my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
+              class="rainbow-rounded rainbow-border -my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
               title="Autofill"
               @click="showAutoFillMenu = !showAutoFillMenu"
               @keydown.stop
@@ -313,10 +313,10 @@ function onAutoCycleJudges() {
       />
       <button
         data-dance-placeholder
-        class="col-span-full rounded bg-muted/50 px-3 py-1.5 text-left text-sm font-medium leading-tight text-muted-foreground outline-none glass hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        class="col-span-full flex items-center gap-1 rounded-lg px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-muted focus-visible:ring-2 focus-visible:ring-ring"
         @click="onAddArbitraryDance"
       >
-        <span class="-ml-1">+</span> Add item or drag dances
+        <span class="select-none">+</span> Add item or drag dances
       </button>
     </div>
   </div>

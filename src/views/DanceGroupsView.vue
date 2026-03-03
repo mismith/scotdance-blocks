@@ -86,7 +86,7 @@ const gridCols = computed(
         >
           <input
             type="checkbox"
-            class="size-4 cursor-default accent-dance-foreground"
+            class="size-4 cursor-default accent-dance-foreground dark:accent-dance"
             :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
             :checked="categoryDanceState(categoryId, danceId) === 'all'"
             :indeterminate="categoryDanceState(categoryId, danceId) === 'some'"
@@ -110,7 +110,7 @@ const gridCols = computed(
             >
               <input
                 type="checkbox"
-                class="size-3.5 cursor-default accent-dance-foreground"
+                class="size-3.5 cursor-default accent-dance-foreground dark:accent-dance"
                 :class="store.collectionsReadonly ? 'pointer-events-none opacity-60' : ''"
                 :checked="!!dance.groupIds[groupId]"
                 @change="store.toggleDanceGroup(danceId, groupId)"

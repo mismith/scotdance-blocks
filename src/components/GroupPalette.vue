@@ -84,7 +84,7 @@ function onRemoveCategory(categoryId: string) {
       </div>
       <button
         v-if="!store.collectionsReadonly"
-        class="mt-1 w-full rounded bg-group/25 px-3 py-1.5 text-left text-sm font-medium leading-tight text-group-foreground/50 outline-none glass glass-group hover:bg-group hover:text-group-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        class="mt-1 w-full rounded bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
         @click="
           () => {
             autoEditId = store.addGroup(categoryId)
@@ -96,7 +96,7 @@ function onRemoveCategory(categoryId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-2 w-full rounded bg-muted-foreground/5 px-3 py-1.5 text-left text-sm font-medium leading-tight text-muted-foreground outline-none glass glass-accent hover:bg-muted-foreground/25 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+      class="mt-2 w-full rounded bg-muted-foreground/5 px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-accent hover:bg-muted-foreground/25 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       @click="
         () => {
           autoEditCategoryId = store.addCategory()

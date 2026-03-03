@@ -40,7 +40,7 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-group-chip
-    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-group/25 px-3 py-1.5 text-sm font-medium leading-tight text-group-foreground/50 select-none glass glass-group border-dashed! hover:bg-group hover:text-group-foreground has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-group/25 px-3 py-1.5 text-sm font-medium leading-tight text-group-foreground/50 dark:text-group/50 select-none glass glass-group border-dashed! hover:bg-group/80 hover:text-group-foreground has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="{ 'opacity-40': isDragging }"
     title="Spacer"
   >

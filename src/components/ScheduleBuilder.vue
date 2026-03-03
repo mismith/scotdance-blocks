@@ -150,7 +150,7 @@ function onAddResults() {
       <div class="ml-auto self-center">
         <button
           ref="autoFillBtnEl"
-          class="flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          class="rainbow-rounded rainbow-border flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           title="Autofill"
           @click="showAutoFillMenu = !showAutoFillMenu"
         >
