@@ -59,7 +59,11 @@ function onRemove() {
 
 <template>
   <!-- Arbitrary dance: spans all columns as a single editable row -->
-  <div v-if="!scheduledDance.danceId" data-dance-row class="group col-span-full border-t border-border first:border-t-0">
+  <div
+    v-if="!scheduledDance.danceId"
+    data-dance-row
+    class="group col-span-full border-t border-border first:border-t-0"
+  >
     <div
       ref="arbitraryEl"
       class="flex cursor-grab items-start px-1 py-1.5 text-sm has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
@@ -76,7 +80,7 @@ function onRemove() {
         <div class="py-1.5">
           <InlineEdit
             :model-value="scheduledDance.description ?? ''"
-            placeholder="Add item description"
+            placeholder="Add custom item description"
             :required="false"
             multiline
             @update:model-value="
@@ -97,7 +101,11 @@ function onRemove() {
   </div>
 
   <!-- Reference dance: DanceChip + platform cells -->
-  <div v-else data-dance-row class="group col-span-full grid grid-cols-subgrid border-t border-border first:border-t-0">
+  <div
+    v-else
+    data-dance-row
+    class="group col-span-full grid grid-cols-subgrid border-t border-border first:border-t-0"
+  >
     <div class="px-1 py-1.5 font-medium whitespace-nowrap">
       <DanceChip
         :dance-id="scheduledDance.danceId"

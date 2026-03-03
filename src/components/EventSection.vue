@@ -133,8 +133,8 @@ const autoFillMenuStyle = computed(() => ({
 }))
 const autoEditDanceId = vueRef<string | null>(null)
 
-function onAddArbitraryDance() {
-  const id = store.addDanceToEvent(props.blockId, props.eventId, undefined, 'New Item')
+function onAddCustomItem() {
+  const id = store.addDanceToEvent(props.blockId, props.eventId, undefined, 'New Custom Item')
   autoEditDanceId.value = id
 }
 
@@ -318,13 +318,24 @@ function onAutoCycleJudges() {
         v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances ?? {}).length"
         class="col-span-full -my-px"
       />
-      <button
-        data-dance-placeholder
-        class="col-span-full flex items-center gap-1 rounded-lg bg-card px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-card hover:bg-muted hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        @click="onAddArbitraryDance"
-      >
-        <span class="select-none">+</span> Add item or drag dances here
-      </button>
+      <div class="col-span-full mt-1 grid grid-cols-subgrid">
+        <div class="px-1 py-1">
+          <button
+            data-dance-placeholder
+            class="flex w-full items-center gap-1 rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
+            @click="onAddCustomItem"
+          >
+            <span class="select-none -ml-1">+</span> Add custom item
+          </button>
+        </div>
+        <div class="px-2 py-1" style="grid-column: 2 / -2">
+          <div
+            class="flex h-full items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground px-2 py-1"
+          >
+            Drag dances here
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
