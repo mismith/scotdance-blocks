@@ -32,6 +32,7 @@ function onRemoveDance(danceId: string) {
       class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm font-semibold uppercase tracking-wider text-muted-foreground select-none"
     >
       <router-link
+        v-if="isDanceGroups || (Object.keys(store.dances).length > 0 && Object.keys(store.groups).length > 0)"
         :to="isDanceGroups
           ? { name: isDemo ? 'demo' : 'blocks' }
           : { name: isDemo ? 'demo-dance-groups' : 'dance-groups' }"
