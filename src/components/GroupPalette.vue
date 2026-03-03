@@ -44,9 +44,7 @@ function onRemoveCategory(categoryId: string) {
       Groups
     </summary>
     <div v-for="[categoryId] in Object.entries(store.categories)" :key="categoryId" class="mb-2">
-      <div
-        class="group/cat mb-1 flex items-center gap-1 text-sm font-medium text-muted-foreground"
-      >
+      <div class="group/cat mb-1 flex items-center gap-1 text-sm font-medium text-muted-foreground">
         <InlineEdit
           :model-value="store.getCategoryName(categoryId)"
           placeholder="Category name"
@@ -96,7 +94,7 @@ function onRemoveCategory(categoryId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-2 w-full rounded bg-muted/50 px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-muted hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+      class="mt-2 w-full rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
       @click="
         () => {
           autoEditCategoryId = store.addCategory()

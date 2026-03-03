@@ -210,7 +210,6 @@ const liveJudgeInsertIndex = computed(() => {
         <template v-for="(groupId, index) in assignment.orderedGroupIds" :key="groupId">
           <DragIndicator
             v-if="isDragOver && liveGroupInsertIndex === index"
-
             class="-my-0.5 rounded"
           />
           <SpacerChip
@@ -261,7 +260,6 @@ const liveJudgeInsertIndex = computed(() => {
         <template v-for="(judgeId, index) in assignment.orderedJudgeIds" :key="judgeId">
           <DragIndicator
             v-if="isDragOver && liveJudgeInsertIndex === index"
-
             class="-my-0.5 rounded"
           />
           <JudgeChip
@@ -297,7 +295,7 @@ const liveJudgeInsertIndex = computed(() => {
       <div
         class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground"
       >
-        Drag groups + judges
+        Drag groups or judges here
       </div>
     </template>
   </div>

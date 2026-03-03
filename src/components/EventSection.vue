@@ -227,46 +227,46 @@ function onAutoCycleJudges() {
                 class="fixed z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
                 :style="autoFillMenuStyle"
               >
-              <button
-                v-for="[categoryId, category] in categoryEntries"
-                :key="categoryId"
-                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-                @click="onAutoPlaceCategoryDances(categoryId)"
-              >
-                Place {{ category.name }} dances
-              </button>
-              <button
-                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-                @click="onAutoPlaceDances"
-              >
-                Place all dances
-              </button>
-              <div class="my-1 border-t border-border" />
-              <button
-                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="
-                  hasDances
-                    ? 'text-foreground hover:bg-muted'
-                    : 'text-muted-foreground/50 pointer-events-none'
-                "
-                :disabled="!hasDances"
-                @click="onAutoFillGroups"
-              >
-                Assign groups
-              </button>
-              <button
-                class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                :class="
-                  hasDances
-                    ? 'text-foreground hover:bg-muted'
-                    : 'text-muted-foreground/50 pointer-events-none'
-                "
-                :disabled="!hasDances"
-                @click="onAutoCycleJudges"
-              >
-                Assign judges
-              </button>
-            </div>
+                <button
+                  v-for="[categoryId, category] in categoryEntries"
+                  :key="categoryId"
+                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                  @click="onAutoPlaceCategoryDances(categoryId)"
+                >
+                  Place {{ category.name }} dances
+                </button>
+                <button
+                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                  @click="onAutoPlaceDances"
+                >
+                  Place all dances
+                </button>
+                <div class="my-1 border-t border-border" />
+                <button
+                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  :class="
+                    hasDances
+                      ? 'text-foreground hover:bg-muted'
+                      : 'text-muted-foreground/50 pointer-events-none'
+                  "
+                  :disabled="!hasDances"
+                  @click="onAutoFillGroups"
+                >
+                  Assign groups
+                </button>
+                <button
+                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  :class="
+                    hasDances
+                      ? 'text-foreground hover:bg-muted'
+                      : 'text-muted-foreground/50 pointer-events-none'
+                  "
+                  :disabled="!hasDances"
+                  @click="onAutoCycleJudges"
+                >
+                  Assign judges
+                </button>
+              </div>
             </Teleport>
           </div>
           <button
@@ -320,10 +320,10 @@ function onAutoCycleJudges() {
       />
       <button
         data-dance-placeholder
-        class="col-span-full flex items-center gap-1 rounded-lg bg-muted/50 px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-muted hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+        class="col-span-full flex items-center gap-1 rounded-lg bg-card px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-card hover:bg-muted hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
         @click="onAddArbitraryDance"
       >
-        <span class="select-none">+</span> Add item or drag dances
+        <span class="select-none">+</span> Add item or drag dances here
       </button>
     </div>
   </div>

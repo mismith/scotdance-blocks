@@ -118,10 +118,6 @@ body {
     var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 0 0 transparent),
     var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent),
     var(--tw-shadow);
-  transition:
-    transform 150ms ease,
-    box-shadow 150ms ease,
-    background-color 150ms ease;
 
   &:hover {
     --tw-shadow:
@@ -132,7 +128,6 @@ body {
       var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent),
       var(--tw-shadow);
   }
-
   &:active {
     cursor: grabbing;
   }
@@ -144,20 +139,17 @@ body {
   inherits: false;
   initial-value: 0deg;
 }
-
 @keyframes rainbow-spin {
   to {
     --rainbow-angle: 360deg;
   }
 }
-
 @utility rainbow-rounded {
   --rainbow-border-radius: 0.25rem;
 }
 @utility rainbow-rounded-* {
   --rainbow-border-radius: --value(--radius- *, [length]);
 }
-
 @utility rainbow-border {
   --rainbow-border-width: 1px;
   --rainbow-border-opacity: 1;
@@ -190,28 +182,7 @@ body {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .rainbow-border::before {
-    background: conic-gradient(
-      from var(--rainbow-angle),
-      oklch(0.78 0.2 132),
-      oklch(0.78 0.2 233),
-      oklch(0.78 0.2 349),
-      oklch(0.78 0.2 492)
-    );
-  }
-}
-
 /* Ensure drag overlay renders above all content */
 .dnd-kit-overlay-container {
   z-index: 9999;
-}
-
-/* Elevated drag overlay for chips being dragged */
-.dnd-kit-overlay-container [data-dance-chip],
-.dnd-kit-overlay-container [data-group-chip],
-.dnd-kit-overlay-container [data-judge-chip] {
-  transform: scale(1.03);
-  --tw-shadow: 0 8px 24px oklch(0 0 0 / 0.2), 0 2px 6px oklch(0 0 0 / 0.15);
-  box-shadow: var(--tw-inset-shadow), var(--tw-shadow);
 }
