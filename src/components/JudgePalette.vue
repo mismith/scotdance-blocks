@@ -58,7 +58,7 @@ function onRemoveStaff(staffId: string) {
     </div>
     <button
       v-if="!store.collectionsReadonly"
-      class="mt-1 w-full rounded bg-judge/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-judge-foreground/80 outline-none glass glass-judge focus-visible:ring-2 focus-visible:ring-ring dark:text-judge/80"
+      class="mt-1 w-full rounded bg-judge/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-judge-foreground/80 outline-none glass glass-judge hover:bg-judge/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-judge/80"
       @click="
         () => {
           autoEditId = store.addStaffMember()

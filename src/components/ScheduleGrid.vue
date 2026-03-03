@@ -216,7 +216,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
 
     <!-- Add event -->
     <button
-      class="col-span-full flex min-h-9 items-center gap-1 rounded-lg bg-accent px-1 py-1.5 text-left text-sm font-semibold text-accent-foreground outline-none glass glass-accent focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
+      class="col-span-full flex min-h-9 items-center gap-1 rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold text-accent-foreground outline-none glass glass-accent hover:bg-accent focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
       @click="onAddEvent"
     >
       <span class="select-none">+</span>

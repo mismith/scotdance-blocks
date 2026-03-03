@@ -18,13 +18,13 @@
   --destructive-foreground: var(--color-white);
   --dance: oklch(0.82 0.3 132);
   --dance-foreground: oklch(0.3 0.14 132);
-  --dance-muted: oklch(0.22 0.06 132);
+  --dance-muted: oklch(0.92 0.08 132);
   --group: oklch(0.78 0.28 233);
   --group-foreground: oklch(0.32 0.12 233);
-  --group-muted: oklch(0.22 0.06 233);
+  --group-muted: oklch(0.92 0.08 233);
   --judge: oklch(0.72 0.28 349);
   --judge-foreground: oklch(0.32 0.14 349);
-  --judge-muted: oklch(0.22 0.06 349);
+  --judge-muted: oklch(0.88 0.08 349);
   --indicator: var(--foreground);
 }
 
@@ -129,6 +129,24 @@ body {
     var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 0 0 transparent),
     var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent),
     var(--tw-shadow);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+
+  &:hover {
+    --tw-shadow:
+      0 2px 4px oklch(0 0 0 / 0.12), 0 6px 16px oklch(0 0 0 / 0.1),
+      0 0 12px color-mix(in oklch, var(--glass-color, transparent) 25%, transparent);
+    box-shadow:
+      var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 0 0 transparent),
+      var(--tw-ring-offset-shadow, 0 0 0 0 transparent), var(--tw-ring-shadow, 0 0 0 0 transparent),
+      var(--tw-shadow);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 /* Animated rainbow border */
@@ -198,4 +216,13 @@ body {
 /* Ensure drag overlay renders above all content */
 .dnd-kit-overlay-container {
   z-index: 9999;
+}
+
+/* Elevated drag overlay for chips being dragged */
+.dnd-kit-overlay-container [data-dance-chip],
+.dnd-kit-overlay-container [data-group-chip],
+.dnd-kit-overlay-container [data-judge-chip] {
+  transform: scale(1.03);
+  --tw-shadow: 0 8px 24px oklch(0 0 0 / 0.2), 0 2px 6px oklch(0 0 0 / 0.15);
+  box-shadow: var(--tw-inset-shadow), var(--tw-shadow);
 }

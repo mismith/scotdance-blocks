@@ -40,7 +40,7 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-group-chip
-    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-group/25 px-3 py-1.5 text-sm font-medium leading-tight text-group-foreground/50 dark:text-group/50 select-none glass glass-group border-dashed! hover:bg-group/80 hover:text-group-foreground has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-group/10 px-3 py-1.5 text-sm font-medium leading-tight text-group-foreground/80 dark:text-group/80 select-none glass glass-group border-dashed! hover:bg-group/25 has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="{ 'opacity-40': isDragging }"
     title="Spacer"
   >
@@ -48,7 +48,7 @@ const { isDragging } = makeDraggable(
     <span class="flex-1 truncate">Spacer</span>
     <span
       v-if="!removable"
-      class="ml-1 flex size-4 shrink-0 items-center justify-center rounded-full border border-group-foreground/25 text-[10px] text-group-foreground/25"
+      class="ml-1 flex size-5 shrink-0 items-center justify-center rounded-full border border-group-foreground/25 text-[10px] text-group-foreground/25"
       title="Drag into a platform cell to add a visual gap between groups"
     >?</span>
     <button

@@ -180,7 +180,7 @@ function onAutoCycleJudges() {
     <div class="group col-span-full has-[[data-grip]:focus-visible]:z-10">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between rounded-lg bg-accent px-1 py-1.5 text-left text-sm font-semibold glass glass-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+        class="flex cursor-grab items-center justify-between rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold glass glass-accent hover:bg-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       >
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -294,7 +294,6 @@ function onAutoCycleJudges() {
       >
         <DragIndicator
           v-if="isDragOver && liveDanceInsertIndex === danceIndex"
-          variant="dance"
           class="col-span-full -my-px"
         />
         <DanceRow
@@ -308,12 +307,11 @@ function onAutoCycleJudges() {
       </template>
       <DragIndicator
         v-if="isDragOver && liveDanceInsertIndex === Object.keys(event.dances ?? {}).length"
-        variant="dance"
         class="col-span-full -my-px"
       />
       <button
         data-dance-placeholder
-        class="col-span-full flex items-center gap-1 rounded-lg px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-muted focus-visible:ring-2 focus-visible:ring-ring"
+        class="col-span-full flex items-center gap-1 rounded-lg bg-muted/50 px-1 py-1 text-left text-sm font-medium text-muted-foreground outline-none glass glass-muted hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
         @click="onAddArbitraryDance"
       >
         <span class="select-none">+</span> Add item or drag dances

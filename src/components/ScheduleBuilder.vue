@@ -171,7 +171,7 @@ function onAddResults() {
           />
           <div
             v-if="showAutoFillMenu"
-            class="fixed z-50 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
+            class="fixed z-100 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
             :style="autoFillMenuStyle"
           >
             <button

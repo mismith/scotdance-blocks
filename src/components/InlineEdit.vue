@@ -96,7 +96,7 @@ onMounted(() => {
     ref="displayEl"
     tabindex="0"
     title="Click to edit"
-    class="cursor-text border-b border-dotted border-b-transparent outline-none hover:border-b-muted-foreground focus-visible:border-b-ring"
+    class="cursor-text border-b border-dotted border-b-transparent outline-none hover:border-b-foreground focus-visible:border-b-ring"
     :class="{ 'text-current/50': !modelValue, 'whitespace-pre-wrap': multiline }"
     @click.stop="startEdit"
     @keydown.stop

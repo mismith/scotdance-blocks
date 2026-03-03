@@ -40,7 +40,7 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-judge-chip
-    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-judge/80 px-3 py-1.5 text-sm font-medium leading-tight text-judge-foreground select-none glass glass-judge has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-judge/80 px-3 py-1.5 text-sm font-medium leading-tight text-judge-foreground select-none glass glass-judge hover:bg-judge has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="{ 'opacity-40': isDragging }"
     :title="label"
   >
