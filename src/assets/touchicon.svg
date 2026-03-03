@@ -1,0 +1,23 @@
+<svg version="1.2"
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 555">
+    <defs>
+        <linearGradient id="P" gradientUnits="userSpaceOnUse"/>
+        <linearGradient id="g1" x2="1" href="#P" gradientTransform="matrix(0,555,-165,0,-225,0)">
+            <stop stop-color="#91e337"/>
+            <stop offset=".55" stop-color="#85d932"/>
+            <stop offset="1" stop-color="#78cf2d"/>
+        </linearGradient>
+        <linearGradient id="g2" x2="1" href="#P" gradientTransform="matrix(0,242,-324,0,-214,1)">
+            <stop stop-color="#00b4ff"/>
+            <stop offset="1" stop-color="#0095fe"/>
+        </linearGradient>
+        <linearGradient id="g3" x2="1" href="#P" gradientTransform="matrix(0,289,-334,0,-220.596,266)">
+            <stop stop-color="#f118a4"/>
+            <stop offset="1" stop-color="#cd0a93"/>
+        </linearGradient>
+    </defs>
+    <style>.a{fill:url(#g1)}.b{fill:url(#g2)}.c{fill:url(#g3)}</style>
+    <path fill-rule="evenodd" class="a" d="m60 0h85c22.1 0 40 17.9 40 40v475c0 22.1-17.9 40-40 40h-85c-22.1 0-40-17.9-40-40v-475c0-22.1 17.9-40 40-40z"/>
+    <path class="b" d="m232 1h222c11.8 0 23.5 2.3 34.4 6.9 11 4.5 20.9 11.1 29.2 19.5 8.4 8.3 15 18.2 19.5 29.2 4.6 10.9 6.9 22.6 6.9 34.4v62c0 11.8-2.3 23.5-6.9 34.4-4.5 11-11.1 20.9-19.5 29.2-8.3 8.4-18.2 15-29.2 19.5-10.9 4.6-22.6 6.9-34.4 6.9h-222c-1.6 0-3.1-0.3-4.6-0.9-1.4-0.6-2.8-1.5-3.9-2.6-1.1-1.1-2-2.5-2.6-3.9-0.6-1.5-0.9-3-0.9-4.6v-218c0-1.6 0.3-3.1 0.9-4.6 0.6-1.4 1.5-2.8 2.6-3.9 1.1-1.1 2.5-2 3.9-2.6 1.5-0.6 3-0.9 4.6-0.9z"/>
+    <path class="c" d="m232 266h222c13.1 0 26.1 2.6 38.3 7.6 12.1 5 23.1 12.4 32.4 21.7 9.3 9.3 16.7 20.3 21.7 32.4 5 12.2 7.6 25.2 7.6 38.3v89c0 13.1-2.6 26.1-7.6 38.3-5 12.1-12.4 23.1-21.7 32.4-9.3 9.3-20.3 16.7-32.4 21.7-12.2 5-25.2 7.6-38.3 7.6h-222c-1.6 0-3.1-0.3-4.6-0.9-1.4-0.6-2.8-1.5-3.9-2.6-1.1-1.1-2-2.5-2.6-3.9-0.6-1.5-0.9-3-0.9-4.6v-265c0-1.6 0.3-3.1 0.9-4.6 0.6-1.4 1.5-2.8 2.6-3.9 1.1-1.1 2.5-2 3.9-2.6 1.5-0.6 3-0.9 4.6-0.9z"/>
+</svg>

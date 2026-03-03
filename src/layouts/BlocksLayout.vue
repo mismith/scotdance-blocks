@@ -6,6 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
+import TouchIcon from '@/assets/touchicon.svg?component'
 
 const store = useCompetitionStore()
 const { data } = storeToRefs(store)
@@ -52,7 +53,7 @@ whenever(
   <div class="flex h-screen select-none flex-col">
     <header class="flex items-center gap-3 border-b border-border px-4 py-3">
       <RouterLink to="/" class="flex items-center gap-3 cursor-pointer hover:opacity-80">
-        <img src="/touchicon.png" alt="" class="size-7 rounded" />
+        <TouchIcon class="size-7 rounded" />
         <span class="text-lg font-bold text-foreground">Blocks</span>
       </RouterLink>
       <div class="ml-auto flex items-center gap-3">
