@@ -84,19 +84,8 @@
   --color-indicator: var(--indicator);
 }
 
-@utility bg-textured {
-  @media (prefers-color-scheme: dark) {
-    background-image: url('./dark_matter.png');
-    background-repeat: repeat;
-  }
-  @media (prefers-color-scheme: light) {
-    background-image: url('./dark_matter-light.png');
-    background-repeat: repeat;
-  }
-}
-
 body {
-  @apply bg-background bg-textured text-foreground;
+  @apply bg-background text-foreground;
 }
 
 /* Liquid-glass utilities */

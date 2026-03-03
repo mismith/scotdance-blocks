@@ -115,7 +115,7 @@ function onAddResults() {
     <!-- Block tabs -->
     <div
       ref="tabBarEl"
-      class="flex gap-1 overflow-x-auto bg-background bg-textured px-4 pt-2"
+      class="flex gap-1 overflow-x-auto bg-background px-4 pt-2"
       :class="isValidTarget ? 'bg-group-muted' : ''"
     >
       <template v-for="([blockId, block], blockIndex) in blockEntries" :key="blockId">
