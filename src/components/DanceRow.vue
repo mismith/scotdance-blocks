@@ -109,7 +109,7 @@ function onRemove() {
     <div class="px-1 py-1.5 font-medium whitespace-nowrap">
       <DanceChip
         :dance-id="scheduledDance.danceId"
-        :label="dance?.shortName ?? dance?.name ?? 'Unknown'"
+        :label="dance?.shortName || dance?.name || 'Unknown'"
         :steps="dance?.steps"
         :index
         :source="{ blockId, eventId }"
@@ -117,7 +117,7 @@ function onRemove() {
         removable
         @remove="onRemove"
       >
-        {{ dance?.shortName ?? dance?.name ?? 'Unknown' }}
+        {{ dance?.shortName || dance?.name || 'Unknown' }}
         <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
         <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">
           {{ scheduledDance.name }}
