@@ -19,12 +19,6 @@ const router = createRouter({
           name: 'blocks',
           component: () => import('../views/BlocksView.vue'),
         },
-        {
-          path: 'dance-groups',
-          name: 'dance-groups',
-          meta: { isDanceGroups: true },
-          component: () => import('../views/DanceGroupsView.vue'),
-        },
       ],
     },
     {
@@ -41,12 +35,6 @@ const router = createRouter({
           path: '',
           name: 'demo',
           component: () => import('../views/BlocksView.vue'),
-        },
-        {
-          path: 'dance-groups',
-          name: 'demo-dance-groups',
-          meta: { isDanceGroups: true },
-          component: () => import('../views/DanceGroupsView.vue'),
         },
       ],
     },

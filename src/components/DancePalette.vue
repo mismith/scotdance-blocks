@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
+import { useDanceGroupsDialog } from '@/composables/useDanceGroupsDialog'
 
 import AddPopover from '@/components/AddPopover.vue'
 import type { AddPopoverItem } from '@/components/AddPopover.vue'
@@ -11,10 +11,7 @@ import InlineEdit from '@/components/InlineEdit.vue'
 import { DANCE_PRESETS } from '@/data/presets'
 
 const store = useCompetitionStore()
-const route = useRoute()
-
-const isDanceGroups = computed(() => !!route.meta.isDanceGroups)
-const isDemo = computed(() => route.path.startsWith('/demo'))
+const { open: openDanceGroupsDialog } = useDanceGroupsDialog()
 
 const autoEditId = ref<string | null>(null)
 const nameRefs = ref<Record<string, InstanceType<typeof InlineEdit> | null>>({})
@@ -63,20 +60,13 @@ function onSelectPreset(item: AddPopoverItem) {
     <summary
       class="mb-2 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm font-semibold uppercase tracking-wider text-muted-foreground select-none"
     >
-      <router-link
-        v-if="isDanceGroups || (Object.keys(store.dances).length > 0 && Object.keys(store.groups).length > 0)"
-        :to="isDanceGroups
-          ? { name: isDemo ? 'demo' : 'blocks' }
-          : { name: isDemo ? 'demo-dance-groups' : 'dance-groups' }"
-        class="float-right rounded border border-border px-2 py-1 -mt-1 text-xs font-normal normal-case tracking-normal outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        :class="
-          isDanceGroups
-            ? 'bg-primary text-primary-foreground hover:bg-primary/80'
-            : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground'
-        "
-        @click.stop
-        >{{ isDanceGroups ? 'Done' : 'Configure' }}</router-link
+      <button
+        v-if="Object.keys(store.dances).length > 0 && Object.keys(store.groups).length > 0"
+        class="float-right rounded border border-border bg-card px-2 py-1 -mt-1 text-xs font-normal normal-case tracking-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        @click.stop="openDanceGroupsDialog"
       >
+        Configure
+      </button>
       Dances
     </summary>
     <div class="flex flex-col gap-1">

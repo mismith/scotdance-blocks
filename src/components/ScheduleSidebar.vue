@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useScroll } from '@vueuse/core'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 
 import DancePalette from '@/components/DancePalette.vue'
 import GroupPalette from '@/components/GroupPalette.vue'
 import JudgePalette from '@/components/JudgePalette.vue'
-
-const route = useRoute()
 
 const sidebarEl = ref<HTMLElement | null>(null)
 const { arrivedState } = useScroll(sidebarEl, { offset: { top: 5, bottom: 5 } })
@@ -28,7 +25,7 @@ const { arrivedState } = useScroll(sidebarEl, { offset: { top: 5, bottom: 5 } })
     </div>
     <DancePalette />
     <GroupPalette />
-    <JudgePalette v-if="!route.meta.isDanceGroups" />
+    <JudgePalette />
     <div
       class="pointer-events-none sticky bottom-0 -mx-3 h-0 z-10 transition-opacity"
       :class="arrivedState.bottom ? 'opacity-0' : 'opacity-100'"

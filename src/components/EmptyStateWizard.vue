@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
+import { useDanceGroupsDialog } from '@/composables/useDanceGroupsDialog'
 import AddPopover from '@/components/AddPopover.vue'
 import ChevronRightIcon from '@/components/ChevronRightIcon.vue'
 import { BLOCK_PRESETS } from '@/data/presets'
 
 const store = useCompetitionStore()
-const route = useRoute()
-const router = useRouter()
+const { open: openDanceGroupsDialog } = useDanceGroupsDialog()
 
 const emit = defineEmits<{
   addPlatform: []
@@ -40,9 +39,6 @@ const blockPopoverItems = computed(() => {
   }))
 })
 
-// Demo routing
-const isDemo = computed(() => route.path.startsWith('/demo'))
-
 function clickSidebarButton(selector: string) {
   const btn = document.querySelector<HTMLElement>(selector)
   if (btn) {
@@ -52,7 +48,7 @@ function clickSidebarButton(selector: string) {
 }
 
 function onConfigureDanceGroups() {
-  router.push({ name: isDemo.value ? 'demo-dance-groups' : 'dance-groups' })
+  openDanceGroupsDialog()
 }
 </script>
 

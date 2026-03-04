@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -12,7 +11,6 @@ import SpacerChip from '@/components/SpacerChip.vue'
 import { CATEGORY_PRESETS, GROUP_PRESETS } from '@/data/presets'
 
 const store = useCompetitionStore()
-const route = useRoute()
 
 const autoEditId = ref<string | null>(null)
 const autoEditCategoryId = ref<string | null>(null)
@@ -156,7 +154,7 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
         @add="store.addCategory($event)"
       />
     </div>
-    <div v-if="!route.meta.isDanceGroups && Object.keys(store.groups).length" class="mt-3">
+    <div v-if="Object.keys(store.groups).length" class="mt-3">
       <SpacerChip class="w-full" />
     </div>
   </details>

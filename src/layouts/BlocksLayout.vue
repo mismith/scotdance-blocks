@@ -6,6 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import TouchIcon from '@/assets/touchicon.svg?component'
 import { useCompetitionStore } from '@/stores/competition'
+import DanceGroupsDialog from '@/components/DanceGroupsDialog.vue'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 
 const store = useCompetitionStore()
@@ -75,5 +76,6 @@ whenever(
         <RouterView class="flex-auto min-w-0" />
       </div>
     </DnDProvider>
+    <DanceGroupsDialog />
   </div>
 </template>
