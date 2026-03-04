@@ -141,6 +141,27 @@ function onAddCustomItem() {
 
 const hasDances = computed(() => !!props.event.dances && Object.keys(props.event.dances).length > 0)
 
+const hasGroups = computed(() => Object.keys(store.groups).length > 0)
+const hasPlatforms = computed(() => store.platformEntries.length > 0)
+const hasJudges = computed(() => Object.values(store.staff).some((m) => m.type === 'Judge'))
+
+const canAssignGroups = computed(() => hasDances.value && hasGroups.value && hasPlatforms.value)
+const assignGroupsHint = computed(() => {
+  const missing: string[] = []
+  if (!hasDances.value) missing.push('dances placed in this event')
+  if (!hasGroups.value) missing.push('groups')
+  if (!hasPlatforms.value) missing.push('platforms')
+  return missing.length ? `Add ${missing.join(' and ')} first` : ''
+})
+
+const canAssignJudges = computed(() => hasDances.value && hasJudges.value)
+const assignJudgesHint = computed(() => {
+  const missing: string[] = []
+  if (!hasDances.value) missing.push('dances placed in this event')
+  if (!hasJudges.value) missing.push('judges')
+  return missing.length ? `Add ${missing.join(' and ')} first` : ''
+})
+
 function hasExistingGroups() {
   return Object.values(props.event.dances ?? {}).some((sd) =>
     Object.values(sd.platforms).some((a) => a.orderedGroupIds.length > 0),
@@ -163,14 +184,14 @@ function onAutoPlaceCategoryDances(categoryId: string) {
   showAutoFillMenu.value = false
 }
 function onAutoFillGroups() {
-  if (!hasDances.value) return
+  if (!canAssignGroups.value) return
   if (hasExistingGroups() && !confirm('This will replace existing group assignments. Continue?'))
     return
   autoFillGroups(props.blockId, props.eventId)
   showAutoFillMenu.value = false
 }
 function onAutoCycleJudges() {
-  if (!hasDances.value) return
+  if (!canAssignJudges.value) return
   if (hasExistingJudges() && !confirm('This will replace existing judge assignments. Continue?'))
     return
   autoCycleJudges(props.blockId, props.eventId)
@@ -203,15 +224,16 @@ function onAutoCycleJudges() {
           <div v-if="Object.keys(store.dances).length > 0" class="relative">
             <button
               ref="autoFillBtnEl"
-              class="rainbow-rounded rainbow-border -my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
-              title="Boost"
+              class="rainbow-rounded rainbow-border -my-0.5 flex items-center gap-0.5 rounded border border-border bg-card px-1 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
+              title="Autofill"
               @click="showAutoFillMenu = !showAutoFillMenu"
               @keydown.stop
             >
               <svg class="size-3 rainbow-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z" />
+                <path
+                  d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z"
+                />
               </svg>
-              Boost
               <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fill-rule="evenodd"
@@ -248,28 +270,36 @@ function onAutoCycleJudges() {
                 </button>
                 <div class="my-1 border-t border-border" />
                 <button
-                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  class="flex w-full items-center gap-1 whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   :class="
-                    hasDances
-                      ? 'text-foreground hover:bg-muted'
-                      : 'text-muted-foreground/50 pointer-events-none'
+                    canAssignGroups ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50'
                   "
-                  :disabled="!hasDances"
+                  :disabled="!canAssignGroups"
                   @click="onAutoFillGroups"
                 >
                   Assign groups
+                  <span
+                    v-if="!canAssignGroups"
+                    class="ml-auto size-4 inline-flex items-center justify-center rounded-full border border-current text-[10px] leading-none"
+                    :title="assignGroupsHint"
+                    >?</span
+                  >
                 </button>
                 <button
-                  class="flex w-full whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  class="flex w-full items-center gap-1 whitespace-nowrap rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   :class="
-                    hasDances
-                      ? 'text-foreground hover:bg-muted'
-                      : 'text-muted-foreground/50 pointer-events-none'
+                    canAssignJudges ? 'text-foreground hover:bg-muted' : 'text-muted-foreground/50'
                   "
-                  :disabled="!hasDances"
+                  :disabled="!canAssignJudges"
                   @click="onAutoCycleJudges"
                 >
                   Assign judges
+                  <span
+                    v-if="!canAssignJudges"
+                    class="ml-auto size-4 inline-flex items-center justify-center rounded-full border border-current text-[10px] leading-none"
+                    :title="assignJudgesHint"
+                    >?</span
+                  >
                 </button>
               </div>
             </Teleport>

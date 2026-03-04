@@ -168,14 +168,15 @@ function onAutoFillSchedule() {
       >
         <button
           ref="autoFillBtnEl"
-          class="rainbow-rounded rainbow-border flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          title="Boost"
+          class="rainbow-rounded rainbow-border flex items-center gap-0.5 rounded border border-border bg-card px-1 py-1 text-xs text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          title="Autofill"
           @click="showAutoFillMenu = !showAutoFillMenu"
         >
           <svg class="size-3 rainbow-icon" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z" />
+            <path
+              d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z"
+            />
           </svg>
-          Boost
           <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor">
             <path
               fill-rule="evenodd"
@@ -200,7 +201,7 @@ function onAutoFillSchedule() {
               class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
               @click="onAutoFillSchedule"
             >
-              Boost schedule
+              Autofill schedule
             </button>
           </div>
         </Teleport>
@@ -212,12 +213,12 @@ function onAutoFillSchedule() {
       <div class="w-fit min-w-full px-4">
         <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
         <div v-else class="py-12 text-center text-muted-foreground">
-          <template v-if="Object.keys(store.dances).length === 0 && Object.keys(store.groups).length === 0">
+          <template
+            v-if="Object.keys(store.dances).length === 0 && Object.keys(store.groups).length === 0"
+          >
             Add dances and groups in the sidebar, then create your first block here.
           </template>
-          <template v-else>
-            Click + to add your first block.
-          </template>
+          <template v-else> Click + to add your first block. </template>
         </div>
       </div>
     </div>

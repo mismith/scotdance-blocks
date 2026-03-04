@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { computed, nextTick, ref, watch } from 'vue'
 
 export type AddPopoverItem = {
   key: string
@@ -129,8 +130,7 @@ function onAddCustom() {
   nextTick(() => inputEl.value?.focus())
 }
 
-onMounted(() => document.addEventListener('keydown', onKeydown))
-onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
+useEventListener(document, 'keydown', onKeydown)
 </script>
 
 <template>
