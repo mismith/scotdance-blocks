@@ -44,7 +44,7 @@ const { isDragging } = makeDraggable(
   <div
     ref="headerEl"
     data-platform-header
-    class="group flex items-center gap-1 rounded-lg bg-card/50 px-1 py-1.5 text-center text-sm font-semibold glass glass-card hover:bg-muted has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group flex items-center gap-1 rounded-lg bg-card/50 px-1 py-1.5 text-center text-sm font-semibold text-foreground glass glass-card hover:bg-muted has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="[isDragging ? 'opacity-40' : '', readonly ? 'pointer-events-none' : 'cursor-grab']"
   >
     <span

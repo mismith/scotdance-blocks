@@ -49,6 +49,7 @@ export interface ScheduleEvent {
 
 export interface ScheduleBlock {
   name: string // "Morning", "Afternoon"
+  description?: string
   events: Record<string, ScheduleEvent>
 }
 

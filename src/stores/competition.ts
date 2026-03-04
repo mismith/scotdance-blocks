@@ -417,6 +417,11 @@ export const useCompetitionStore = defineStore('competition', () => {
     if (block) block.name = name
   }
 
+  function updateBlockDescription(blockId: string, description: string) {
+    const block = data.value.schedule.blocks[blockId]
+    if (block) block.description = description || undefined
+  }
+
   function addEvent(blockId: string, name?: string): string {
     const id = generateId()
     const block = data.value.schedule.blocks[blockId]
@@ -608,6 +613,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     addBlock,
     removeBlock,
     renameBlock,
+    updateBlockDescription,
     addEvent,
     removeEvent,
     renameEvent,
