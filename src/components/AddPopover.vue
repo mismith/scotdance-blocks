@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useElementBounding } from '@vueuse/core'
 
 export type AddPopoverItem = {
   key: string
@@ -25,16 +25,17 @@ const emit = defineEmits<{
   add: [text: string]
 }>()
 
-const bounds = useElementBounding(() => props.anchor)
+const anchorRef = computed(() => props.anchor)
+const floatingEl = ref<HTMLElement | null>(null)
 
-const style = computed(() => {
-  if (!props.anchor) return {}
-  return {
-    top: bounds.bottom.value + 4 + 'px',
-    ...(props.align === 'right'
-      ? { right: document.documentElement.clientWidth - bounds.right.value + 'px' }
-      : { left: bounds.left.value + 'px' }),
-  }
+const placement = computed<'bottom-start' | 'bottom-end'>(() =>
+  props.align === 'right' ? 'bottom-end' : 'bottom-start',
+)
+
+const { floatingStyles } = useFloating(anchorRef, floatingEl, {
+  placement,
+  middleware: [offset(4), flip(), shift()],
+  whileElementsMounted: autoUpdate,
 })
 
 const search = ref('')
@@ -68,7 +69,6 @@ watch(
     if (open) {
       search.value = ''
       highlightIndex.value = 0
-      bounds.update()
       nextTick(() => inputEl.value?.focus())
     }
   },
@@ -138,8 +138,9 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     <template v-if="open">
       <div class="fixed inset-0 z-40" @click="emit('close')" />
       <div
-        class="fixed z-50 min-w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg"
-        :style="style"
+        ref="floatingEl"
+        class="z-50 min-w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+        :style="floatingStyles"
       >
         <input
           ref="inputEl"

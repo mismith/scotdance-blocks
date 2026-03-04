@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.11",
     "@vue-dnd-kit/core": "^2.0.0-alpha10",
     "@vueuse/core": "^14.2.1",
     "pinia": "^3.0.4",

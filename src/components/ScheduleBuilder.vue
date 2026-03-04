@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { makeDroppable } from '@vue-dnd-kit/core'
-import { useElementBounding } from '@vueuse/core'
 import { computed, ref, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
@@ -64,11 +64,12 @@ const liveBlockInsertIndex = computed(() => {
 })
 
 const autoFillBtnEl = vueRef<HTMLElement | null>(null)
-const autoFillBtnBounds = useElementBounding(autoFillBtnEl)
-const autoFillMenuStyle = computed(() => ({
-  top: autoFillBtnBounds.bottom.value + 'px',
-  right: document.documentElement.clientWidth - autoFillBtnBounds.right.value + 'px',
-}))
+const autoFillMenuEl = vueRef<HTMLElement | null>(null)
+const { floatingStyles: autoFillMenuStyle } = useFloating(autoFillBtnEl, autoFillMenuEl, {
+  placement: 'bottom-end',
+  middleware: [offset(4), flip(), shift()],
+  whileElementsMounted: autoUpdate,
+})
 
 const autoEditBlockId = ref<string | null>(null)
 
@@ -191,7 +192,8 @@ function onAutoFillSchedule() {
           />
           <div
             v-if="showAutoFillMenu"
-            class="fixed z-50 mt-1 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
+            ref="autoFillMenuEl"
+            class="z-50 min-w-48 rounded-lg border border-border bg-card p-1 shadow-lg"
             :style="autoFillMenuStyle"
           >
             <button

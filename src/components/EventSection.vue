@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { makeDraggable, makeDroppable } from '@vue-dnd-kit/core'
-import { useElementBounding } from '@vueuse/core'
 import { computed, ref as vueRef } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
@@ -126,11 +126,12 @@ function onRemoveEvent() {
 const { autoPlaceDances, autoFillGroups, autoCycleJudges } = useAutoFill()
 const showAutoFillMenu = vueRef(false)
 const autoFillBtnEl = vueRef<HTMLElement | null>(null)
-const autoFillBtnBounds = useElementBounding(autoFillBtnEl)
-const autoFillMenuStyle = computed(() => ({
-  top: autoFillBtnBounds.bottom.value + 'px',
-  right: document.documentElement.clientWidth - autoFillBtnBounds.right.value + 'px',
-}))
+const autoFillMenuEl = vueRef<HTMLElement | null>(null)
+const { floatingStyles: autoFillMenuStyle } = useFloating(autoFillBtnEl, autoFillMenuEl, {
+  placement: 'bottom-end',
+  middleware: [offset(4), flip(), shift()],
+  whileElementsMounted: autoUpdate,
+})
 const autoEditDanceId = vueRef<string | null>(null)
 
 function onAddCustomItem() {
@@ -227,7 +228,8 @@ function onAutoCycleJudges() {
               />
               <div
                 v-if="showAutoFillMenu"
-                class="fixed z-50 mt-1 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
+                ref="autoFillMenuEl"
+                class="z-50 min-w-40 rounded-lg border border-border bg-card p-1 font-normal shadow-lg"
                 :style="autoFillMenuStyle"
               >
                 <button
