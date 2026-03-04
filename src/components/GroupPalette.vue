@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
+import AddPopover from '@/components/AddPopover.vue'
+import type { AddPopoverItem } from '@/components/AddPopover.vue'
 import GroupChip from '@/components/GroupChip.vue'
 import InlineEdit from '@/components/InlineEdit.vue'
 import SpacerChip from '@/components/SpacerChip.vue'
@@ -14,7 +16,12 @@ const route = useRoute()
 
 const autoEditId = ref<string | null>(null)
 const autoEditCategoryId = ref<string | null>(null)
-const showBoost = ref(false)
+
+const showCategoryPopover = ref(false)
+const categoryBtnEl = ref<HTMLElement | null>(null)
+
+const openGroupPopoverCategoryId = ref<string | null>(null)
+const groupBtnEls = ref<Record<string, HTMLElement | null>>({})
 
 function isGroupAssigned(groupId: string) {
   return Object.values(store.blocks).some((block) =>
@@ -37,24 +44,31 @@ function onRemoveCategory(categoryId: string) {
   store.removeCategory(categoryId)
 }
 
-const availableCategoryPresets = computed(() => {
+const categoryPopoverItems = computed<AddPopoverItem[]>(() => {
   const existingNames = new Set(Object.values(store.categories).map((c) => c.name))
-  return CATEGORY_PRESETS.filter((name) => !existingNames.has(name))
+  return CATEGORY_PRESETS.filter((name) => !existingNames.has(name)).map((name) => ({
+    key: name,
+    label: name,
+  }))
 })
 
-function availableGroupPresets(categoryId: string) {
+function groupPopoverItems(categoryId: string): AddPopoverItem[] {
   const existingNames = new Set(
     (store.groupsByCategory[categoryId] ?? []).map(([, g]) => g.name),
   )
-  return GROUP_PRESETS.filter((name) => !existingNames.has(name))
+  return GROUP_PRESETS.filter((name) => !existingNames.has(name)).map((name) => ({
+    key: name,
+    label: name,
+  }))
 }
 
-const hasAnyPresets = computed(() => {
-  if (availableCategoryPresets.value.length > 0) return true
-  return Object.keys(store.categories).some(
-    (categoryId) => availableGroupPresets(categoryId).length > 0,
-  )
-})
+function onSelectCategory(item: AddPopoverItem) {
+  store.addCategory(item.label)
+}
+
+function onSelectGroup(categoryId: string, item: AddPopoverItem) {
+  store.addGroup(categoryId, item.label)
+}
 </script>
 
 <template>
@@ -100,53 +114,43 @@ const hasAnyPresets = computed(() => {
             @update:model-value="store.renameGroup(groupId, $event)"
           />
         </GroupChip>
-        <template v-if="showBoost && !store.collectionsReadonly">
-          <button
-            v-for="name in availableGroupPresets(categoryId)"
-            :key="name"
-            class="w-full rounded bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group hover:bg-group/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
-            @click="store.addGroup(categoryId, name)"
-          >
-            <span class="-ml-1">+</span> {{ name }}
-          </button>
-        </template>
       </div>
-      <button
-        v-if="!store.collectionsReadonly"
-        class="mt-1 w-full rounded bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group hover:bg-group/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
-        @click="autoEditId = store.addGroup(categoryId)"
-      >
-        <span class="-ml-1">+</span> Add group
-      </button>
+      <div v-if="!store.collectionsReadonly" class="mt-1">
+        <button
+          :ref="(el) => { groupBtnEls[categoryId] = el as HTMLElement }"
+          class="w-full rounded bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group hover:bg-group/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
+          @click="openGroupPopoverCategoryId = openGroupPopoverCategoryId === categoryId ? null : categoryId"
+        >
+          <span class="-ml-1">+</span> Add group
+        </button>
+        <AddPopover
+          :anchor="groupBtnEls[categoryId] ?? null"
+          :open="openGroupPopoverCategoryId === categoryId"
+          :items="groupPopoverItems(categoryId)"
+          placeholder="Search groups..."
+          @close="openGroupPopoverCategoryId = null"
+          @select="onSelectGroup(categoryId, $event)"
+          @add="store.addGroup(categoryId, $event)"
+        />
+      </div>
     </div>
-    <template v-if="showBoost && !store.collectionsReadonly">
+    <div v-if="!store.collectionsReadonly" class="mt-2">
       <button
-        v-for="name in availableCategoryPresets"
-        :key="name"
-        class="mb-1 w-full rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        @click="store.addCategory(name)"
-      >
-        <span class="-ml-1">+</span> {{ name }}
-      </button>
-    </template>
-    <div v-if="!store.collectionsReadonly" class="mt-2 flex gap-1">
-      <button
-        class="flex-1 rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        @click="autoEditCategoryId = store.addCategory()"
+        ref="categoryBtnEl"
+        class="w-full rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        @click="showCategoryPopover = !showCategoryPopover"
       >
         <span class="-ml-1">+</span> Add category
       </button>
-      <button
-        v-if="hasAnyPresets"
-        class="rainbow-rounded rainbow-border flex items-center justify-center rounded border border-border px-1.5 py-1 text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        :class="showBoost ? 'bg-muted' : 'bg-card'"
-        title="Boost"
-        @click="showBoost = !showBoost"
-      >
-        <svg class="size-3.5 rainbow-icon" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z" />
-        </svg>
-      </button>
+      <AddPopover
+        :anchor="categoryBtnEl"
+        :open="showCategoryPopover"
+        :items="categoryPopoverItems"
+        placeholder="Search categories..."
+        @close="showCategoryPopover = false"
+        @select="onSelectCategory"
+        @add="store.addCategory($event)"
+      />
     </div>
     <div v-if="!route.meta.isDanceGroups && Object.keys(store.groups).length" class="mt-3">
       <SpacerChip class="w-full" />

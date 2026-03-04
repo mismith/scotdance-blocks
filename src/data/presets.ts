@@ -48,3 +48,12 @@ export const GROUP_PRESETS: string[] = [
   '18 & Under 21 Years',
   '21 Years & Over',
 ]
+
+export const BLOCK_PRESETS: string[] = ['Morning', 'Afternoon', 'Evening']
+
+export const EVENT_PRESETS: string[] = ['Registration', 'Results']
+
+export const EVENT_CATEGORY_BUCKETS: string[][] = [
+  ['Primary', 'Beginner', 'Novice'],
+  ['Intermediate', 'Premier', 'Restricted Premier', 'Premier Special'],
+]

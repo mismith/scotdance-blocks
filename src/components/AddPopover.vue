@@ -1,0 +1,180 @@
+<script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useElementBounding } from '@vueuse/core'
+
+export type AddPopoverItem = {
+  key: string
+  label: string
+  sublabel?: string
+}
+
+const props = withDefaults(
+  defineProps<{
+    anchor: HTMLElement | null
+    open: boolean
+    align?: 'left' | 'right'
+    items: AddPopoverItem[]
+    placeholder?: string
+  }>(),
+  { align: 'left', placeholder: 'Search...' },
+)
+
+const emit = defineEmits<{
+  close: []
+  select: [item: AddPopoverItem]
+  add: [text: string]
+}>()
+
+const bounds = useElementBounding(() => props.anchor)
+
+const style = computed(() => {
+  if (!props.anchor) return {}
+  return {
+    top: bounds.bottom.value + 4 + 'px',
+    ...(props.align === 'right'
+      ? { right: document.documentElement.clientWidth - bounds.right.value + 'px' }
+      : { left: bounds.left.value + 'px' }),
+  }
+})
+
+const search = ref('')
+const highlightIndex = ref(0)
+const inputEl = ref<HTMLInputElement | null>(null)
+
+const filteredItems = computed(() => {
+  if (!search.value) return props.items
+  const q = search.value.toLowerCase()
+  return props.items.filter(
+    (item) =>
+      item.label.toLowerCase().includes(q) ||
+      (item.sublabel && item.sublabel.toLowerCase().includes(q)),
+  )
+})
+
+const showAddOption = computed(() => search.value.trim().length > 0)
+
+const totalOptions = computed(() => filteredItems.value.length + (showAddOption.value ? 1 : 0))
+
+watch(
+  () => search.value,
+  () => {
+    highlightIndex.value = 0
+  },
+)
+
+watch(
+  () => props.open,
+  (open) => {
+    if (open) {
+      search.value = ''
+      highlightIndex.value = 0
+      bounds.update()
+      nextTick(() => inputEl.value?.focus())
+    }
+  },
+)
+
+function onConfirm() {
+  if (totalOptions.value === 0) return
+
+  const idx = highlightIndex.value
+  if (idx < filteredItems.value.length) {
+    const item = filteredItems.value[idx]
+    emit('select', item)
+    search.value = ''
+  } else if (showAddOption.value) {
+    emit('add', search.value.trim())
+    search.value = ''
+  }
+}
+
+function onKeydown(e: KeyboardEvent) {
+  if (!props.open) return
+
+  if (e.key === 'Escape') {
+    e.stopPropagation()
+    emit('close')
+    return
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault()
+    if (totalOptions.value > 0) {
+      highlightIndex.value = (highlightIndex.value + 1) % totalOptions.value
+    }
+    return
+  }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault()
+    if (totalOptions.value > 0) {
+      highlightIndex.value = (highlightIndex.value - 1 + totalOptions.value) % totalOptions.value
+    }
+    return
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    onConfirm()
+  }
+}
+
+function onSelectItem(item: AddPopoverItem) {
+  emit('select', item)
+  search.value = ''
+  nextTick(() => inputEl.value?.focus())
+}
+
+function onAddCustom() {
+  if (!search.value.trim()) return
+  emit('add', search.value.trim())
+  search.value = ''
+  nextTick(() => inputEl.value?.focus())
+}
+
+onMounted(() => document.addEventListener('keydown', onKeydown))
+onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
+</script>
+
+<template>
+  <Teleport to="body">
+    <template v-if="open">
+      <div class="fixed inset-0 z-40" @click="emit('close')" />
+      <div
+        class="fixed z-50 min-w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+        :style="style"
+      >
+        <input
+          ref="inputEl"
+          v-model="search"
+          class="w-full border-b border-border bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground/50"
+          :placeholder="placeholder"
+        />
+        <div class="max-h-64 overflow-y-auto p-1">
+          <button
+            v-for="(item, index) in filteredItems"
+            :key="item.key"
+            class="flex w-full items-center rounded px-2 py-1.5 text-left text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            :class="highlightIndex === index ? 'bg-muted' : 'hover:bg-muted'"
+            @click="onSelectItem(item)"
+            @mouseenter="highlightIndex = index"
+          >
+            {{ item.label }}<span v-if="item.sublabel" class="ml-1 text-muted-foreground">{{ item.sublabel }}</span>
+          </button>
+          <button
+            v-if="showAddOption"
+            class="flex w-full items-center rounded px-2 py-1.5 text-left text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            :class="highlightIndex === filteredItems.length ? 'bg-muted' : 'hover:bg-muted'"
+            @click="onAddCustom"
+            @mouseenter="highlightIndex = filteredItems.length"
+          >
+            <span class="mr-1">+</span> Add "{{ search.trim() }}"
+          </button>
+          <div
+            v-if="filteredItems.length === 0 && !showAddOption"
+            class="px-2 py-1.5 text-sm text-muted-foreground"
+          >
+            No items
+          </div>
+        </div>
+      </div>
+    </template>
+  </Teleport>
+</template>

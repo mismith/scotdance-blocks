@@ -5,9 +5,11 @@ import { computed, ref } from 'vue'
 import { useCompetitionStore } from '@/stores/competition'
 
 import { useDragType } from '@/composables/useDragType'
+import AddPopover from '@/components/AddPopover.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
 import EventSection from '@/components/EventSection.vue'
 import PlatformHeader from '@/components/PlatformHeader.vue'
+import { EVENT_CATEGORY_BUCKETS, EVENT_PRESETS } from '@/data/presets'
 import type { DragEventData, DragPlatformData, ScheduleBlock } from '@/types'
 
 const props = defineProps<{
@@ -145,8 +147,30 @@ function onRemovePlatform(platformId: string) {
   store.removePlatform(platformId)
 }
 
-function onAddEvent() {
-  autoEditEventId.value = store.addEvent(props.blockId)
+// --- Event add popover ---
+const showEventPopover = ref(false)
+const addEventBtnEl = ref<HTMLElement | null>(null)
+
+const eventPopoverItems = computed(() => {
+  const existingNames = new Set(Object.values(props.block.events).map((e) => e.name))
+  const categoryNames = new Set(Object.values(store.categories).map((c) => c.name))
+
+  const items: { key: string; label: string }[] = []
+  for (const name of EVENT_PRESETS) {
+    if (!existingNames.has(name)) items.push({ key: name, label: name })
+  }
+  for (const bucket of EVENT_CATEGORY_BUCKETS) {
+    const matching = bucket.filter((name) => categoryNames.has(name))
+    if (matching.length > 0) {
+      const combo = matching.join(' / ')
+      if (!existingNames.has(combo)) items.push({ key: combo, label: combo })
+    }
+  }
+  return items
+})
+
+function onAddEvent(name: string) {
+  store.addEvent(props.blockId, name)
 }
 
 const eventEntries = computed(() => Object.entries(props.block.events))
@@ -213,12 +237,24 @@ const eventEntries = computed(() => Object.entries(props.block.events))
     />
 
     <!-- Add event -->
-    <button
-      class="col-span-full flex min-h-9 items-center gap-1 rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold text-accent-foreground outline-none glass glass-accent hover:bg-accent focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
-      @click="onAddEvent"
-    >
-      <span class="select-none">+</span>
-      Add event
-    </button>
+    <div class="col-span-full">
+      <button
+        ref="addEventBtnEl"
+        class="flex min-h-9 w-full items-center gap-1 rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold text-accent-foreground outline-none glass glass-accent hover:bg-accent focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring"
+        @click="showEventPopover = !showEventPopover"
+      >
+        <span class="select-none">+</span>
+        Add event
+      </button>
+      <AddPopover
+        :anchor="addEventBtnEl"
+        :open="showEventPopover"
+        :items="eventPopoverItems"
+        placeholder="Search events..."
+        @close="showEventPopover = false"
+        @select="onAddEvent($event.label)"
+        @add="onAddEvent($event)"
+      />
+    </div>
   </div>
 </template>

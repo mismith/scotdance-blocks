@@ -281,9 +281,9 @@ export const useCompetitionStore = defineStore('competition', () => {
     if (category) category.name = name
   }
 
-  function addDance(): string {
+  function addDance(name?: string): string {
     const id = generateId()
-    data.value.dances[id] = { name: 'New Dance', shortName: '', groupIds: {} }
+    data.value.dances[id] = { name: name ?? 'New Dance', shortName: '', groupIds: {} }
     return id
   }
 

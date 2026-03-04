@@ -7,9 +7,11 @@ import { useCompetitionStore } from '@/stores/competition'
 
 import { useAutoFill } from '@/composables/useAutoFill'
 import { useDragType } from '@/composables/useDragType'
+import AddPopover from '@/components/AddPopover.vue'
 import BlockTab from '@/components/BlockTab.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
 import ScheduleGrid from '@/components/ScheduleGrid.vue'
+import { BLOCK_PRESETS } from '@/data/presets'
 import type { DragBlockData } from '@/types'
 
 const store = useCompetitionStore()
@@ -70,10 +72,21 @@ const autoFillMenuStyle = computed(() => ({
 
 const autoEditBlockId = ref<string | null>(null)
 
-function onAddBlock() {
-  const id = store.addBlock()
+// --- Block add popover ---
+const showBlockPopover = ref(false)
+const addBlockBtnEl = ref<HTMLElement | null>(null)
+
+const blockPopoverItems = computed(() => {
+  const existingNames = new Set(Object.values(store.blocks).map((b) => b.name))
+  return BLOCK_PRESETS.filter((name) => !existingNames.has(name)).map((name) => ({
+    key: name,
+    label: name,
+  }))
+})
+
+function onAddBlock(name: string) {
+  const id = store.addBlock(name)
   activeBlockId.value = id
-  autoEditBlockId.value = id
 }
 
 function onRemoveBlock(blockId: string) {
@@ -95,17 +108,6 @@ function onAutoFillSchedule() {
   if (hasContent && !confirm('This will replace the current schedule. Continue?')) return
   const firstBlockId = autoFillSchedule()
   if (firstBlockId) activeBlockId.value = firstBlockId
-  showAutoFillMenu.value = false
-}
-function onAddRegistration() {
-  if (!activeBlockId.value) return
-  const eventId = store.addEvent(activeBlockId.value, 'Registration')
-  store.updateEventDescription(activeBlockId.value, eventId, '9:00 AM')
-  showAutoFillMenu.value = false
-}
-function onAddResults() {
-  if (!activeBlockId.value) return
-  store.addEvent(activeBlockId.value, 'Results')
   showAutoFillMenu.value = false
 }
 </script>
@@ -140,13 +142,25 @@ function onAddResults() {
         orientation="vertical"
         class="-mx-0.75 self-stretch rounded"
       />
-      <button
-        class="-mb-[2px] inline-flex gap-1 rounded-t-lg px-3 py-2.5 text-sm font-medium text-muted-foreground outline-none glass glass-muted backdrop-blur-3xl hover:bg-muted hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        title="Add block"
-        @click="onAddBlock"
-      >
-        + <span v-if="blockEntries.length === 0">Add block</span>
-      </button>
+      <div class="-mb-0.5">
+        <button
+          ref="addBlockBtnEl"
+          class="inline-flex gap-1 rounded-t-lg px-3 py-2.5 text-sm font-medium text-muted-foreground outline-none glass glass-muted backdrop-blur-3xl hover:bg-muted hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          title="Add block"
+          @click="showBlockPopover = !showBlockPopover"
+        >
+          + <span v-if="blockEntries.length === 0">Add block</span>
+        </button>
+        <AddPopover
+          :anchor="addBlockBtnEl"
+          :open="showBlockPopover"
+          :items="blockPopoverItems"
+          placeholder="Search blocks..."
+          @close="showBlockPopover = false"
+          @select="onAddBlock($event.label)"
+          @add="onAddBlock($event)"
+        />
+      </div>
       <div
         v-if="Object.keys(store.dances).length > 0 || Object.keys(store.categories).length > 0"
         class="ml-auto self-center"
@@ -185,30 +199,6 @@ function onAddResults() {
               @click="onAutoFillSchedule"
             >
               Boost schedule
-            </button>
-            <button
-              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              :class="
-                activeBlock
-                  ? 'text-foreground hover:bg-muted'
-                  : 'text-muted-foreground/50 pointer-events-none'
-              "
-              :disabled="!activeBlock"
-              @click="onAddRegistration"
-            >
-              Add Registration
-            </button>
-            <button
-              class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              :class="
-                activeBlock
-                  ? 'text-foreground hover:bg-muted'
-                  : 'text-muted-foreground/50 pointer-events-none'
-              "
-              :disabled="!activeBlock"
-              @click="onAddResults"
-            >
-              Add Results
             </button>
           </div>
         </Teleport>
