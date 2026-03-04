@@ -293,7 +293,7 @@ const liveJudgeInsertIndex = computed(() => {
         class="-my-0.5 rounded"
       />
       <div
-        class="flex flex-auto items-center justify-center rounded border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground"
+        class="flex flex-auto items-center justify-center rounded-lg border border-dashed border-border px-2 py-1 text-center text-xs text-muted-foreground"
       >
         Drag groups or judges here
       </div>

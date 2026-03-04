@@ -2,7 +2,7 @@
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { makeAutoScroll, makeDroppable } from '@vue-dnd-kit/core'
 import { useScroll } from '@vueuse/core'
-import { computed, ref, ref as vueRef } from 'vue'
+import { computed, nextTick, ref, ref as vueRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
@@ -10,8 +10,8 @@ import { useCompetitionStore } from '@/stores/competition'
 import { useAutoFill } from '@/composables/useAutoFill'
 import { useDragType } from '@/composables/useDragType'
 import AddPopover from '@/components/AddPopover.vue'
-import ChevronRightIcon from '@/components/ChevronRightIcon.vue'
 import BlockSection from '@/components/BlockSection.vue'
+import ChevronRightIcon from '@/components/ChevronRightIcon.vue'
 import DragIndicator from '@/components/DragIndicator.vue'
 import PlatformHeader from '@/components/PlatformHeader.vue'
 import { BLOCK_PRESETS } from '@/data/presets'
@@ -187,6 +187,10 @@ const blockPopoverItems = computed(() => {
 
 function onAddBlock(name: string) {
   store.addBlock(name)
+  nextTick(() => {
+    const sections = document.querySelectorAll('[data-block-section]')
+    sections.item(sections.length - 1)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 function onRemoveBlock(blockId: string) {
@@ -232,7 +236,7 @@ function onConfigureDanceGroups() {
 <template>
   <div class="flex h-full flex-col overflow-clip bg-background">
     <div class="relative flex-1 overflow-clip">
-      <div ref="scrollEl" class="absolute inset-0 overflow-auto pb-4">
+      <div ref="scrollEl" class="absolute inset-0 overflow-auto pb-12">
         <!-- Platform headers grid (shown when platforms exist) -->
         <div
           v-if="store.platformEntries.length > 0 || blockEntries.length > 0"
@@ -247,8 +251,7 @@ function onConfigureDanceGroups() {
           <!-- Platform headers (top-level, shared across all blocks) -->
           <div
             ref="headerRowEl"
-            class="sticky top-0 z-20 col-span-full grid grid-cols-subgrid gap-2 pt-4 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:-bottom-4 before:-z-10 before:bg-linear-to-b before:from-background before:to-transparent before:backdrop-blur-md before:mask-[linear-gradient(to_bottom,black_33%,transparent)]"
-            :class="blockEntries.length > 0 ? 'pb-4' : 'pb-2'"
+            class="sticky top-0 z-20 col-span-full grid grid-cols-subgrid gap-2 py-4 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:-bottom-4 before:-z-10 before:bg-linear-to-b before:from-background before:to-transparent before:backdrop-blur-md before:mask-[linear-gradient(to_bottom,black_33%,transparent)]"
           >
             <div v-if="blockEntries.length > 0" class="px-1 py-1.5" />
             <PlatformHeader
@@ -274,7 +277,7 @@ function onConfigureDanceGroups() {
             <DragIndicator
               v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"
               orientation="vertical"
-              class="absolute! top-0 bottom-0"
+              class="absolute! top-4 bottom-4"
               :style="{ left: indicatorLeftPx + 'px' }"
             />
           </div>
@@ -306,7 +309,7 @@ function onConfigureDanceGroups() {
                 class="flex min-h-9 items-center gap-1 rounded-xl px-4 py-3 text-left text-sm font-medium text-muted-foreground glass glass-muted"
               >
                 <button
-                  class="flex items-center gap-1 outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring rounded"
+                  class="flex flex-1 items-center gap-1 outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
                   title="Add block"
                   @click="showBlockPopover = !showBlockPopover"
                 >
@@ -318,6 +321,7 @@ function onConfigureDanceGroups() {
                     Object.keys(store.dances).length > 0 || Object.keys(store.categories).length > 0
                   "
                   class="ml-auto"
+                  @click.stop
                 >
                   <button
                     ref="autoFillBtnEl"
@@ -364,7 +368,8 @@ function onConfigureDanceGroups() {
                 :anchor="addBlockBtnEl"
                 :open="showBlockPopover"
                 :items="blockPopoverItems"
-                placeholder="Search blocks..."
+                placeholder="Type new block name..."
+                popover-class="text-muted-foreground glass glass-muted"
                 @close="showBlockPopover = false"
                 @select="onAddBlock($event.label)"
                 @add="onAddBlock($event)"
@@ -389,8 +394,16 @@ function onConfigureDanceGroups() {
             :class="hasPlatforms && 'opacity-50'"
             @click="onAddPlatformFromEmpty"
           >
-            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
-              <svg v-if="hasPlatforms" class="size-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground"
+            >
+              <svg v-if="hasPlatforms" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
               <template v-else>1</template>
             </span>
             <div class="min-w-0 flex-1">
@@ -408,14 +421,26 @@ function onConfigureDanceGroups() {
           >
             <span
               class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-              :class="hasDances ? 'bg-dance/20 text-dance-foreground/60 dark:text-dance/40' : 'bg-dance/30 text-dance-foreground dark:text-dance'"
+              :class="
+                hasDances
+                  ? 'bg-dance/20 text-dance-foreground/60 dark:text-dance/40'
+                  : 'bg-dance/30 text-dance-foreground dark:text-dance'
+              "
             >
-              <svg v-if="hasDances" class="size-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>
+              <svg v-if="hasDances" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
               <template v-else>2</template>
             </span>
             <div class="min-w-0 flex-1">
               <div class="text-sm font-medium text-foreground">Add dances</div>
-              <div class="text-xs text-muted-foreground">Define the dances for your competition</div>
+              <div class="text-xs text-muted-foreground">
+                Define the dances for your competition
+              </div>
             </div>
             <ChevronRightIcon class="text-muted-foreground/40" />
           </button>
@@ -434,9 +459,19 @@ function onConfigureDanceGroups() {
           >
             <span
               class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-              :class="hasGroups ? 'bg-group/20 text-group-foreground/60 dark:text-group/40' : 'bg-group/30 text-group-foreground dark:text-group'"
+              :class="
+                hasGroups
+                  ? 'bg-group/20 text-group-foreground/60 dark:text-group/40'
+                  : 'bg-group/30 text-group-foreground dark:text-group'
+              "
             >
-              <svg v-if="hasGroups" class="size-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>
+              <svg v-if="hasGroups" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
               <template v-else>3</template>
             </span>
             <div class="min-w-0 flex-1">
@@ -455,12 +490,18 @@ function onConfigureDanceGroups() {
           >
             <span
               class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-              :class="hasDances && hasGroups ? 'bg-dance/30 text-dance-foreground dark:text-dance' : 'bg-muted text-muted-foreground/60'"
+              :class="
+                hasDances && hasGroups
+                  ? 'bg-dance/30 text-dance-foreground dark:text-dance'
+                  : 'bg-muted text-muted-foreground/60'
+              "
               >4</span
             >
             <div class="min-w-0 flex-1">
               <div class="text-sm font-medium text-foreground">Configure dance groups</div>
-              <div class="text-xs text-muted-foreground">Choose which groups dance which dances</div>
+              <div class="text-xs text-muted-foreground">
+                Choose which groups dance which dances
+              </div>
             </div>
             <ChevronRightIcon class="text-muted-foreground/40" />
           </button>
@@ -473,9 +514,19 @@ function onConfigureDanceGroups() {
           >
             <span
               class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-              :class="hasJudges ? 'bg-judge/20 text-judge-foreground/60 dark:text-judge/40' : 'bg-judge/30 text-judge-foreground dark:text-judge'"
+              :class="
+                hasJudges
+                  ? 'bg-judge/20 text-judge-foreground/60 dark:text-judge/40'
+                  : 'bg-judge/30 text-judge-foreground dark:text-judge'
+              "
             >
-              <svg v-if="hasJudges" class="size-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>
+              <svg v-if="hasJudges" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
               <template v-else>5</template>
             </span>
             <div class="min-w-0 flex-1">
@@ -486,7 +537,7 @@ function onConfigureDanceGroups() {
           </button>
 
           <!-- Divider -->
-          <div class="flex w-full max-w-xs items-center gap-3">
+          <div class="flex w-2/3 max-w-xs items-center gap-3 my-4 mx-auto">
             <div class="flex-1 border-t border-border" />
             <span class="text-xs text-muted-foreground">Then</span>
             <div class="flex-1 border-t border-border" />
@@ -498,10 +549,15 @@ function onConfigureDanceGroups() {
             class="flex w-full max-w-xs items-center gap-3 rounded-xl border border-border px-4 py-3 text-left outline-none hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring"
             @click="showBlockPopover = true"
           >
-            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent/40 dark:bg-accent text-sm font-bold text-accent-foreground dark:text-accent-foreground">+</span>
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent/40 dark:bg-accent text-sm font-bold text-accent-foreground dark:text-accent-foreground"
+              >+</span
+            >
             <div class="min-w-0 flex-1">
               <div class="text-sm font-medium text-foreground">Create a block</div>
-              <div class="text-xs text-muted-foreground">Manually build your schedule step by step</div>
+              <div class="text-xs text-muted-foreground">
+                Manually build your schedule step by step
+              </div>
             </div>
             <ChevronRightIcon class="text-muted-foreground/40" />
           </button>
@@ -513,15 +569,23 @@ function onConfigureDanceGroups() {
             :disabled="!canAutofill"
             @click="onAutoFillSchedule"
           >
-            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground"
+            >
               <svg class="size-4 rainbow-icon" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z" />
+                <path
+                  d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z"
+                />
               </svg>
             </span>
             <div class="min-w-0 flex-1">
               <div class="text-sm font-medium text-foreground">Autofill schedule</div>
-              <div class="text-xs text-muted-foreground">Builds a full schedule instantly — just tweak from there</div>
-              <div v-if="!canAutofill" class="mt-0.5 text-[11px] text-muted-foreground/60">Complete steps 1–5 to unlock</div>
+              <div class="text-xs text-muted-foreground">
+                Builds a full schedule instantly — just tweak from there
+              </div>
+              <div v-if="!canAutofill" class="mt-0.5 text-[11px] text-muted-foreground/60">
+                Complete steps 1–5 to unlock
+              </div>
             </div>
             <ChevronRightIcon class="text-muted-foreground/40" />
           </button>
@@ -529,7 +593,8 @@ function onConfigureDanceGroups() {
             :anchor="addBlockBtnEl"
             :open="showBlockPopover"
             :items="blockPopoverItems"
-            placeholder="Search blocks..."
+            placeholder="Type new block name..."
+            popover-class="border border-border bg-card"
             @close="showBlockPopover = false"
             @select="onAddBlock($event.label)"
             @add="onAddBlock($event)"

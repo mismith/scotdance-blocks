@@ -209,7 +209,7 @@ function onAutoCycleJudges() {
     <div class="group col-span-full has-[[data-grip]:focus-visible]:z-10">
       <div
         ref="eventHeaderEl"
-        class="flex cursor-grab items-center justify-between rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold glass glass-accent hover:bg-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+        class="flex items-center justify-between rounded-lg bg-accent/80 px-1 py-1.5 text-left text-sm font-semibold glass glass-accent glass-draggable hover:bg-accent has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       >
         <div class="flex items-center gap-1">
           <span data-grip tabindex="0" class="opacity-50 outline-none select-none">⠿</span>
@@ -357,7 +357,7 @@ function onAutoCycleJudges() {
         <div class="px-1 py-1">
           <button
             data-dance-placeholder
-            class="flex w-full items-center gap-1 rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
+            class="flex w-full items-center gap-1 rounded-lg bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
             @click="onAddRow"
           >
             <span class="select-none -ml-1">+</span> Add row
@@ -365,7 +365,7 @@ function onAutoCycleJudges() {
         </div>
         <div class="px-2 py-1" style="grid-column: 2 / -2">
           <div
-            class="flex h-full items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground px-2 py-1"
+            class="flex h-full items-center justify-center rounded-lg border border-dashed border-border text-xs text-muted-foreground px-2 py-1"
           >
             Drag dances here
           </div>

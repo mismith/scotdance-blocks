@@ -12,7 +12,7 @@ export interface Group {
 export interface Dance {
   name: string
   shortName: string
-  steps?: string // "4", "2&1", "3&1"
+  steps?: string // "4", "2+1", "3&1"
   groupIds: Record<string, true> // which groups can perform this dance
 }
 

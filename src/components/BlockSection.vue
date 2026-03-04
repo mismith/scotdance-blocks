@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { makeDraggable, makeDroppable } from '@vue-dnd-kit/core'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -113,7 +113,11 @@ const eventPopoverItems = computed(() => {
 })
 
 function onAddEvent(name: string) {
-  autoEditEventId.value = store.addEvent(props.blockId, name)
+  store.addEvent(props.blockId, name)
+  nextTick(() => {
+    const sections = sectionEl.value?.querySelectorAll('[data-event-section]')
+    sections?.item(sections.length - 1)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 const eventEntries = computed(() => Object.entries(props.block.events))
@@ -199,7 +203,8 @@ const eventEntries = computed(() => Object.entries(props.block.events))
           :anchor="addEventBtnEl"
           :open="showEventPopover"
           :items="eventPopoverItems"
-          placeholder="Search events..."
+          placeholder="Type new event name..."
+          popover-class="bg-accent/80 text-accent-foreground glass glass-accent"
           @close="showEventPopover = false"
           @select="onAddEvent($event.label)"
           @add="onAddEvent($event)"

@@ -17,6 +17,8 @@ const isDanceGroups = computed(() => !!route.meta.isDanceGroups)
 const isDemo = computed(() => route.path.startsWith('/demo'))
 
 const autoEditId = ref<string | null>(null)
+const nameRefs = ref<Record<string, InstanceType<typeof InlineEdit> | null>>({})
+const stepsRefs = ref<Record<string, InstanceType<typeof InlineEdit> | null>>({})
 const showPopover = ref(false)
 const addBtnEl = ref<HTMLElement | null>(null)
 
@@ -89,6 +91,7 @@ function onSelectPreset(item: AddPopoverItem) {
         @remove="onRemoveDance(danceId)"
       >
         <InlineEdit
+          :ref="(el: any) => (nameRefs[danceId] = el)"
           :model-value="dance.shortName || dance.name"
           placeholder="Name"
           :auto-edit="autoEditId === danceId"
@@ -96,14 +99,17 @@ function onSelectPreset(item: AddPopoverItem) {
           @update:model-value="
             store.updateDance(danceId, dance.shortName ? { shortName: $event } : { name: $event })
           "
+          @tab="stepsRefs[danceId]?.startEdit()"
         />
         <span v-if="!store.collectionsReadonly || dance.steps" class="text-dance-foreground/50"
           >{{ ' ' }}(<InlineEdit
+            :ref="(el: any) => (stepsRefs[danceId] = el)"
             :model-value="dance.steps ?? ''"
             placeholder="Steps"
             :required="false"
             :readonly="store.collectionsReadonly"
             @update:model-value="store.updateDance(danceId, { steps: $event })"
+            @shift-tab="nameRefs[danceId]?.startEdit()"
           />)</span
         >
       </DanceChip>
@@ -112,7 +118,7 @@ function onSelectPreset(item: AddPopoverItem) {
       <button
         ref="addBtnEl"
         data-add="dance"
-        class="w-full rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
+        class="w-full rounded-lg bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
         @click="showPopover = !showPopover"
       >
         <span class="-ml-1">+</span> Add dance
@@ -121,7 +127,8 @@ function onSelectPreset(item: AddPopoverItem) {
         :anchor="addBtnEl"
         :open="showPopover"
         :items="popoverItems"
-        placeholder="Search dances..."
+        placeholder="Type new dance name..."
+        popover-class="bg-dance/10 text-dance-foreground/80 glass glass-dance dark:text-dance/80"
         @close="showPopover = false"
         @select="onSelectPreset"
         @add="store.addDance($event)"

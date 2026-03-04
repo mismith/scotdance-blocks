@@ -43,7 +43,7 @@ const { isDragging } = makeDraggable(
   <span
     ref="el"
     data-dance-chip
-    class="group/chip flex min-w-0 items-center cursor-grab rounded bg-dance/80 px-3 py-1.5 text-sm font-medium leading-tight text-dance-foreground select-none glass glass-dance hover:bg-dance has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
+    class="group/chip flex min-w-0 items-center rounded-lg bg-dance/80 px-3 py-1.5 text-sm font-medium leading-tight text-dance-foreground select-none glass glass-dance glass-draggable hover:bg-dance has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
     :class="{ 'opacity-40': isDragging }"
     :title="label + (steps ? ` (${steps})` : '')"
   >

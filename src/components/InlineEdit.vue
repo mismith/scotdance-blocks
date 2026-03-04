@@ -23,7 +23,11 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
+  tab: []
+  shiftTab: []
 }>()
+
+defineExpose({ startEdit })
 
 const editing = ref(false)
 const draft = ref('')
@@ -46,6 +50,7 @@ async function focusDisplay() {
 }
 
 function commit() {
+  if (!editing.value) return
   editing.value = false
   const trimmed = draft.value.trim()
   if (props.required && !trimmed) {
@@ -88,6 +93,8 @@ onMounted(() => {
     @pointerdown.stop
     @keydown.stop
     @keydown.enter.exact.prevent="commit"
+    @keydown.tab.shift.exact.prevent="commit(); emit('shiftTab')"
+    @keydown.tab.exact.prevent="commit(); emit('tab')"
     @keydown.escape="cancel"
     @blur="commit"
   />

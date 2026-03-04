@@ -9,6 +9,8 @@ import JudgeChip from '@/components/JudgeChip.vue'
 const store = useCompetitionStore()
 
 const autoEditId = ref<string | null>(null)
+const firstNameRefs = ref<Record<string, InstanceType<typeof InlineEdit> | null>>({})
+const lastNameRefs = ref<Record<string, InstanceType<typeof InlineEdit> | null>>({})
 
 function onRemoveStaff(staffId: string) {
   const isAssigned = Object.values(store.blocks).some((block) =>
@@ -41,25 +43,29 @@ function onRemoveStaff(staffId: string) {
         @remove="onRemoveStaff(staffId)"
       >
         <InlineEdit
+          :ref="(el: any) => (firstNameRefs[staffId] = el)"
           :model-value="member.firstName"
           placeholder="First"
           :auto-edit="autoEditId === staffId"
           :readonly="store.collectionsReadonly"
           @update:model-value="store.renameStaffMember(staffId, $event, member.lastName)"
+          @tab="lastNameRefs[staffId]?.startEdit()"
         />
         {{ ' ' }}
         <InlineEdit
+          :ref="(el: any) => (lastNameRefs[staffId] = el)"
           :model-value="member.lastName"
           placeholder="Last"
           :readonly="store.collectionsReadonly"
           @update:model-value="store.renameStaffMember(staffId, member.firstName, $event)"
+          @shift-tab="firstNameRefs[staffId]?.startEdit()"
         />
       </JudgeChip>
     </div>
     <button
       v-if="!store.collectionsReadonly"
       data-add="judge"
-      class="mt-1 w-full rounded bg-judge/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-judge-foreground/80 outline-none glass glass-judge hover:bg-judge/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-judge/80"
+      class="mt-1 w-full rounded-lg bg-judge/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-judge-foreground/80 outline-none glass glass-judge hover:bg-judge/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-judge/80"
       @click="
         () => {
           autoEditId = store.addStaffMember()

@@ -119,7 +119,7 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
         <button
           :ref="(el) => { groupBtnEls[categoryId] = el as HTMLElement }"
           data-add="group"
-          class="w-full rounded bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group hover:bg-group/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
+          class="w-full rounded-lg bg-group/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-group-foreground/80 outline-none glass glass-group hover:bg-group/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-group/80"
           @click="openGroupPopoverCategoryId = openGroupPopoverCategoryId === categoryId ? null : categoryId"
         >
           <span class="-ml-1">+</span> Add group
@@ -128,7 +128,8 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
           :anchor="groupBtnEls[categoryId] ?? null"
           :open="openGroupPopoverCategoryId === categoryId"
           :items="groupPopoverItems(categoryId)"
-          placeholder="Search groups..."
+          placeholder="Type new group name..."
+          popover-class="bg-group/10 text-group-foreground/80 glass glass-group dark:text-group/80"
           @close="openGroupPopoverCategoryId = null"
           @select="onSelectGroup(categoryId, $event)"
           @add="store.addGroup(categoryId, $event)"
@@ -139,7 +140,7 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
       <button
         ref="categoryBtnEl"
         data-add="category"
-        class="w-full rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        class="w-full rounded-lg bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
         @click="showCategoryPopover = !showCategoryPopover"
       >
         <span class="-ml-1">+</span> Add category
@@ -148,7 +149,8 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
         :anchor="categoryBtnEl"
         :open="showCategoryPopover"
         :items="categoryPopoverItems"
-        placeholder="Search categories..."
+        placeholder="Type new category name..."
+        popover-class="bg-card text-accent-foreground glass glass-card"
         @close="showCategoryPopover = false"
         @select="onSelectCategory"
         @add="store.addCategory($event)"
