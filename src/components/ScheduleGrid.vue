@@ -175,17 +175,15 @@ const eventEntries = computed(() => Object.entries(props.block.events))
         :readonly="store.collectionsReadonly"
         @remove="onRemovePlatform(platformId)"
       />
-      <div class="flex items-center justify-center px-1 py-1.5">
-        <button
-          :tabindex="store.collectionsReadonly ? -1 : 0"
-          class="flex size-6 items-center justify-center rounded text-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
-          :class="{ 'invisible pointer-events-none': store.collectionsReadonly }"
-          title="Add platform"
-          @click="onAddPlatform"
-        >
-          +
-        </button>
-      </div>
+      <button
+        :tabindex="store.collectionsReadonly ? -1 : 0"
+        class="flex items-center justify-center gap-1 rounded-lg bg-card/50 text-sm font-semibold text-muted-foreground outline-none glass glass-card hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring whitespace-nowrap px-2 py-1.5"
+        :class="[store.collectionsReadonly && 'invisible pointer-events-none']"
+        title="Add platform"
+        @click="onAddPlatform"
+      >
+        + <span v-if="store.platformEntries.length === 0">Add platform</span>
+      </button>
       <!-- Platform insertion indicator (absolute, no layout impact) -->
       <DragIndicator
         v-if="isPlatformDragOver && livePlatformInsertIndex >= 0"

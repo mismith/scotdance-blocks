@@ -141,11 +141,11 @@ function onAddResults() {
         class="-mx-0.75 self-stretch rounded"
       />
       <button
-        class="inline-flex rounded px-4 py-2.5 text-sm text-muted-foreground outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        class="-mb-[2px] inline-flex gap-1 rounded-t-lg px-3 py-2.5 text-sm font-medium text-muted-foreground outline-none glass glass-muted backdrop-blur-3xl hover:bg-muted hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
         title="Add block"
         @click="onAddBlock"
       >
-        +
+        + <span v-if="blockEntries.length === 0">Add block</span>
       </button>
       <div
         v-if="Object.keys(store.dances).length > 0 || Object.keys(store.categories).length > 0"
