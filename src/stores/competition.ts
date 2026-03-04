@@ -262,9 +262,9 @@ export const useCompetitionStore = defineStore('competition', () => {
 
   // --- Reference data CRUD ---
 
-  function addCategory(): string {
+  function addCategory(name?: string): string {
     const id = generateId()
-    data.value.categories[id] = { name: 'New Category' }
+    data.value.categories[id] = { name: name ?? 'New Category' }
     return id
   }
 
@@ -284,6 +284,21 @@ export const useCompetitionStore = defineStore('competition', () => {
   function addDance(): string {
     const id = generateId()
     data.value.dances[id] = { name: 'New Dance', shortName: '', groupIds: {} }
+    return id
+  }
+
+  function addDanceFromPreset(preset: {
+    name: string
+    shortName?: string
+    steps?: string
+  }): string {
+    const id = generateId()
+    data.value.dances[id] = {
+      name: preset.name,
+      shortName: preset.shortName ?? '',
+      steps: preset.steps,
+      groupIds: {},
+    }
     return id
   }
 
@@ -328,9 +343,9 @@ export const useCompetitionStore = defineStore('competition', () => {
     }
   }
 
-  function addGroup(categoryId: string): string {
+  function addGroup(categoryId: string, name?: string): string {
     const id = generateId()
-    data.value.groups[id] = { categoryId, name: 'New Group' }
+    data.value.groups[id] = { categoryId, name: name ?? 'New Group' }
     return id
   }
 
@@ -570,6 +585,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     removeCategory,
     renameCategory,
     addDance,
+    addDanceFromPreset,
     removeDance,
     updateDance,
     toggleDanceGroup,

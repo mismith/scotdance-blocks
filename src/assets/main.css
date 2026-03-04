@@ -184,6 +184,25 @@ body {
   }
 }
 
+/* Animated rainbow icon color — cycles through the same hues as rainbow-border */
+@keyframes rainbow-color {
+  0% {
+    color: oklch(0.72 0.2 132);
+  }
+  33% {
+    color: oklch(0.72 0.2 233);
+  }
+  67% {
+    color: oklch(0.72 0.2 349);
+  }
+  100% {
+    color: oklch(0.72 0.2 492);
+  }
+}
+@utility rainbow-icon {
+  animation: rainbow-color 2s linear infinite;
+}
+
 /* Ensure drag overlay renders above all content */
 .dnd-kit-overlay-container {
   z-index: 9999;

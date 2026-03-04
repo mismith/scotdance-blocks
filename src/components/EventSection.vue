@@ -199,15 +199,18 @@ function onAutoCycleJudges() {
           />
         </div>
         <div class="ml-auto flex items-center gap-1">
-          <div class="relative">
+          <div v-if="Object.keys(store.dances).length > 0" class="relative">
             <button
               ref="autoFillBtnEl"
               class="rainbow-rounded rainbow-border -my-0.5 flex items-center gap-1 rounded border border-border bg-card px-2 py-1 text-xs font-normal text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring comfortable:text-sm"
-              title="Autofill"
+              title="Boost"
               @click="showAutoFillMenu = !showAutoFillMenu"
               @keydown.stop
             >
-              Autofill
+              <svg class="size-3 rainbow-icon" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8.94 1.5a.5.5 0 0 1 .44.74L7.26 6H12a.5.5 0 0 1 .4.8l-5.5 7a.5.5 0 0 1-.9-.54L8.12 10H4a.5.5 0 0 1-.4-.8l5-7a.5.5 0 0 1 .34-.2Z" />
+              </svg>
+              Boost
               <svg class="size-3 opacity-50" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fill-rule="evenodd"
