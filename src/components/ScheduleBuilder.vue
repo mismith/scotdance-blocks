@@ -2,6 +2,7 @@
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { makeDroppable } from '@vue-dnd-kit/core'
 import { computed, ref, ref as vueRef } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { useCompetitionStore } from '@/stores/competition'
 
@@ -111,6 +112,35 @@ function onAutoFillSchedule() {
   if (firstBlockId) activeBlockId.value = firstBlockId
   showAutoFillMenu.value = false
 }
+
+// --- Empty state setup steps ---
+const route = useRoute()
+const router = useRouter()
+const isDemo = computed(() => route.path.startsWith('/demo'))
+
+const hasPlatforms = computed(() => store.platformEntries.length > 0)
+const hasDances = computed(() => Object.keys(store.dances).length > 0)
+const hasGroups = computed(() => Object.keys(store.groups).length > 0)
+const hasDanceGroups = computed(() =>
+  Object.values(store.dances).some((d) => Object.keys(d.groupIds).length > 0),
+)
+const hasJudges = computed(() => Object.values(store.staff).some((m) => m.type === 'Judge'))
+
+function clickSidebarButton(selector: string) {
+  const btn = document.querySelector<HTMLElement>(selector)
+  if (btn) {
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    btn.click()
+  }
+}
+
+function onAddPlatformFromEmpty() {
+  store.addPlatform()
+}
+
+function onConfigureDanceGroups() {
+  router.push({ name: isDemo.value ? 'demo-dance-groups' : 'dance-groups' })
+}
 </script>
 
 <template>
@@ -212,13 +242,148 @@ function onAutoFillSchedule() {
     <div class="flex-1 overflow-auto py-4">
       <div class="w-fit min-w-full px-4">
         <ScheduleGrid v-if="activeBlock" :block="activeBlock" :block-id="activeBlockId" />
-        <div v-else class="py-12 text-center text-muted-foreground">
-          <template
-            v-if="Object.keys(store.dances).length === 0 && Object.keys(store.groups).length === 0"
+        <!-- Empty state: readonly -->
+        <div v-else-if="store.collectionsReadonly" class="flex flex-col items-center justify-center gap-3 px-4 py-16">
+          <h2 class="mb-1 text-lg font-semibold text-foreground">Build your schedule</h2>
+          <p class="mb-2 max-w-sm text-center text-sm text-muted-foreground">
+            Create a block to start scheduling
+          </p>
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl bg-accent/10 px-4 py-3 text-left outline-none glass glass-accent hover:bg-accent/20 focus-visible:ring-2 focus-visible:ring-ring"
+            @click="showBlockPopover = true"
           >
-            Add dances and groups in the sidebar, then create your first block here.
-          </template>
-          <template v-else> Click + to add your first block. </template>
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent/30 text-sm font-bold text-accent-foreground dark:text-accent">+</span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-accent-foreground dark:text-accent/80">Create a block</div>
+              <div class="text-xs text-accent-foreground/60 dark:text-accent/50">Start building your schedule</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Empty state: editable setup -->
+        <div v-else class="flex flex-col items-center justify-center gap-3 px-4 py-16">
+          <h2 class="mb-1 text-lg font-semibold text-foreground">Build your schedule</h2>
+          <p class="mb-4 max-w-sm text-center text-sm text-muted-foreground">
+            Set up your competition in a few steps
+          </p>
+
+          <!-- Step 1: Platforms -->
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl px-4 py-3 text-left outline-none glass glass-card focus-visible:ring-2 focus-visible:ring-ring"
+            :class="hasPlatforms ? 'bg-muted/30' : 'bg-muted/50 hover:bg-muted/80'"
+            @click="onAddPlatformFromEmpty"
+          >
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              :class="hasPlatforms ? 'bg-muted text-muted-foreground/60' : 'bg-muted text-muted-foreground'"
+            >
+              <svg v-if="hasPlatforms" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+              <template v-else>1</template>
+            </span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-foreground" :class="hasPlatforms && 'opacity-60'">Add platforms</div>
+              <div class="text-xs text-muted-foreground" :class="hasPlatforms && 'opacity-60'">Set up stages or areas for dancing</div>
+            </div>
+          </button>
+
+          <!-- Step 2: Dances -->
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl px-4 py-3 text-left outline-none glass glass-dance focus-visible:ring-2 focus-visible:ring-ring"
+            :class="hasDances ? 'bg-dance/5' : 'bg-dance/10 hover:bg-dance/20'"
+            @click="clickSidebarButton('[data-add=dance]')"
+          >
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              :class="hasDances ? 'bg-dance/20 text-dance-foreground/60 dark:text-dance/40' : 'bg-dance/30 text-dance-foreground dark:text-dance'"
+            >
+              <svg v-if="hasDances" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+              <template v-else>2</template>
+            </span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-dance-foreground dark:text-dance/80" :class="hasDances && 'opacity-60'">Add dances</div>
+              <div class="text-xs text-dance-foreground/60 dark:text-dance/50" :class="hasDances && 'opacity-60'">Define the dances for your competition</div>
+            </div>
+          </button>
+
+          <!-- Step 3: Groups -->
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl px-4 py-3 text-left outline-none glass glass-group focus-visible:ring-2 focus-visible:ring-ring"
+            :class="hasGroups ? 'bg-group/5' : 'bg-group/10 hover:bg-group/20'"
+            @click="clickSidebarButton('[data-add=category]')"
+          >
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              :class="hasGroups ? 'bg-group/20 text-group-foreground/60 dark:text-group/40' : 'bg-group/30 text-group-foreground dark:text-group'"
+            >
+              <svg v-if="hasGroups" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+              <template v-else>3</template>
+            </span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-group-foreground dark:text-group/80" :class="hasGroups && 'opacity-60'">Add groups</div>
+              <div class="text-xs text-group-foreground/60 dark:text-group/50" :class="hasGroups && 'opacity-60'">Set up age categories and groups</div>
+            </div>
+          </button>
+
+          <!-- Step 4: Configure dance groups (appears when both dances and groups exist) -->
+          <button
+            v-if="hasDances && hasGroups"
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl px-4 py-3 text-left outline-none glass glass-dance focus-visible:ring-2 focus-visible:ring-ring"
+            :class="hasDanceGroups ? 'bg-dance/5' : 'bg-dance/10 hover:bg-dance/20'"
+            @click="onConfigureDanceGroups"
+          >
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              :class="hasDanceGroups ? 'bg-dance/20 text-dance-foreground/60 dark:text-dance/40' : 'bg-dance/30 text-dance-foreground dark:text-dance'"
+            >
+              <svg v-if="hasDanceGroups" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+              <template v-else>4</template>
+            </span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-dance-foreground dark:text-dance/80" :class="hasDanceGroups && 'opacity-60'">Configure dance groups</div>
+              <div class="text-xs text-dance-foreground/60 dark:text-dance/50" :class="hasDanceGroups && 'opacity-60'">Choose which groups dance which dances</div>
+            </div>
+          </button>
+
+          <!-- Step 5: Judges -->
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl px-4 py-3 text-left outline-none glass glass-judge focus-visible:ring-2 focus-visible:ring-ring"
+            :class="hasJudges ? 'bg-judge/5' : 'bg-judge/10 hover:bg-judge/20'"
+            @click="clickSidebarButton('[data-add=judge]')"
+          >
+            <span
+              class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              :class="hasJudges ? 'bg-judge/20 text-judge-foreground/60 dark:text-judge/40' : 'bg-judge/30 text-judge-foreground dark:text-judge'"
+            >
+              <svg v-if="hasJudges" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+              </svg>
+              <template v-else>5</template>
+            </span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-judge-foreground dark:text-judge/80" :class="hasJudges && 'opacity-60'">Add judges</div>
+              <div class="text-xs text-judge-foreground/60 dark:text-judge/50" :class="hasJudges && 'opacity-60'">Add your competition judges</div>
+            </div>
+          </button>
+
+          <!-- Step 6: Create block -->
+          <button
+            class="flex w-full max-w-xs items-center gap-3 rounded-xl bg-accent/10 px-4 py-3 text-left outline-none glass glass-accent hover:bg-accent/20 focus-visible:ring-2 focus-visible:ring-ring"
+            @click="showBlockPopover = true"
+          >
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent/30 text-sm font-bold text-accent-foreground dark:text-accent">6</span>
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-accent-foreground dark:text-accent/80">Create a block</div>
+              <div class="text-xs text-accent-foreground/60 dark:text-accent/50">Start building your schedule</div>
+            </div>
+          </button>
         </div>
       </div>
     </div>

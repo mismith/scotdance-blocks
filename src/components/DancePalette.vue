@@ -111,6 +111,7 @@ function onSelectPreset(item: AddPopoverItem) {
     <div v-if="!store.collectionsReadonly" class="mt-1">
       <button
         ref="addBtnEl"
+        data-add="dance"
         class="w-full rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
         @click="showPopover = !showPopover"
       >

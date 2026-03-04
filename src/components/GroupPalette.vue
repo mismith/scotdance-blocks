@@ -137,6 +137,7 @@ function onSelectGroup(categoryId: string, item: AddPopoverItem) {
     <div v-if="!store.collectionsReadonly" class="mt-2">
       <button
         ref="categoryBtnEl"
+        data-add="category"
         class="w-full rounded bg-background px-3 py-1.5 text-left text-sm font-medium leading-5 text-muted-foreground outline-none glass glass-card hover:bg-card hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
         @click="showCategoryPopover = !showCategoryPopover"
       >
