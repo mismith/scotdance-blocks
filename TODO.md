@@ -4,6 +4,4 @@
 - [ ] JSON export (scotdance.app-compatible)
 - [ ] JSON import
 - [ ] Persistence — save/load state
-- [ ] auto-suggest or autocomplete categories, dances, groups, etc. (as in, dropdown as you type, but also maybe autofill button for categories/dances/etc?)
-- [ ] improve empty state story
 - [ ] uer-saved templates (eg. common platforms /catgories/ etc) - basicallyt, for yearly competitons to reuse

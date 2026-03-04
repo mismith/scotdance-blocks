@@ -4,9 +4,9 @@ import { useMagicKeys, useRefHistory, whenever } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { RouterLink, RouterView } from 'vue-router'
 
+import TouchIcon from '@/assets/touchicon.svg?component'
 import { useCompetitionStore } from '@/stores/competition'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
-import TouchIcon from '@/assets/touchicon.svg?component'
 
 const store = useCompetitionStore()
 const { data } = storeToRefs(store)

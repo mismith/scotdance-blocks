@@ -240,7 +240,7 @@ function onConfigureDanceGroups() {
         <!-- Platform headers (top-level, shared across all blocks) -->
         <div
           ref="headerRowEl"
-          class="relative sticky top-0 z-20 col-span-full grid grid-cols-subgrid gap-1 pt-4 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:-bottom-4 before:-z-10 before:bg-linear-to-b before:from-background before:to-transparent before:backdrop-blur-md before:mask-[linear-gradient(to_bottom,black_33%,transparent)]"
+          class="sticky top-0 z-20 col-span-full grid grid-cols-subgrid gap-2 pt-4 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:-bottom-4 before:-z-10 before:bg-linear-to-b before:from-background before:to-transparent before:backdrop-blur-md before:mask-[linear-gradient(to_bottom,black_33%,transparent)]"
           :class="blockEntries.length > 0 ? 'pb-4' : 'pb-2'"
         >
           <div v-if="blockEntries.length > 0" class="px-1 py-1.5" />
@@ -256,7 +256,7 @@ function onConfigureDanceGroups() {
           />
           <button
             :tabindex="store.collectionsReadonly ? -1 : 0"
-            class="flex items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-card/50 px-2 py-1.5 text-sm font-semibold text-muted-foreground outline-none glass glass-card hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+            class="flex items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-card px-2 py-1.5 text-sm font-semibold text-muted-foreground outline-none glass glass-card hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
             :class="[store.collectionsReadonly && 'invisible pointer-events-none']"
             title="Add platform"
             @click="onAddPlatform"
@@ -515,7 +515,7 @@ function onConfigureDanceGroups() {
               class="text-sm font-medium text-group-foreground dark:text-group/80"
               :class="hasGroups && 'opacity-60'"
             >
-              Add groups
+              Add categories &amp; groups
             </div>
             <div
               class="text-xs text-group-foreground/60 dark:text-group/50"

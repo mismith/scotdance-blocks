@@ -127,7 +127,7 @@ const eventEntries = computed(() => Object.entries(props.block.events))
   >
     <div
       ref="sectionEl"
-      class="col-span-full grid grid-cols-subgrid rounded-xl bg-card/50 px-3 py-3 glass glass-card"
+      class="col-span-full grid grid-cols-subgrid rounded-xl bg-card px-3 py-3 glass glass-card"
     >
       <!-- Block header -->
       <div class="group col-span-full px-1 has-[[data-grip]:focus-visible]:z-10">
