@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { makeAutoScroll, makeDroppable } from '@vue-dnd-kit/core'
+import { useScroll } from '@vueuse/core'
 import { computed, ref, ref as vueRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -22,6 +23,7 @@ const blockEntries = computed(() => Object.entries(store.blocks))
 
 const scrollEl = ref<HTMLElement | null>(null)
 makeAutoScroll(scrollEl)
+const { arrivedState } = useScroll(scrollEl, { offset: { bottom: 5 } })
 
 const gridEl = ref<HTMLElement | null>(null)
 const headerRowEl = vueRef<HTMLElement | null>(null)
@@ -225,7 +227,8 @@ function onConfigureDanceGroups() {
 
 <template>
   <div class="flex h-full flex-col overflow-clip bg-background">
-    <div ref="scrollEl" class="flex-1 overflow-auto pb-4">
+    <div class="relative flex-1 overflow-clip">
+    <div ref="scrollEl" class="absolute inset-0 overflow-auto pb-4">
       <!-- Platform headers grid (shown when platforms exist) -->
       <div
         v-if="store.platformEntries.length > 0 || blockEntries.length > 0"
@@ -634,6 +637,15 @@ function onConfigureDanceGroups() {
           @add="onAddBlock($event)"
         />
       </div>
+    </div>
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 transition-opacity"
+      :class="arrivedState.bottom ? 'opacity-0' : 'opacity-100'"
+    >
+      <div
+        class="h-full bg-linear-to-t from-background to-transparent backdrop-blur-md mask-[linear-gradient(to_top,black_33%,transparent)]"
+      />
+    </div>
     </div>
   </div>
 </template>
