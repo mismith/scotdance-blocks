@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
-import { makeDroppable } from '@vue-dnd-kit/core'
+import { makeAutoScroll, makeDroppable } from '@vue-dnd-kit/core'
 import { computed, ref, ref as vueRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -19,6 +19,9 @@ const store = useCompetitionStore()
 const { provider, activeDragGroup } = useDragType()
 
 const blockEntries = computed(() => Object.entries(store.blocks))
+
+const scrollEl = ref<HTMLElement | null>(null)
+makeAutoScroll(scrollEl)
 
 const gridEl = ref<HTMLElement | null>(null)
 const headerRowEl = vueRef<HTMLElement | null>(null)
@@ -222,7 +225,7 @@ function onConfigureDanceGroups() {
 
 <template>
   <div class="flex h-full flex-col overflow-clip bg-background">
-    <div class="flex-1 overflow-auto pb-4">
+    <div ref="scrollEl" class="flex-1 overflow-auto pb-4">
       <!-- Platform headers grid (shown when platforms exist) -->
       <div
         v-if="store.platformEntries.length > 0 || blockEntries.length > 0"
