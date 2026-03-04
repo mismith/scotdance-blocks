@@ -24,11 +24,11 @@ const dance = props.scheduledDance.danceId
   ? store.getDance(props.scheduledDance.danceId)
   : undefined
 
-// Draggable handle for arbitrary dances (reference dances use DanceChip's built-in drag)
-const arbitraryEl = vueRef<HTMLElement | null>(null)
+// Draggable handle for freeform rows (reference dances use DanceChip's built-in drag)
+const rowEl = vueRef<HTMLElement | null>(null)
 
 const { isDragging } = makeDraggable(
-  arbitraryEl,
+  rowEl,
   { groups: ['dance'], activation: { distance: 3 } },
   () =>
     [
@@ -58,14 +58,14 @@ function onRemove() {
 </script>
 
 <template>
-  <!-- Arbitrary dance: spans all columns as a single editable row -->
+  <!-- Note: spans all columns as a single editable row -->
   <div
     v-if="!scheduledDance.danceId"
     data-dance-row
     class="group col-span-full border-t border-border first:border-t-0"
   >
     <div
-      ref="arbitraryEl"
+      ref="rowEl"
       class="flex cursor-grab items-start px-1 py-1.5 text-sm has-[[data-grip]:focus-visible]:z-10 has-[[data-grip]:focus-visible]:ring-2 has-[[data-grip]:focus-visible]:ring-ring"
       :class="{ 'opacity-40': isDragging }"
     >
@@ -73,14 +73,15 @@ function onRemove() {
       <div class="min-w-0 flex-1">
         <InlineEdit
           :model-value="scheduledDance.name"
-          placeholder="Item name"
+          placeholder="Row name"
+          class="font-semibold"
           :auto-edit="autoEdit"
           @update:model-value="store.updateScheduledDanceName(blockId, eventId, danceId, $event)"
         />
         <div class="py-1.5">
           <InlineEdit
             :model-value="scheduledDance.description ?? ''"
-            placeholder="Add custom item description"
+            placeholder="Add row description"
             :required="false"
             multiline
             @update:model-value="

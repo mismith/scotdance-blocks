@@ -35,9 +35,9 @@ export interface PlatformAssignment {
 }
 
 export interface ScheduledDance {
-  danceId?: string // omit for arbitrary items (e.g. "March Past", "Registration")
+  danceId?: string // omit for freeform rows (e.g. "March Past", "Registration")
   name: string // display override or number label; primary name when no danceId
-  description?: string // optional detail text (only used for arbitrary items)
+  description?: string // optional detail text (only used for freeform rows)
   platforms: Record<string, PlatformAssignment>
 }
 

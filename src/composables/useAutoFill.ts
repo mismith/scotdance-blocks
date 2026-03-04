@@ -137,7 +137,7 @@ export function useAutoFill() {
 
     for (let danceIndex = 0; danceIndex < danceEntries.length; danceIndex++) {
       const [sdId, scheduledDance] = danceEntries[danceIndex]
-      if (!scheduledDance.danceId) continue // skip arbitrary dances
+      if (!scheduledDance.danceId) continue // skip freeform rows
       for (let pIdx = 0; pIdx < platformIds.length; pIdx++) {
         if (pIdx >= numJudges) break // more platforms than judges
         const judgeIndex = ((pIdx - danceIndex) % numJudges + numJudges) % numJudges

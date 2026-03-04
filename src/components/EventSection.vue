@@ -134,8 +134,8 @@ const { floatingStyles: autoFillMenuStyle } = useFloating(autoFillBtnEl, autoFil
 })
 const autoEditDanceId = vueRef<string | null>(null)
 
-function onAddCustomItem() {
-  const id = store.addDanceToEvent(props.blockId, props.eventId, undefined, 'New Custom Item')
+function onAddRow() {
+  const id = store.addDanceToEvent(props.blockId, props.eventId, undefined, 'New Row')
   autoEditDanceId.value = id
 }
 
@@ -358,9 +358,9 @@ function onAutoCycleJudges() {
           <button
             data-dance-placeholder
             class="flex w-full items-center gap-1 rounded bg-dance/10 px-3 py-1.5 text-left text-sm font-medium leading-5 text-dance-foreground/80 outline-none glass glass-dance hover:bg-dance/25 focus-visible:ring-2 focus-visible:ring-ring dark:text-dance/80"
-            @click="onAddCustomItem"
+            @click="onAddRow"
           >
-            <span class="select-none -ml-1">+</span> Add custom item
+            <span class="select-none -ml-1">+</span> Add row
           </button>
         </div>
         <div class="px-2 py-1" style="grid-column: 2 / -2">
