@@ -120,9 +120,6 @@ function onRemove() {
       >
         {{ dance?.shortName || dance?.name || 'Unknown' }}
         <span v-if="dance?.steps" class="text-dance-foreground/50">({{ dance.steps }})</span>
-        <span v-if="scheduledDance.name" class="ml-1 text-dance-foreground/50">
-          {{ scheduledDance.name }}
-        </span>
       </DanceChip>
     </div>
     <PlatformCell
