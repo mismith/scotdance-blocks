@@ -57,7 +57,7 @@ const gridCols = computed(() => `auto repeat(${danceEntries.value.length}, auto)
 <template>
   <dialog
     ref="dialogEl"
-    class="m-auto max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-2xl border border-border bg-card p-0 shadow-lg backdrop:bg-background/60 backdrop:backdrop-blur-sm sm:max-h-[calc(100%-4rem)] sm:max-w-[calc(100%-4rem)] lg:max-h-[calc(100%-6rem)] lg:max-w-[calc(100%-6rem)] open:flex"
+    class="m-auto max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground p-0 shadow-lg backdrop:bg-background/60 backdrop:backdrop-blur-sm sm:max-h-[calc(100%-4rem)] sm:max-w-[calc(100%-4rem)] lg:max-h-[calc(100%-6rem)] lg:max-w-[calc(100%-6rem)] open:flex"
     @cancel="onCancel"
     @click="onBackdropClick"
   >
