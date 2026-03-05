@@ -41,12 +41,4 @@ const router = createRouter({
   ],
 })
 
-router.afterEach(async (to, from) => {
-  if (from.path.startsWith('/demo') && !to.path.startsWith('/demo')) {
-    const { useCompetitionStore, createEmptyData } = await import('../stores/competition')
-    const store = useCompetitionStore()
-    store.loadData(createEmptyData())
-  }
-})
-
 export default router

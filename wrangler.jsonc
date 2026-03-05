@@ -5,4 +5,5 @@
     "directory": "./dist",
     "not_found_handling": "single-page-application",
   },
+  "kv_namespaces": [{ "binding": "BLOCKS_PROJECTS", "id": "d2fd65e392254f14832871352c1e9808" }],
 }
