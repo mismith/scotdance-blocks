@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useAuth } from '@/composables/useAuth'
-import { usePersistence } from '@/composables/usePersistence'
 import ScotDanceBadge from '@/components/ScotDanceBadge.vue'
 
 const { user, isLoading, isAuthenticated, error, signIn, register, resetPassword, signOut } =
   useAuth()
-const {
-  projects,
-  activeProjectId,
-  loadProject,
-  createProject,
-  deleteProject,
-  newCompetition,
-} = usePersistence()
+
+const gravatarHash = ref<string | null>(null)
+const gravatarUrl = computed(() =>
+  gravatarHash.value ? `https://www.gravatar.com/avatar/${gravatarHash.value}?s=80&d=mp` : null,
+)
+
+watch(
+  () => user.value?.email,
+  async (email) => {
+    if (!email) {
+      gravatarHash.value = null
+      return
+    }
+    const normalized = email.trim().toLowerCase()
+    const buf = await crypto.subtle.digest(
+      'SHA-256',
+      new TextEncoder().encode(normalized),
+    )
+    gravatarHash.value = Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+  },
+  { immediate: true },
+)
 
 const isOpen = ref(false)
 const mode = ref<'menu' | 'login' | 'register' | 'reset-password'>('menu')
@@ -41,7 +56,6 @@ watch(isOpen, (open) => {
     showPassword.value = false
     resetSent.value = false
     error.value = null
-    // email is intentionally preserved across opens
   }
 })
 
@@ -51,7 +65,6 @@ function switchMode(newMode: 'login' | 'register' | 'reset-password') {
   showPassword.value = false
   resetSent.value = false
   error.value = null
-  // email is preserved
 }
 
 async function handleSubmit() {
@@ -84,48 +97,9 @@ async function handleResetPassword() {
   }
 }
 
-async function handleSignOut() {
+async function handleLogout() {
   await signOut()
   isOpen.value = false
-}
-
-async function handleOpenProject(projectId: string) {
-  await loadProject(projectId)
-  isOpen.value = false
-}
-
-async function handleNewCompetition() {
-  if (isAuthenticated.value) {
-    const id = await createProject('Untitled Competition', {
-      categories: {},
-      groups: {},
-      dances: {},
-      platforms: {},
-      staff: {},
-      schedule: { name: '', date: '', blocks: {} },
-    })
-    if (id) {
-      newCompetition()
-      await loadProject(id)
-    }
-  } else {
-    newCompetition()
-  }
-  isOpen.value = false
-}
-
-async function handleDeleteProject(projectId: string) {
-  if (!confirm('Delete this competition? This cannot be undone.')) return
-  await deleteProject(projectId)
-}
-
-function formatDate(timestamp: number): string {
-  if (!timestamp) return ''
-  return new Date(timestamp).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }
 </script>
 
@@ -133,21 +107,23 @@ function formatDate(timestamp: number): string {
   <div class="relative">
     <button
       ref="anchorEl"
-      class="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1.5 text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+      class="rounded-full text-muted-foreground outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
+      title="Account"
       @click="isOpen = !isOpen"
     >
       <template v-if="isLoading">
-        <span class="size-4 animate-pulse rounded-full bg-muted" />
+        <span class="block size-7 animate-pulse rounded-full bg-muted" />
       </template>
-      <template v-else-if="isAuthenticated">
-        <span
-          class="flex size-5 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground"
-        >
-          {{ user?.email?.[0]?.toUpperCase() }}
-        </span>
-        <span class="max-w-32 truncate">{{ user?.email }}</span>
+      <template v-else-if="gravatarUrl">
+        <img :src="gravatarUrl" class="size-7 rounded-full" alt="" />
       </template>
-      <template v-else> Login </template>
+      <template v-else>
+        <svg class="size-7 rounded-full bg-muted p-0.5" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+          />
+        </svg>
+      </template>
     </button>
 
     <Teleport to="body">
@@ -171,9 +147,7 @@ function formatDate(timestamp: number): string {
                     <template v-if="mode === 'login'">
                       Save and sync your competitions across devices.
                     </template>
-                    <template v-else>
-                      Your ScotDance.app account works here too.
-                    </template>
+                    <template v-else> Your ScotDance.app account works here too. </template>
                   </p>
                 </div>
               </div>
@@ -186,7 +160,7 @@ function formatDate(timestamp: number): string {
                     type="email"
                     required
                     autocomplete="email"
-                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground/40 focus-visible:ring-2 focus-visible:ring-ring"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     placeholder="you@example.com"
                   />
                 </label>
@@ -201,7 +175,7 @@ function formatDate(timestamp: number): string {
                       :type="showPassword ? 'text' : 'password'"
                       required
                       :autocomplete="mode === 'register' ? 'new-password' : 'current-password'"
-                      class="w-full rounded-md border border-border bg-background px-3 py-2 pr-9 text-sm text-foreground outline-none placeholder:text-muted-foreground/40 focus-visible:ring-2 focus-visible:ring-ring"
+                      class="w-full rounded-md border border-border bg-background px-3 py-2 pr-9 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       :placeholder="mode === 'register' ? 'At least 6 characters' : 'Password'"
                     />
                     <button
@@ -249,7 +223,9 @@ function formatDate(timestamp: number): string {
                 :disabled="isSubmitting"
                 class="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
               >
-                {{ isSubmitting ? 'Please wait\u2026' : mode === 'register' ? 'Register' : 'Login' }}
+                {{
+                  isSubmitting ? 'Please wait\u2026' : mode === 'register' ? 'Register' : 'Login'
+                }}
               </button>
 
               <div class="mt-3 space-y-1 text-center text-xs text-muted-foreground">
@@ -320,7 +296,7 @@ function formatDate(timestamp: number): string {
                     type="email"
                     required
                     autocomplete="email"
-                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground/40 focus-visible:ring-2 focus-visible:ring-ring"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     placeholder="you@example.com"
                   />
                 </label>
@@ -351,84 +327,18 @@ function formatDate(timestamp: number): string {
 
           <!-- Authenticated menu -->
           <template v-else-if="isAuthenticated">
-            <div class="border-b border-border px-4 py-3">
+            <div class="p-4">
               <p class="truncate text-sm font-medium text-foreground">
                 {{ user?.email }}
               </p>
               <p class="text-xs text-muted-foreground">Signed in via ScotDance.app</p>
             </div>
-
-            <div class="max-h-64 overflow-y-auto">
-              <div class="px-4 pt-3 pb-1.5">
-                <span
-                  class="text-[11px] font-medium uppercase tracking-wider text-muted-foreground"
-                  >Competitions</span
-                >
-              </div>
-              <div
-                v-if="projects.length === 0"
-                class="px-4 py-3 text-xs text-muted-foreground"
-              >
-                No saved competitions yet.
-              </div>
-              <div
-                v-for="project in projects"
-                :key="project.id"
-                role="button"
-                tabindex="0"
-                class="group flex w-full items-center gap-2 px-4 py-2 text-left outline-none hover:bg-muted focus-visible:bg-muted"
-                :class="activeProjectId === project.id ? 'bg-muted' : ''"
-                @click="handleOpenProject(project.id)"
-                @keydown.enter="handleOpenProject(project.id)"
-                @keydown.space.prevent="handleOpenProject(project.id)"
-              >
-                <div class="min-w-0 flex-1">
-                  <p class="truncate text-sm text-foreground">{{ project.name }}</p>
-                  <p class="text-xs text-muted-foreground">
-                    {{ formatDate(project.updatedAt) }}
-                  </p>
-                </div>
-                <button
-                  class="shrink-0 rounded p-1 text-muted-foreground/60 opacity-0 outline-none hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
-                  title="Delete"
-                  @click.stop="handleDeleteProject(project.id)"
-                >
-                  <svg
-                    class="size-3.5"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                  >
-                    <path d="M4 4l8 8M12 4l-8 8" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
             <div class="border-t border-border p-1.5">
               <button
-                class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:bg-muted"
-                @click="handleNewCompetition"
-              >
-                <svg
-                  class="size-4 text-muted-foreground"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                >
-                  <path d="M8 3v10M3 8h10" />
-                </svg>
-                New Competition
-              </button>
-              <button
                 class="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:bg-muted"
-                @click="handleSignOut"
+                @click="handleLogout"
               >
-                Sign out
+                Logout
               </button>
             </div>
           </template>

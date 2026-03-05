@@ -14,6 +14,7 @@ const PROJECT_KEY = 'scotdance-blocks:active-project'
 export interface ProjectMeta {
   id: string
   name: string
+  createdAt: number
   updatedAt: number
 }
 
@@ -97,23 +98,58 @@ export function usePersistence() {
     }
   }
 
+  let isCreating = false
+
+  function hasContent(): boolean {
+    const d = data.value
+    return (
+      Object.keys(d.categories).length > 0 ||
+      Object.keys(d.schedule.blocks).length > 0 ||
+      !!d.schedule.name
+    )
+  }
+
   async function saveToCloud() {
-    if (!isAuthenticated.value || isDemo.value || !activeProjectId.value) return
+    if (!isAuthenticated.value || isDemo.value) return
+
+    // Lazy-create: if no active project yet, only create once there's real data
+    if (!activeProjectId.value) {
+      if (!hasContent() || isCreating) return
+      isCreating = true
+      try {
+        const name = data.value.schedule.name
+        await createProject(name, data.value)
+      } finally {
+        isCreating = false
+      }
+      return
+    }
+
     const token = await getIdToken()
     if (!token) return
     isSyncing.value = true
     try {
-      await fetch(`/api/projects/${activeProjectId.value}`, {
+      const name = data.value.schedule.name
+      const res = await fetch(`/api/projects/${activeProjectId.value}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: data.value.schedule.name || 'Untitled Competition',
+          name,
           data: data.value,
         }),
       })
+      if (res.ok) {
+        const result = await res.json() as { updatedAt: number }
+        // Update local project list without re-querying
+        const project = projects.value.find((p) => p.id === activeProjectId.value)
+        if (project) {
+          project.name = name
+          project.updatedAt = result.updatedAt
+        }
+      }
     } catch {
       // silent fail — localStorage has the data
     } finally {
@@ -138,9 +174,16 @@ export function usePersistence() {
         body: JSON.stringify({ id, name, data: projectData }),
       })
       if (!res.ok) return null
+      const result = await res.json() as { createdAt: number; updatedAt: number }
       activeProjectId.value = id
       localStorage.setItem(PROJECT_KEY, id)
-      await refreshProjects()
+      // Add to local project list without re-querying
+      projects.value.unshift({
+        id,
+        name,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
+      })
       return id
     } catch {
       return null
@@ -157,10 +200,10 @@ export function usePersistence() {
       })
       if (!res.ok) return false
       if (activeProjectId.value === projectId) {
-        activeProjectId.value = null
-        localStorage.removeItem(PROJECT_KEY)
+        newCompetition()
       }
-      await refreshProjects()
+      // Remove from local project list without re-querying
+      projects.value = projects.value.filter((p) => p.id !== projectId)
       return true
     } catch {
       return false
@@ -192,21 +235,13 @@ export function usePersistence() {
     window.addEventListener('beforeunload', saveToLocalStorage)
   }
 
-  // --- Sign-in migration ---
+  // --- Sign-in: refresh project list ---
 
   watch(
     () => user.value,
     async (newUser, oldUser) => {
       if (newUser && !oldUser) {
-        // Just signed in — refresh project list
         await refreshProjects()
-
-        // Auto-migrate localStorage data if user has no cloud projects
-        const hasLocalData = localStorage.getItem(STORAGE_KEY) !== null
-        if (hasLocalData && projects.value.length === 0) {
-          const name = data.value.schedule.name || 'Untitled Competition'
-          await createProject(name, data.value)
-        }
       }
     },
   )

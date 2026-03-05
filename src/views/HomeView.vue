@@ -1,17 +1,29 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 import TouchIcon from '@/assets/touchicon.svg?component'
+import { useAuth } from '@/composables/useAuth'
+import { usePersistence } from '@/composables/usePersistence'
 import AuthMenu from '@/components/AuthMenu.vue'
+import ProjectMenu from '@/components/ProjectMenu.vue'
 import ScotDanceBadge from '@/components/ScotDanceBadge.vue'
 
+const router = useRouter()
+const { isAuthenticated } = useAuth()
+const { newCompetition } = usePersistence()
 const hasSavedData = computed(() => localStorage.getItem('scotdance-blocks:data') !== null)
+
+function handleNew() {
+  newCompetition()
+  router.push('/blocks')
+}
 </script>
 
 <template>
   <div class="relative flex min-h-screen flex-col items-center justify-center">
-    <div class="absolute right-4 top-4">
+    <div class="absolute right-4 top-4 flex items-center gap-2">
+      <ProjectMenu v-if="isAuthenticated" label="Competitions" @new="handleNew" />
       <AuthMenu />
     </div>
 

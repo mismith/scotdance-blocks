@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { ExportDanceRow, ExportRow } from '@/composables/useScheduleExport'
 import { useScheduleExport } from '@/composables/useScheduleExport'
+import { useCompetitionStore } from '@/stores/competition'
 
+const store = useCompetitionStore()
 const { settings, scheduleBlocks, platformEntries } = useScheduleExport()
 
 interface RenderRow {
@@ -162,6 +164,14 @@ const totalCols = () =>
       :key="bi"
       :class="{ 'break-before-page': bi > 0 }"
     >
+      <!-- Competition name -->
+      <p
+        v-if="settings.showCompetitionName && store.schedule.name"
+        class="text-sm font-medium text-center text-muted-foreground"
+      >
+        {{ store.schedule.name }}
+      </p>
+
       <!-- Block title -->
       <h1 class="text-xl font-bold text-center">{{ block.title }}</h1>
 

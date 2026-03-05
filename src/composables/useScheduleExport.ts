@@ -46,6 +46,7 @@ export interface ExportSettings {
   showDescriptions: boolean
   eventNameInColumn: boolean
   showHeaderLabels: boolean
+  showCompetitionName: boolean
 }
 
 // Module-level so settings persist across dialog open/close within the session
@@ -53,6 +54,7 @@ const settings = reactive<ExportSettings>({
   showDescriptions: true,
   eventNameInColumn: false,
   showHeaderLabels: false,
+  showCompetitionName: false,
 })
 
 // --- Composable ---

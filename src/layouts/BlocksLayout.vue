@@ -10,7 +10,9 @@ import { usePersistence } from '@/composables/usePersistence'
 import { usePreviewDialog } from '@/composables/usePreviewDialog'
 import AuthMenu from '@/components/AuthMenu.vue'
 import DanceGroupsDialog from '@/components/DanceGroupsDialog.vue'
+import InlineEdit from '@/components/InlineEdit.vue'
 import PreviewDialog from '@/components/PreviewDialog.vue'
+import ProjectMenu from '@/components/ProjectMenu.vue'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 
 const store = useCompetitionStore()
@@ -36,8 +38,9 @@ const { undo, redo } = useRefHistory(data, {
 startAutoSave()
 
 function handleNew() {
-  const hasData = Object.keys(data.value.schedule.blocks).length > 0
-    || Object.keys(data.value.categories).length > 0
+  const hasData =
+    Object.keys(data.value.schedule.blocks).length > 0 ||
+    Object.keys(data.value.categories).length > 0
   if (hasData && !confirm('Start a new competition? Your current work is saved.')) return
   newCompetition()
 }
@@ -81,13 +84,16 @@ whenever(
         <TouchIcon class="size-7 rounded" />
         <span class="text-lg font-bold text-foreground">Blocks</span>
       </RouterLink>
+      <span class="text-muted-foreground/30">/</span>
+      <InlineEdit
+        :model-value="data.schedule.name"
+        placeholder="Untitled competition"
+        :required="false"
+        class="text-sm"
+        @update:model-value="data.schedule.name = $event"
+      />
+      <ProjectMenu @new="handleNew" />
       <div class="ml-auto flex items-center gap-3">
-        <button
-          class="rounded-lg bg-card px-2.5 py-1.5 text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-          @click="handleNew"
-        >
-          New
-        </button>
         <button
           class="rounded-lg bg-card px-2.5 py-1.5 text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
           title="Paper preview"

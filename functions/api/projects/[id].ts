@@ -43,12 +43,17 @@ async function handlePut(
 
   const now = Date.now()
 
+  // Preserve createdAt from existing metadata
+  const existing = await context.env.BLOCKS_PROJECTS.getWithMetadata(key)
+  const createdAt =
+    (existing.metadata as { createdAt?: number } | null)?.createdAt ?? now
+
   await context.env.BLOCKS_PROJECTS.put(key, JSON.stringify(body.data), {
-    metadata: { name: body.name || 'Untitled', updatedAt: now },
+    metadata: { name: body.name || '', createdAt, updatedAt: now },
   })
 
   return new Response(
-    JSON.stringify({ id: projectId, name: body.name, updatedAt: now }),
+    JSON.stringify({ id: projectId, name: body.name, createdAt, updatedAt: now }),
     { headers: { 'Content-Type': 'application/json' } },
   )
 }

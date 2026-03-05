@@ -9,11 +9,15 @@ async function handleGet(
   const uid = context.data.uid as string
   const list = await context.env.BLOCKS_PROJECTS.list({ prefix: `${uid}:` })
 
-  const projects = list.keys.map((key) => ({
-    id: key.name.slice(uid.length + 1), // strip "uid:" prefix
-    name: (key.metadata as { name?: string })?.name ?? 'Untitled',
-    updatedAt: (key.metadata as { updatedAt?: number })?.updatedAt ?? 0,
-  }))
+  const projects = list.keys.map((key) => {
+    const meta = key.metadata as { name?: string; createdAt?: number; updatedAt?: number } | null
+    return {
+      id: key.name.slice(uid.length + 1), // strip "uid:" prefix
+      name: meta?.name ?? '',
+      createdAt: meta?.createdAt ?? 0,
+      updatedAt: meta?.updatedAt ?? 0,
+    }
+  })
 
   // Sort by most recently updated
   projects.sort((a, b) => b.updatedAt - a.updatedAt)
@@ -53,11 +57,11 @@ async function handlePost(
   const now = Date.now()
 
   await context.env.BLOCKS_PROJECTS.put(key, JSON.stringify(body.data), {
-    metadata: { name: body.name || 'Untitled', updatedAt: now },
+    metadata: { name: body.name || '', createdAt: now, updatedAt: now },
   })
 
   return new Response(
-    JSON.stringify({ id: body.id, name: body.name, updatedAt: now }),
+    JSON.stringify({ id: body.id, name: body.name, createdAt: now, updatedAt: now }),
     {
       status: 201,
       headers: { 'Content-Type': 'application/json' },

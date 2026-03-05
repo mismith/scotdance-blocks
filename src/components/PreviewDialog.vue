@@ -101,6 +101,15 @@ function onBackdropClick(e: MouseEvent) {
             />
             <span class="text-xs font-medium text-muted-foreground">Header labels</span>
           </label>
+          <label class="flex items-center gap-1.5">
+            <input
+              type="checkbox"
+              class="size-3.5 cursor-default accent-primary"
+              :checked="settings.showCompetitionName"
+              @change="settings.showCompetitionName = ($event.target as HTMLInputElement).checked"
+            />
+            <span class="text-xs font-medium text-muted-foreground">Competition name</span>
+          </label>
         </div>
       </div>
 
