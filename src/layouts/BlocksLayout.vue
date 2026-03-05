@@ -6,11 +6,14 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import TouchIcon from '@/assets/touchicon.svg?component'
 import { useCompetitionStore } from '@/stores/competition'
+import { usePreviewDialog } from '@/composables/usePreviewDialog'
 import DanceGroupsDialog from '@/components/DanceGroupsDialog.vue'
+import PreviewDialog from '@/components/PreviewDialog.vue'
 import ScheduleSidebar from '@/components/ScheduleSidebar.vue'
 
 const store = useCompetitionStore()
 const { data } = storeToRefs(store)
+const { open: openPreview } = usePreviewDialog()
 
 const { undo, redo } = useRefHistory(data, {
   deep: true,
@@ -58,6 +61,13 @@ whenever(
         <span class="text-lg font-bold text-foreground">Blocks</span>
       </RouterLink>
       <div class="ml-auto flex items-center gap-3">
+        <button
+          class="rounded-lg bg-card px-2.5 py-1.5 text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+          title="Paper preview"
+          @click="openPreview"
+        >
+          Paper preview
+        </button>
         <label class="flex items-center gap-1.5 text-sm text-muted-foreground">
           <input
             type="checkbox"
@@ -77,5 +87,6 @@ whenever(
       </div>
     </DnDProvider>
     <DanceGroupsDialog />
+    <PreviewDialog />
   </div>
 </template>

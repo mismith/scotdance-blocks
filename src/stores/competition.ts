@@ -46,12 +46,12 @@ export const useCompetitionStore = defineStore('competition', () => {
     return categories.value[categoryId]?.name ?? categoryId
   }
 
-  function getGroupLabel(groupId: string): string {
+  function getGroupLabel(groupId: string, { abbreviate = true } = {}): string {
     const group = groups.value[groupId]
     if (!group) return groupId
     const category = categories.value[group.categoryId]
-    const abbrev = category?.name?.slice(0, 3) ?? ''
-    return `${abbrev} ${group.name}`
+    const catName = abbreviate ? (category?.name?.slice(0, 3) ?? '') : (category?.name ?? '')
+    return `${catName} ${group.name}`
   }
 
   function getDance(danceId: string): Dance | undefined {
