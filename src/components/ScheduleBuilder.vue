@@ -208,7 +208,11 @@ function onAddPlatformFromEmpty() {
 <template>
   <div class="flex h-full flex-col overflow-clip bg-background">
     <div class="relative flex-1 overflow-clip">
-      <div ref="scrollEl" class="absolute inset-0 overflow-auto pb-12">
+      <div
+        ref="scrollEl"
+        class="absolute inset-0 overflow-auto pb-12"
+        :class="{ 'scroll-fade-b-16': !arrivedState.bottom }"
+      >
         <!-- Platform headers grid (shown when platforms exist) -->
         <div
           v-if="store.platformEntries.length > 0 || blockEntries.length > 0"
@@ -356,14 +360,6 @@ function onAddPlatformFromEmpty() {
           @add-platform="onAddPlatformFromEmpty"
           @add-block="onAddBlock($event)"
           @auto-fill="onAutoFillSchedule"
-        />
-      </div>
-      <div
-        class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 transition-opacity"
-        :class="arrivedState.bottom ? 'opacity-0' : 'opacity-100'"
-      >
-        <div
-          class="h-full bg-linear-to-t from-background to-transparent backdrop-blur-md mask-[linear-gradient(to_top,black_33%,transparent)]"
         />
       </div>
     </div>

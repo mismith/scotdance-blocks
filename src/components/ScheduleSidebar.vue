@@ -13,26 +13,14 @@ const { arrivedState } = useScroll(sidebarEl, { offset: { top: 5, bottom: 5 } })
 <template>
   <aside
     ref="sidebarEl"
-    class="relative flex min-w-64 flex-col gap-4 overflow-y-auto border-r border-border px-3"
+    class="flex min-w-64 flex-col gap-4 overflow-y-auto p-3"
+    :class="{
+      'scroll-fade-t-16': !arrivedState.top,
+      'scroll-fade-b-16': !arrivedState.bottom,
+    }"
   >
-    <div
-      class="pointer-events-none sticky top-0 -mx-3 h-0 z-10 transition-opacity"
-      :class="arrivedState.top ? 'opacity-0' : 'opacity-100'"
-    >
-      <div
-        class="h-16 bg-linear-to-b from-background to-transparent backdrop-blur-md mask-[linear-gradient(to_bottom,black_33%,transparent)]"
-      />
-    </div>
     <DancePalette />
     <GroupPalette />
     <JudgePalette />
-    <div
-      class="pointer-events-none sticky bottom-0 -mx-3 h-0 z-10 transition-opacity"
-      :class="arrivedState.bottom ? 'opacity-0' : 'opacity-100'"
-    >
-      <div
-        class="h-16 -mt-16 bg-linear-to-t from-background to-transparent backdrop-blur-md mask-[linear-gradient(to_top,black_33%,transparent)]"
-      />
-    </div>
   </aside>
 </template>

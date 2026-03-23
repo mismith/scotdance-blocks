@@ -206,6 +206,18 @@ body {
   animation: rainbow-color 2s linear infinite;
 }
 
+/* Scroll-fade masks — composable top/bottom edge fades */
+@utility scroll-fade-t-* {
+  --scroll-fade-t: linear-gradient(transparent, black --spacing(--value(integer)));
+  mask-image: var(--scroll-fade-t), var(--scroll-fade-b, linear-gradient(black, black));
+  mask-composite: intersect;
+}
+@utility scroll-fade-b-* {
+  --scroll-fade-b: linear-gradient(black calc(100% - --spacing(--value(integer))), transparent);
+  mask-image: var(--scroll-fade-t, linear-gradient(black, black)), var(--scroll-fade-b);
+  mask-composite: intersect;
+}
+
 /* Ensure drag overlay renders above all content */
 .dnd-kit-overlay-container {
   z-index: 9999;

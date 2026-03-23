@@ -117,6 +117,7 @@ whenever(
     <DnDProvider overlay-to="body">
       <div class="flex flex-auto min-h-0">
         <ScheduleSidebar />
+        <hr class="border-r border-border h-full w-0" />
         <RouterView class="flex-auto min-w-0" />
       </div>
     </DnDProvider>
