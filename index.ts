@@ -10,7 +10,7 @@ export const TOOLS = [
   {
     id: 'splits',
     name: 'Splits',
-    description: 'Split registrants into groups with bib numbers',
+    description: 'Split dancers into groups and assign numbers',
     color: '#ffd323',
     icon: 'https://splits.scotdance.app/touchicon.png',
     url: 'https://splits.scotdance.app',
