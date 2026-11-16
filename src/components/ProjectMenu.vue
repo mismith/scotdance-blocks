@@ -5,21 +5,18 @@ import { useRouter } from 'vue-router'
 
 import { useAuth } from '@/composables/useAuth'
 import { usePersistence } from '@/composables/usePersistence'
+import AsyncButton from '@/components/AsyncButton.vue'
+import Spinner from './LoadingSpinner.vue'
 
-const props = defineProps<{ label?: string }>()
-const emit = defineEmits<{ new: [] }>()
+defineProps<{ label?: string }>()
+defineEmits<{ new: [] }>()
 
 const router = useRouter()
 const { isAuthenticated } = useAuth()
-const {
-  projects,
-  activeProjectId,
-  loadProject,
-  deleteProject,
-  refreshProjects,
-} = usePersistence()
+const { projects, activeProjectId, loadProject, deleteProject, refreshProjects } = usePersistence()
 
 const isOpen = ref(false)
+const opening = ref('')
 
 const anchorEl = ref<HTMLElement | null>(null)
 const floatingEl = ref<HTMLElement | null>(null)
@@ -37,11 +34,14 @@ watch(isOpen, (open) => {
 })
 
 async function handleOpenProject(projectId: string) {
-  await loadProject(projectId)
-  isOpen.value = false
-  // Navigate to editor if not already there (e.g. from HomeView)
-  if (!router.currentRoute.value.path.startsWith('/blocks')) {
-    router.push('/blocks')
+  if (opening.value) return
+  opening.value = projectId
+  try {
+    if (!(await loadProject(projectId))) return
+    isOpen.value = false
+    if (!router.currentRoute.value.path.startsWith('/blocks')) await router.push('/blocks')
+  } finally {
+    opening.value = ''
   }
 }
 
@@ -111,19 +111,13 @@ function formatDate(timestamp: number): string {
           :style="floatingStyles"
         >
           <!-- Not authenticated -->
-          <div
-            v-if="!isAuthenticated"
-            class="px-4 py-3 text-xs text-muted-foreground"
-          >
+          <div v-if="!isAuthenticated" class="px-4 py-3 text-xs text-muted-foreground">
             Sign in to save and load competitions.
           </div>
 
           <!-- Authenticated: project list -->
           <template v-else>
-            <div
-              v-if="projects.length === 0"
-              class="px-4 py-3 text-xs text-muted-foreground"
-            >
+            <div v-if="projects.length === 0" class="px-4 py-3 text-xs text-muted-foreground">
               No saved competitions yet.
             </div>
             <div class="max-h-64 overflow-y-auto">
@@ -131,6 +125,8 @@ function formatDate(timestamp: number): string {
                 v-for="project in projects"
                 :key="project.id"
                 role="button"
+                :aria-disabled="!!opening || undefined"
+                :aria-busy="opening === project.id || undefined"
                 tabindex="0"
                 class="group flex w-full items-center gap-2 px-4 py-2 text-left outline-none hover:bg-muted focus-visible:bg-muted"
                 :class="activeProjectId === project.id ? 'bg-muted' : ''"
@@ -138,6 +134,10 @@ function formatDate(timestamp: number): string {
                 @keydown.enter="handleOpenProject(project.id)"
                 @keydown.space.prevent="handleOpenProject(project.id)"
               >
+                <Spinner
+                  v-if="opening === project.id"
+                  class="size-4 animate-spin motion-reduce:animate-none"
+                />
                 <div class="min-w-0 flex-1">
                   <p class="truncate text-sm text-foreground">
                     {{ project.name || 'Untitled competition' }}
@@ -146,7 +146,7 @@ function formatDate(timestamp: number): string {
                     {{ formatDate(project.updatedAt) }}
                   </p>
                 </div>
-                <button
+                <AsyncButton
                   class="shrink-0 rounded p-1 text-muted-foreground/60 opacity-0 outline-none hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
                   title="Delete"
                   @click.stop="handleDeleteProject(project.id)"
@@ -161,7 +161,7 @@ function formatDate(timestamp: number): string {
                   >
                     <path d="M4 4l8 8M12 4l-8 8" />
                   </svg>
-                </button>
+                </AsyncButton>
               </div>
             </div>
           </template>

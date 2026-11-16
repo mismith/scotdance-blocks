@@ -3,7 +3,10 @@ import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import { computed, ref, watch } from 'vue'
 
 import { useAuth } from '@/composables/useAuth'
+import AsyncButton from '@/components/AsyncButton.vue'
 import ScotDanceBadge from '@/components/ScotDanceBadge.vue'
+const pendingHandleSubmit = ref(false)
+const pendingHandleResetPassword = ref(false)
 
 const { user, isLoading, isAuthenticated, error, signIn, register, resetPassword, signOut } =
   useAuth()
@@ -21,10 +24,7 @@ watch(
       return
     }
     const normalized = email.trim().toLowerCase()
-    const buf = await crypto.subtle.digest(
-      'SHA-256',
-      new TextEncoder().encode(normalized),
-    )
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalized))
     gravatarHash.value = Array.from(new Uint8Array(buf))
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('')
@@ -68,32 +68,44 @@ function switchMode(newMode: 'login' | 'register' | 'reset-password') {
 }
 
 async function handleSubmit() {
-  if (!email.value || !password.value) return
-  isSubmitting.value = true
+  if (pendingHandleSubmit.value) return
+  pendingHandleSubmit.value = true
   try {
-    if (mode.value === 'register') {
-      await register(email.value, password.value)
-    } else {
-      await signIn(email.value, password.value)
+    if (!email.value || !password.value) return
+    isSubmitting.value = true
+    try {
+      if (mode.value === 'register') {
+        await register(email.value, password.value)
+      } else {
+        await signIn(email.value, password.value)
+      }
+      isOpen.value = false
+    } catch {
+      // error is already set in useAuth
+    } finally {
+      isSubmitting.value = false
     }
-    isOpen.value = false
-  } catch {
-    // error is already set in useAuth
   } finally {
-    isSubmitting.value = false
+    pendingHandleSubmit.value = false
   }
 }
 
 async function handleResetPassword() {
-  if (!email.value) return
-  isSubmitting.value = true
+  if (pendingHandleResetPassword.value) return
+  pendingHandleResetPassword.value = true
   try {
-    await resetPassword(email.value)
-    resetSent.value = true
-  } catch {
-    // error is already set in useAuth
+    if (!email.value) return
+    isSubmitting.value = true
+    try {
+      await resetPassword(email.value)
+      resetSent.value = true
+    } catch {
+      // error is already set in useAuth
+    } finally {
+      isSubmitting.value = false
+    }
   } finally {
-    isSubmitting.value = false
+    pendingHandleResetPassword.value = false
   }
 }
 
@@ -218,15 +230,16 @@ async function handleLogout() {
                 {{ error }}
               </p>
 
-              <button
+              <AsyncButton
                 type="submit"
                 :disabled="isSubmitting"
                 class="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                :busy="pendingHandleSubmit"
               >
                 {{
                   isSubmitting ? 'Please wait\u2026' : mode === 'register' ? 'Register' : 'Login'
                 }}
-              </button>
+              </AsyncButton>
 
               <div class="mt-3 space-y-1 text-center text-xs text-muted-foreground">
                 <p v-if="mode === 'login'">
@@ -313,13 +326,14 @@ async function handleLogout() {
                   >
                     Back
                   </button>
-                  <button
+                  <AsyncButton
                     type="submit"
                     :disabled="isSubmitting"
                     class="flex-1 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                    :busy="pendingHandleResetPassword"
                   >
                     {{ isSubmitting ? 'Please wait\u2026' : 'Send' }}
-                  </button>
+                  </AsyncButton>
                 </div>
               </form>
             </div>
@@ -334,12 +348,12 @@ async function handleLogout() {
               <p class="text-xs text-muted-foreground">Signed in via ScotDance.app</p>
             </div>
             <div class="border-t border-border p-1.5">
-              <button
+              <AsyncButton
                 class="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-muted-foreground outline-none hover:bg-muted focus-visible:bg-muted"
                 @click="handleLogout"
               >
                 Logout
-              </button>
+              </AsyncButton>
             </div>
           </template>
         </div>
