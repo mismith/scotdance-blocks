@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useCompetitionStore } from '@/stores/competition'
 import type { ExportDanceRow, ExportRow } from '@/composables/useScheduleExport'
 import { useScheduleExport } from '@/composables/useScheduleExport'
-import { useCompetitionStore } from '@/stores/competition'
 
 const store = useCompetitionStore()
 const { settings, scheduleBlocks, platformEntries } = useScheduleExport()

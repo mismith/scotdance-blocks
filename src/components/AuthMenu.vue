@@ -5,8 +5,6 @@ import { computed, ref, watch } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import AsyncButton from '@/components/AsyncButton.vue'
 import ScotDanceBadge from '@/components/ScotDanceBadge.vue'
-const pendingHandleSubmit = ref(false)
-const pendingHandleResetPassword = ref(false)
 
 const { user, isLoading, isAuthenticated, error, signIn, register, resetPassword, signOut } =
   useAuth()
@@ -68,44 +66,32 @@ function switchMode(newMode: 'login' | 'register' | 'reset-password') {
 }
 
 async function handleSubmit() {
-  if (pendingHandleSubmit.value) return
-  pendingHandleSubmit.value = true
+  if (!email.value || !password.value || isSubmitting.value) return
+  isSubmitting.value = true
   try {
-    if (!email.value || !password.value) return
-    isSubmitting.value = true
-    try {
-      if (mode.value === 'register') {
-        await register(email.value, password.value)
-      } else {
-        await signIn(email.value, password.value)
-      }
-      isOpen.value = false
-    } catch {
-      // error is already set in useAuth
-    } finally {
-      isSubmitting.value = false
+    if (mode.value === 'register') {
+      await register(email.value, password.value)
+    } else {
+      await signIn(email.value, password.value)
     }
+    isOpen.value = false
+  } catch {
+    // error is already set in useAuth
   } finally {
-    pendingHandleSubmit.value = false
+    isSubmitting.value = false
   }
 }
 
 async function handleResetPassword() {
-  if (pendingHandleResetPassword.value) return
-  pendingHandleResetPassword.value = true
+  if (!email.value || isSubmitting.value) return
+  isSubmitting.value = true
   try {
-    if (!email.value) return
-    isSubmitting.value = true
-    try {
-      await resetPassword(email.value)
-      resetSent.value = true
-    } catch {
-      // error is already set in useAuth
-    } finally {
-      isSubmitting.value = false
-    }
+    await resetPassword(email.value)
+    resetSent.value = true
+  } catch {
+    // error is already set in useAuth
   } finally {
-    pendingHandleResetPassword.value = false
+    isSubmitting.value = false
   }
 }
 
@@ -232,9 +218,8 @@ async function handleLogout() {
 
               <AsyncButton
                 type="submit"
-                :disabled="isSubmitting"
                 class="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-                :busy="pendingHandleSubmit"
+                :busy="isSubmitting"
               >
                 {{
                   isSubmitting ? 'Please wait\u2026' : mode === 'register' ? 'Register' : 'Login'
@@ -328,9 +313,8 @@ async function handleLogout() {
                   </button>
                   <AsyncButton
                     type="submit"
-                    :disabled="isSubmitting"
                     class="flex-1 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-                    :busy="pendingHandleResetPassword"
+                    :busy="isSubmitting"
                   >
                     {{ isSubmitting ? 'Please wait\u2026' : 'Send' }}
                   </AsyncButton>

@@ -74,6 +74,7 @@ function onConfigureDanceGroups() {
       </p>
 
       <div class="grid w-full max-w-2xl gap-8" :class="store.collectionsReadonly ? 'max-w-xs grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'"
+      >
       <!-- Left column: Set up -->
       <div v-if="!store.collectionsReadonly" class="flex flex-col gap-3">
         <h3

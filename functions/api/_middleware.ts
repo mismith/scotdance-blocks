@@ -1,4 +1,4 @@
-import { jwtVerify, createRemoteJWKSet } from 'jose'
+import { createRemoteJWKSet, jwtVerify } from 'jose'
 
 interface Env {
   BLOCKS_PROJECTS: KVNamespace

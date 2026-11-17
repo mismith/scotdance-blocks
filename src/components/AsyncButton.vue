@@ -15,8 +15,8 @@ const action = useButtonAction(props)
     :aria-busy="action.busy.value || undefined"
     @click="action.click"
   >
-    <slot v-if="!action.busy.value" />
-    <span v-else class="pending-label"><slot /></span>
+    <!-- one slot, hidden with CSS while busy, so what's inside is never remounted -->
+    <span class="pending-label"><slot /></span>
     <span v-if="action.busy.value" class="pending-indicator" aria-hidden="true"><Spinner /></span>
   </button>
 </template>
